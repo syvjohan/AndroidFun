@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:text="@string/first_textView"
+        android:text="@string/second_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -15,15 +15,14 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btn_false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_false" />
-
-        <Button
-            android:id="@+id/btn_true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_true" />
-     </LinearLayout>
+            android:id="@+id/btn_back"
+            android:layout_width="100dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="90dp"
+            android:layout_marginBottom="180dp"
+            android:background="#660066"
+            android:textSize="40sp"
+            android:textColor="#FFFFFF"
+            android:text="@string/btn_back" />
+    </LinearLayout>
 </LinearLayout>

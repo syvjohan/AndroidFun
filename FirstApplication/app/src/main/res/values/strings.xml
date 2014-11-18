@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FirstApplication</string>
-    <string name="first_line">First line!</string>
+    <string name="first_textView">First textView!</string>
     <string name="action_settings">Settings</string>
     <string name="btn_true">True</string>
     <string name="btn_false">False</string>
+
+    <string name="second_textView">second textView!</string>
+    <string name="btn_back">Back</string>
 </resources>

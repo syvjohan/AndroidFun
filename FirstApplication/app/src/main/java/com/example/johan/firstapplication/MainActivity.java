@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -15,6 +18,7 @@ public class MainActivity extends Activity {
 
     private Button btnTrue;
     private Button btnFalse;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +31,13 @@ public class MainActivity extends Activity {
         btnTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // showOnClick();
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
                 CharSequence msg = "Yeay! true was pressed";
                 Toast.makeText(context, msg, duration).show();
+
+
 
                 Log.e("true", "true button was pressed");
             }
@@ -39,7 +46,8 @@ public class MainActivity extends Activity {
         btnFalse.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-               Context context = getApplicationContext();
+                //showOnClick();
+              Context context = getApplicationContext();
                int duration = Toast.LENGTH_SHORT;
                CharSequence msg = "Yeay! false was pressed";
                Toast.makeText(context, msg, duration).show();
@@ -47,15 +55,7 @@ public class MainActivity extends Activity {
                Log.e("false","false button was pressed");
             }
         });
-
     }
-
-   /* Context context = getApplicationContext();
-    CharSequence text = "Hello toast!";
-    int duration = Toast.LENGTH_SHORT;
-
-    Toast toast = Toast.makeText(context, text, duration);
-    toast.show();*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
