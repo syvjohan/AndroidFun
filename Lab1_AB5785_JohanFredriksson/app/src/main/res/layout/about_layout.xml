@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="#999966">
+
+    <TextView
+        style="@style/header1"
+        android:id="@+id/textview_about"
+        android:text="About the application!"
+        />
+
+    <TextView
+        style="@style/printTxtBox"
+        android:text="A briefly description off the application and the application name. The app version is 1.0. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius libero justo, sed cursus augue lobortis id. Donec quam diam, auctor sit amet semper dignissim, dignissim at felis. Aliquam fringilla lacinia eros. Fusce vitae congue sem, posuere commodo est. Suspendisse potenti. Mauris vel dictum quam. Maecenas luctus justo et vestibulum lacinia. Pellentesque et vestibulum massa, sit amet euismod orci. Donec et pellentesque eros, eleifend ultrices eros. Donec nec cursus mi, nec placerat urna. Etiam interdum tortor magna, quis venenatis odio vestibulum placerat. Aenean elit nibh, venenatis eget elit at, sagittis mattis lectus. Nulla commodo turpis at felis condimentum porttitor."
+        android:id="@+id/textView_about" />
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/backgroundColor">
+
+    <Button
+        android:text="Register"
+        android:id="@+id/btn_register"
+        style="@style/btn"/>
+
+    <EditText
+        android:inputType="textPersonName"
+        android:text="Write you full name here"
+        android:id="@+id/edit_name"
+        style="@style/editTxtBox"/>
+
+    <EditText
+        android:inputType="textEmailAddress"
+        android:text="Write you e-mail here"
+        android:id="@+id/edit_email"
+        style="@style/editTxtBox" />
+
+    <EditText
+        android:inputType="textPassword"
+        android:text="Write you password here"
+        android:id="@+id/edit_pwd"
+        style="@style/editTxtBox" />
+
+</LinearLayout>
