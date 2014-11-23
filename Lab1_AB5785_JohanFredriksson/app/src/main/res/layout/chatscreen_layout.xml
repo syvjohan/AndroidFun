@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/backgroundColor">
+    style="@style/backgroundColor"
+    android:id="@+id/frag_chat">
 
     <TextView
         style="@style/header1"

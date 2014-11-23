@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/backgroundColor">
+    android:id="@+id/frag_startmenu">
 
     <Button
         android:id="@+id/btn_login"
         android:text="Press to Login"
         style="@style/btn" />
+
+    <Button
+        android:text="Register new user"
+        android:id="@+id/btn_register_new_user"
+        style="@style/btn"/>
 
 </LinearLayout>

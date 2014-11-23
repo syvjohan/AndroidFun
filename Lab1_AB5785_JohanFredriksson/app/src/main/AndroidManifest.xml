@@ -7,15 +7,25 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <!--Start the application with a splash screen-->
         <activity
-            android:name="johan.lab1_ab5785_johanfredriksson.MainActivity"
-            android:label="@string/app_name" >
+            android:name="johan.lab1_ab5785_johanfredriksson.SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--Main activity-->
+        <activity
+            android:name="johan.lab1_ab5785_johanfredriksson.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+
     </application>
 
 </manifest>
