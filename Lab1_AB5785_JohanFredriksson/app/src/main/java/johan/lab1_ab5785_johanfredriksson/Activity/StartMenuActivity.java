@@ -1,20 +1,25 @@
-package johan.lab1_ab5785_johanfredriksson;
+package johan.lab1_ab5785_johanfredriksson.Activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import johan.lab1_ab5785_johanfredriksson.Fragment.FragmentMenu;
+import johan.lab1_ab5785_johanfredriksson.Fragment.FragmentRegistration;
+import johan.lab1_ab5785_johanfredriksson.R;
 
-public class MainActivity extends Activity {
-
-    Button btnLogin, btnRegister;
+/**
+ * Created by johan on 2014-11-23.
+ */
+public class StartMenuActivity extends Activity {
+    Button btnLogin, btnRegisterNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,31 +27,36 @@ public class MainActivity extends Activity {
         setContentView(R.layout.startmenu_layout);
 
         btnLogin = (Button)findViewById(R.id.btn_login);
-        btnRegister = (Button)findViewById(R.id.btn_register_new_user);
+        btnRegisterNewUser = (Button)findViewById(R.id.btn_register_new_user);
 
         //Login fragment
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction().addToBackStack(null);
 
-                FragmentStartMenu fStartMenu = new FragmentStartMenu();
-                ft.add(R.id.frag_menu , fStartMenu);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+
+                FragmentMenu fMenu = new FragmentMenu();
+                ft.replace(R.id.frag_startmenu, fMenu);
+                ft.addToBackStack("frag login");
                 ft.commit();
+                Log.d("login","login btn was pressed");
             }
         });
 
         //Register fragment
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegisterNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction().addToBackStack(null);
-
+                FragmentManager fM = getFragmentManager();
+                FragmentTransaction fT = fM.beginTransaction();
                 FragmentRegistration fRegister = new FragmentRegistration();
-                ft.add(R.id.frag_reg, fRegister);
-                ft.commit();
+
+                fT.replace(R.id.frag_startmenu, fRegister);
+                fT.addToBackStack("frag reg new user");
+                fT.commit();
+                Log.d("reg","register new user btn was pressed");
             }
         });
 
