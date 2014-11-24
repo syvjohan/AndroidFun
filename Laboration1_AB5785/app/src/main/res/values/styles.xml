@@ -1,20 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-
-        <!-- <item name="android:buttonStyle">@style/btn</item>
-          <item name="android:background">@style/backgroundColor</item>-->
-
+    <style name="AppTheme"
+        parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:background">#FFA319</item>
+        <item name="android:textColor">#4C331A</item>
     </style>
+
+    <!--Actionbar style start-->
+    <!--parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="android:actionbar_background">
+        <item name="android:background">#FFA319</item>
+    </style>
+
+    parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="android:actionbar_textColor.">
+        <item name="android:textColor">#4C331A</item>
+    </style>-->
+
+    <!--Actionbar style end-->
+
 
     <style name="btn">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">50dp</item>
-        <item name="android:height">100dp</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:height">50dp</item>
+        <item name="android:textSize">25dp</item>
         <item name="android:background">#D7C5E0</item>
         <item name="android:gravity">center</item>
     </style>
@@ -27,24 +39,22 @@
         <item name="android:background">#A3A375</item>
     </style>
 
-    <style name="editTxtBox">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+    <style name="editTextView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:textSize">15dp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:ems">20</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">#A3A375</item>
+        <item name="android:background">#CBCBB2</item>
     </style>
 
-    <style name="printTxtBox">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textStyle">italic</item>
+    <style name="textView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">15dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginTop">10dp</item>
         <item name="android:background">#A3A375</item>
     </style>
 

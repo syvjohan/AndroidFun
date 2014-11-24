@@ -2,31 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.johan.laboration1_ab5785.Fragment.LoginFragment"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    style="@style/backgroundColor">
 
    <Button
-       android:layout_width="match_parent"
-       android:layout_height="50dp"
-       android:layout_marginTop="10dp"
+       style="@style/btn"
        android:text="Login"
        android:id="@+id/btn_login"
        android:onClick="LoginBtnClick"/>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        style="@style/btn"
         android:text="About"
         android:id="@+id/btn_about"
         android:onClick="GotoAboutBtnClick" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        style="@style/btn"
         android:id="@+id/btn_goto_register"
         android:text="Register new user"
-        android:onClick="BtnGotoRegister" />
+        android:onClick="GotoRegisterBtnClick" />
 
 
 

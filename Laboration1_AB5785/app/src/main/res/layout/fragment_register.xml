@@ -1,38 +1,38 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.johan.laboration1_ab5785.Fragment.RegisterFragment"
-    >
+    android:orientation="vertical"
+    style="@style/backgroundColor">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        style="@style/textView"
         android:text="Username"
-        android:textSize="20dp"
-        android:id="@+id/lblUsername"/>
+        android:layout_marginTop="10dp"
+        android:id="@+id/lblUsername" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        style="@style/editTextView"
+        android:text="Write name here!"
         android:inputType="textPersonName"
-        android:ems="20"
         android:id="@+id/txtUsername" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
         android:layout_marginTop="10dp"
+        style="@style/textView"
         android:text="@string/label_password"
-        android:textSize="20dp"
         android:id="@+id/lblPassword" />
+
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        style="@style/editTextView"
+        android:text="write password here!"
         android:inputType="textPassword"
-        android:ems="10"
         android:id="@+id/txtPassword" />
 
-</FrameLayout>
+    <Button
+        style="@style/btn"
+        android:text="Register"
+        android:id="@+id/btn_register"
+        android:onClick="RegisterBtnClick" />
+
+</LinearLayout>
