@@ -2,36 +2,37 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.johan.laboration1_ab5785.Fragment.RegisterFragment"
-    android:orientation="vertical"
-    style="@style/backgroundColor">
+    android:orientation="vertical">
 
     <TextView
         style="@style/textView"
-        android:text="Username"
+        android:text="@string/txt_username"
+        android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:id="@+id/lblUsername" />
 
     <EditText
         style="@style/editTextView"
-        android:text="Write name here!"
+        android:text="@string/label_username"
         android:inputType="textPersonName"
-        android:id="@+id/txtUsername" />
+        android:id="@+id/reg_txtUsername" />
 
     <TextView
         android:layout_marginTop="10dp"
         style="@style/textView"
-        android:text="@string/label_password"
-        android:id="@+id/lblPassword" />
+        android:textStyle="bold"
+        android:text="@string/txt_password"
+        android:id="@+id/reg_lblPassword" />
 
     <EditText
         style="@style/editTextView"
-        android:text="write password here!"
+        android:text="@string/label_password"
         android:inputType="textPassword"
         android:id="@+id/txtPassword" />
 
     <Button
         style="@style/btn"
-        android:text="Register"
+        android:text="@string/btn_register"
         android:id="@+id/btn_register"
         android:onClick="RegisterBtnClick" />
 

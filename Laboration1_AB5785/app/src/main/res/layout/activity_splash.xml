@@ -14,6 +14,6 @@
     <TextView
         style="@style/textView_welcome_screen"
         android:id="@+id/textView_startscreen"
-        android:text="Welcome to my fabulous chat program" />
+        android:text="@string/label_welcome_msg" />
 
 </RelativeLayout>

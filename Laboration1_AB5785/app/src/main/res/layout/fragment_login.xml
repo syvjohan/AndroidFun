@@ -2,27 +2,40 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.johan.laboration1_ab5785.Fragment.LoginFragment"
-    android:orientation="vertical"
-    style="@style/backgroundColor">
+    android:orientation="vertical" >
 
    <Button
        style="@style/btn"
-       android:text="Login"
+       android:text="@string/btn_login"
        android:id="@+id/btn_login"
        android:onClick="LoginBtnClick"/>
 
+    <EditText
+        android:layout_marginTop="10dp"
+        style="@style/editTextView"
+        android:text="@string/label_username"
+        android:inputType="textPersonName"
+        android:id="@+id/login_txtUsername" />
+
+    <EditText
+        android:layout_marginTop="5dp"
+        style="@style/editTextView"
+        android:text="@string/label_password"
+        android:inputType="textPassword"
+        android:id="@+id/login_txtPassword" />
+
     <Button
+        android:layout_gravity="center_horizontal|bottom"
         style="@style/btn"
-        android:text="About"
+        android:text="@string/btn_about"
         android:id="@+id/btn_about"
         android:onClick="GotoAboutBtnClick" />
 
     <Button
         style="@style/btn"
         android:id="@+id/btn_goto_register"
-        android:text="Register new user"
+        android:text="@string/btn_Register_new_user"
         android:onClick="GotoRegisterBtnClick" />
-
 
 
 </LinearLayout>

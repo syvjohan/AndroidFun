@@ -83,6 +83,7 @@ public class MainActivity extends Activity
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container, fragment, null);
+        fT.addToBackStack("got to register");
         fT.commit();
     }
 
@@ -92,6 +93,7 @@ public class MainActivity extends Activity
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container, fragment, null);
+        fT.addToBackStack("got to about");
         fT.commit();
     }
 
@@ -101,6 +103,7 @@ public class MainActivity extends Activity
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container, fragment, null);
+        fT.addToBackStack("about back");
         fT.commit();
     }
 }

@@ -3,8 +3,7 @@
     xmlns:abdroid="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.johan.laboration1_ab5785.Fragment.GroupFragment"
-    style="@style/backgroundColor">
+    tools:context="com.example.johan.laboration1_ab5785.Fragment.GroupFragment" >
 
    <ListView
        style="@style/lstView"
