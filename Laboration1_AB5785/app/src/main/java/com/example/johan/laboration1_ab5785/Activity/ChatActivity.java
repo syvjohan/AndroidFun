@@ -32,7 +32,6 @@ public class ChatActivity extends Activity
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.add(R.id.chatcontainer, fragment, null);
-        //fT.addToBackStack("chat");
         fT.commit();
     }
 

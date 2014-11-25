@@ -36,7 +36,6 @@ public class MainActivity extends Activity
         fT.commit();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -70,11 +69,13 @@ public class MainActivity extends Activity
     public void LoginBtnClick(View v) {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void RegisterBtnClick(View v) {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
+        finish();
     }
 
     // go to a new fragment
