@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.nsd.NsdManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,17 +23,12 @@ import com.example.johan.laboration1_ab5785.Fragment.RegisterFragment;
 import com.example.johan.laboration1_ab5785.R;
 import com.firebase.client.FirebaseError;
 
-import static com.example.johan.laboration1_ab5785.R.id.login_txtUsername;
-import static com.example.johan.laboration1_ab5785.R.id.reg_txtPassword;
-import static com.example.johan.laboration1_ab5785.R.id.reg_txtUsername;
-
 
 public class MainActivity extends Activity
     implements LoginFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener
 {
-    // firebaseRef.child("message").setValue("nisse");
     private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
     private Firebase firebaseRef;
 
@@ -86,8 +80,7 @@ public class MainActivity extends Activity
     public void LoginBtnClick(View v) {
         final EditText editPwd = (EditText)findViewById(R.id.login_txtPassword);
         final EditText editUser = (EditText)findViewById(R.id.login_txtUsername);
-        Log.v("användare", editUser.getText().toString());
-        Log.v("lösenord", editPwd.getText().toString());
+
         //Authenticate the user
         firebaseRef.authWithPassword(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
             @Override

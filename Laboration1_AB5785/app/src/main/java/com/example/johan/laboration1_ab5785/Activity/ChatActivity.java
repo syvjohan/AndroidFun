@@ -9,24 +9,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.johan.laboration1_ab5785.Fragment.AboutFragment;
 import com.example.johan.laboration1_ab5785.Fragment.ChatFragment;
 import com.example.johan.laboration1_ab5785.Fragment.GroupFragment;
-import com.example.johan.laboration1_ab5785.Fragment.LoginFragment;
 import com.example.johan.laboration1_ab5785.R;
+import com.firebase.client.AuthData;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 /**
  * Created by johan on 11/24/2014.
  */
-public class ChatActivity extends Activity
-      implements GroupFragment.OnFragmentInteractionListener,
-        ChatFragment.OnFragmentInteractionListener
+public class ChatActivity extends Activity implements
+        ChatFragment.OnFragmentInteractionListener,
+        GroupFragment.OnFragmentInteractionListener
 {
+
+    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
+    private Firebase firebaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Firebase.setAndroidContext(this); //Initialize Firebase library.
+        firebaseRef = new Firebase(FIREBASE_URL);
 
         GroupFragment fragment = GroupFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
@@ -63,4 +72,44 @@ public class ChatActivity extends Activity
 
     }
 
+    public void HandleChatGroup(View v)
+    {
+        firebaseRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void AddChatGroupBtnClick(View v) {
+
+    }
+
+    public void GotoChatGroup(View v) {
+
+    }
 }
+
+// firebaseRef.child("message").setValue("nisse");
+
