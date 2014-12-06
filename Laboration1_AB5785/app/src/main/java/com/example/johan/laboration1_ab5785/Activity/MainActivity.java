@@ -7,15 +7,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.net.nsd.NsdManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
 
 import com.example.johan.laboration1_ab5785.Fragment.AboutFragment;
 import com.example.johan.laboration1_ab5785.Fragment.LoginFragment;
 import com.example.johan.laboration1_ab5785.Fragment.RegisterFragment;
 import com.example.johan.laboration1_ab5785.R;
+import com.firebase.client.FirebaseError;
+
+import static com.example.johan.laboration1_ab5785.R.id.login_txtUsername;
+import static com.example.johan.laboration1_ab5785.R.id.reg_txtPassword;
+import static com.example.johan.laboration1_ab5785.R.id.reg_txtUsername;
 
 
 public class MainActivity extends Activity
@@ -23,11 +34,17 @@ public class MainActivity extends Activity
         RegisterFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener
 {
+    // firebaseRef.child("message").setValue("nisse");
+    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
+    private Firebase firebaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Firebase.setAndroidContext(this); //Initialize Firebase library.
+        firebaseRef = new Firebase(FIREBASE_URL);
 
         LoginFragment fragment = LoginFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
@@ -67,15 +84,68 @@ public class MainActivity extends Activity
 
     //Change activity
     public void LoginBtnClick(View v) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-        finish();
+        final EditText editPwd = (EditText)findViewById(R.id.login_txtPassword);
+        final EditText editUser = (EditText)findViewById(R.id.login_txtUsername);
+        Log.v("användare", editUser.getText().toString());
+        Log.v("lösenord", editPwd.getText().toString());
+        //Authenticate the user
+        firebaseRef.authWithPassword(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                Log.v(firebaseError.getMessage(),"");
+                TextView errMsg = (TextView)findViewById(R.id.err_login);
+                errMsg.setVisibility(View.VISIBLE);
+                errMsg.getText().toString();
+                Log.d("", errMsg.getText().toString());
+            }
+        });
     }
 
     public void RegisterBtnClick(View v) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-        finish();
+        final EditText editPwd = (EditText)findViewById(R.id.reg_txtPassword);
+        final EditText editUser = (EditText)findViewById(R.id.reg_txtUsername);
+
+        //Create a new user.
+        firebaseRef.createUser(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.ResultHandler(){
+            @Override
+            public void onSuccess() {
+                //Authenticate the user
+                firebaseRef.authWithPassword(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) {
+                        //Succeded to create and authenticate the new user.
+                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    @Override
+                    public void onAuthenticationError(FirebaseError firebaseError) {
+                        //Failed to Authenticate the new created user
+                        Log.v(firebaseError.getMessage(),"");
+                        TextView errMsg = (TextView)findViewById(R.id.err_login);
+                        errMsg.setVisibility(View.VISIBLE);
+                        errMsg.getText().toString();
+                        Log.d("", errMsg.getText().toString());
+                    }
+                });
+            }
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                //Failed to create new user.
+                Log.v(firebaseError.getMessage(),"");
+                TextView errMsg = (TextView)findViewById(R.id.err_reg);
+                errMsg.setVisibility(View.VISIBLE);
+                errMsg.getText().toString();
+                Log.d("", errMsg.getText().toString());
+            }
+        });
     }
 
     // go to a new fragment
@@ -84,7 +154,7 @@ public class MainActivity extends Activity
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container, fragment, null);
-        fT.addToBackStack("got to register");
+        fT.addToBackStack("goto register");
         fT.commit();
     }
 

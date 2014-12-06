@@ -13,14 +13,14 @@
     <EditText
         android:layout_marginTop="10dp"
         style="@style/editTextView"
-        android:text="@string/label_username"
+        android:text="@string/login_txtUsername"
         android:inputType="textPersonName"
         android:id="@+id/login_txtUsername" />
 
     <EditText
         android:layout_marginTop="5dp"
         style="@style/editTextView"
-        android:text="@string/label_password"
+        android:text="@string/login_txtPassword"
         android:inputType="textPassword"
         android:id="@+id/login_txtPassword" />
 
@@ -37,5 +37,9 @@
         android:text="@string/btn_Register_new_user"
         android:onClick="GotoRegisterBtnClick" />
 
-
+    <TextView
+        android:id="@+id/err_login"
+        style="@style/error_msg"
+        android:text="@string/err_login"
+        android:visibility="invisible" />
 </LinearLayout>

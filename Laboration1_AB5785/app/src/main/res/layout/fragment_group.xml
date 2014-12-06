@@ -1,12 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:abdroid="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.johan.laboration1_ab5785.Fragment.GroupFragment" >
 
-   <ListView
-       style="@style/lstView"
-       android:id="@+id/groupList" />
+    <EditText
+        android:id="@+id/txtgroup_name"
+        style="@style/editTextView"
+        android:hint="@string/group_startNewGroup"
+        android:inputType="textPersonName"
+        android:layout_marginTop="10dp" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/btn_group_createNewGroup"
+        android:text="@string/btn_createNewGroup"
+        style="@style/btn"
+        android:layout_below="@+id/txtgroup_name" />
+
+    <ListView
+        style="@style/lstView"
+        android:id="@+id/group_list"
+        android:layout_below="@id/btn_group_createNewGroup"
+        android:layout_marginTop="30dp" />
+
+
+</RelativeLayout>
