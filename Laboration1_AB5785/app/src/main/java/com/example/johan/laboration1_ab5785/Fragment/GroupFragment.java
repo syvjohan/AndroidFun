@@ -4,11 +4,27 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.johan.laboration1_ab5785.R;
+import com.example.johan.laboration1_ab5785.Group;
+import com.example.johan.laboration1_ab5785.GroupAdapter;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +43,13 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
+    private Firebase firebaseRef = new Firebase(FIREBASE_URL);
+
+    ArrayList<Group> group = new ArrayList<Group>();
+
+    GroupAdapter groupAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,14 +82,84 @@ public class GroupFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<Group> group = (ArrayList<Group>) snapshot.getValue();
+                Log.d("WAEDFRGTWEFRGTHY",snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Retrieve new posts as they are added to Firebase
+        firebaseRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ArrayList<Group> group = (ArrayList<Group>) dataSnapshot.getValue();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        groupAdapter = new GroupAdapter(getActivity(), group);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+        View root = inflater.inflate(R.layout.fragment_group, container, false);
+
+        ListView list = (ListView) root.findViewById(R.id.group_list);
+        list.setAdapter(groupAdapter);
+
+        list.setOnItemClickListener(mOnItemClickListener);
+
+        list.setOnItemLongClickListener(mOnItemLongClickListener);
+
+        return root;
     }
+
+    private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+           // String groupName = group.get(position).getName();
+           // Toast.makeText(getActivity(), "Short click on " + groupName, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+           // String groupName = group.get(position).getName();
+           // Toast.makeText(getActivity(), "Long click on " + groupName, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    };
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

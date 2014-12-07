@@ -5,18 +5,26 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
+import com.example.johan.laboration1_ab5785.Fragment.AboutFragment;
 import com.example.johan.laboration1_ab5785.Fragment.ChatFragment;
 import com.example.johan.laboration1_ab5785.Fragment.GroupFragment;
+import com.example.johan.laboration1_ab5785.Group;
+import com.example.johan.laboration1_ab5785.GroupAdapter;
 import com.example.johan.laboration1_ab5785.R;
-import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+
+import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by johan on 11/24/2014.
@@ -24,10 +32,12 @@ import com.firebase.client.FirebaseError;
 public class ChatActivity extends Activity implements
         ChatFragment.OnFragmentInteractionListener,
         GroupFragment.OnFragmentInteractionListener
-{
 
+{
     private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
     private Firebase firebaseRef;
+
+    ArrayList<Group> group = new ArrayList<Group>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +82,38 @@ public class ChatActivity extends Activity implements
 
     }
 
-    public void HandleChatGroup(View v)
+    //Save a new contact to firebase.
+    public void AddChatGroupBtnClick(View v) {
+        //GroupAdapter groupAdapter = new GroupAdapter(getActivity(), group);
+
+        EditText editGroupName = (EditText)findViewById(R.id.txtgroup_name);
+        Firebase usersRef = firebaseRef.child(editGroupName.getText().toString());
+
+        group.add(new Group(GetCurrTimeStamp(), editGroupName.getText().toString()));
+        usersRef.setValue(group);
+
+        //After adding chat group enter chat!
+        ChatFragment fragment = ChatFragment.newInstance("", "");
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.chatcontainer, fragment, null);
+        fT.addToBackStack("got to chat");
+        fT.commit();
+
+    }
+
+    //Returns the current timestamp this is the id in Group.java
+    public String GetCurrTimeStamp() {
+        java.util.Date date = new java.util.Date();
+        return date.toString();
+    }
+
+
+}
+
+// firebaseRef.child("message").setValue("nisse");
+
+  /*  public void HandleChatGroup(View v)
     {
         firebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -108,8 +149,5 @@ public class ChatActivity extends Activity implements
 
     public void GotoChatGroup(View v) {
 
-    }
-}
-
-// firebaseRef.child("message").setValue("nisse");
+    }*/
 
