@@ -1,5 +1,7 @@
 package com.example.johan.laboration1_ab5785;
 
+import java.util.Map;
+
 /**
  * Created by johan on 2014-12-07.
  */
@@ -21,7 +23,7 @@ public class Group {
     public void setId(String id){
         this.id = id;
     }
-    public String getId(){
+    public String getId() {
         return this.id;
     }
 }

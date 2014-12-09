@@ -25,6 +25,10 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,13 +47,6 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
-    private Firebase firebaseRef = new Firebase(FIREBASE_URL);
-
-    ArrayList<Group> group = new ArrayList<Group>();
-
-    GroupAdapter groupAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -82,53 +79,13 @@ public class GroupFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                ArrayList<Group> group = (ArrayList<Group>) snapshot.getValue();
-                Log.d("WAEDFRGTWEFRGTHY",snapshot.getValue().toString());
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Retrieve new posts as they are added to Firebase
-        firebaseRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ArrayList<Group> group = (ArrayList<Group>) dataSnapshot.getValue();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        groupAdapter = new GroupAdapter(getActivity(), group);
+        GroupAdapter  groupAdapter = new GroupAdapter(getActivity());
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_group, container, false);
@@ -136,9 +93,9 @@ public class GroupFragment extends Fragment {
         ListView list = (ListView) root.findViewById(R.id.group_list);
         list.setAdapter(groupAdapter);
 
-        list.setOnItemClickListener(mOnItemClickListener);
+        // list.setOnItemClickListener(mOnItemClickListener);
 
-        list.setOnItemLongClickListener(mOnItemLongClickListener);
+        //list.setOnItemLongClickListener(mOnItemLongClickListener);
 
         return root;
     }

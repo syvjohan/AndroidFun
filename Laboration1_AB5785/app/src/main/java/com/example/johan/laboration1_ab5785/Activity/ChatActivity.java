@@ -107,47 +107,6 @@ public class ChatActivity extends Activity implements
         java.util.Date date = new java.util.Date();
         return date.toString();
     }
-
-
 }
 
-// firebaseRef.child("message").setValue("nisse");
-
-  /*  public void HandleChatGroup(View v)
-    {
-        firebaseRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    public void AddChatGroupBtnClick(View v) {
-
-    }
-
-    public void GotoChatGroup(View v) {
-
-    }*/
 
