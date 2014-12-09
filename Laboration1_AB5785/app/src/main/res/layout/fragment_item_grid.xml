@@ -8,6 +8,9 @@
         android:id="@+id/user_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:textColor="#343434"
+        android:textSize="12sp"
         android:text="name"/>
 
     <TextView
@@ -15,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="username"
+        android:layout_alignBottom="@+id/reporter"
         android:layout_below="@+id/user_email"/>
 
 </FrameLayout>
