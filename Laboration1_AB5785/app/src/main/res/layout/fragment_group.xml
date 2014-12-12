@@ -16,8 +16,7 @@
         android:id="@+id/btn_group_createNewGroup"
         android:text="@string/btn_createNewGroup"
         style="@style/btn"
-        android:layout_below="@+id/txtgroup_name"
-        android:onClick="AddChatGroupBtnClick"/>
+        android:layout_below="@+id/txtgroup_name"/>
 
     <ListView
         style="@style/lstView"

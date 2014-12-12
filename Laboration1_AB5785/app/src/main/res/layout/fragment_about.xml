@@ -15,7 +15,6 @@
          style="@style/btn"
          android:text="@string/btn_about_back"
          android:id="@+id/btn_about_back"
-         android:onClick="AboutBackBtnClick"
          android:layout_gravity="center_horizontal|bottom" />
 
 

@@ -1,14 +1,23 @@
 package com.example.johan.laboration1_ab5785.Fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.example.johan.laboration1_ab5785.Activity.ChatActivity;
 import com.example.johan.laboration1_ab5785.R;
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +36,11 @@ public class RegisterFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
+    private Firebase firebaseRef;
+
+    private Button RegisterBtnClick;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,13 +73,64 @@ public class RegisterFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Firebase.setAndroidContext(getActivity()); //Initialize Firebase library.
+        firebaseRef = new Firebase(FIREBASE_URL);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        RegisterBtnClick = (Button)view.findViewById(R.id.btn_register);
+        RegisterBtnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editPwd = (EditText) getView().findViewById(R.id.reg_txtPassword);
+                final EditText editUser = (EditText) getView().findViewById(R.id.reg_txtUsername);
+                Log.d(editUser.getText().toString(), editPwd.getText().toString());
+                //Create a new user.
+                firebaseRef.createUser(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        //Authenticate the user
+                        firebaseRef.authWithPassword(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                //Succeded to create and authenticate the new user.
+                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                //Failed to Authenticate the new created user
+                                Log.v(firebaseError.getMessage(), "");
+                                TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
+                                errMsg.setVisibility(View.VISIBLE);
+                                errMsg.getText().toString();
+                                Log.d("", errMsg.getText().toString());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        //Failed to create new user.
+                        Log.v(firebaseError.getMessage(), "");
+                        TextView errMsg = (TextView) getView().findViewById(R.id.err_reg);
+                        errMsg.setVisibility(View.VISIBLE);
+                        errMsg.getText().toString();
+                        Log.d("", errMsg.getText().toString());
+                    }
+                });
+            }
+        });
+                
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

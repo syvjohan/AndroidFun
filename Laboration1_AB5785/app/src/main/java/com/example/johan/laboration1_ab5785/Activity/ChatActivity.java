@@ -34,23 +34,16 @@ public class ChatActivity extends Activity implements
         GroupFragment.OnFragmentInteractionListener
 
 {
-    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
-    private Firebase firebaseRef;
-
-    ArrayList<Group> group = new ArrayList<Group>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Firebase.setAndroidContext(this); //Initialize Firebase library.
-        firebaseRef = new Firebase(FIREBASE_URL);
-
         GroupFragment fragment = GroupFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
-        fT.add(R.id.chatcontainer, fragment, null);
+        fT.replace(R.id.chatcontainer, fragment, null);
+        fT.addToBackStack("go to group fragmement");
         fT.commit();
     }
 
@@ -80,32 +73,6 @@ public class ChatActivity extends Activity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    //Save a new contact to firebase.
-    public void AddChatGroupBtnClick(View v) {
-        //GroupAdapter groupAdapter = new GroupAdapter(getActivity(), group);
-
-        EditText editGroupName = (EditText)findViewById(R.id.txtgroup_name);
-        Firebase usersRef = firebaseRef.child(editGroupName.getText().toString());
-
-        group.add(new Group(GetCurrTimeStamp(), editGroupName.getText().toString()));
-        usersRef.setValue(group);
-
-        //After adding chat group enter chat!
-        ChatFragment fragment = ChatFragment.newInstance("", "");
-        FragmentManager fM = getFragmentManager();
-        FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.chatcontainer, fragment, null);
-        fT.addToBackStack("got to chat");
-        fT.commit();
-
-    }
-
-    //Returns the current timestamp this is the id in Group.java
-    public String GetCurrTimeStamp() {
-        java.util.Date date = new java.util.Date();
-        return date.toString();
     }
 }
 

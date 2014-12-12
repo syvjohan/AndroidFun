@@ -23,8 +23,7 @@
     <Button
         android:id="@+id/btn_register"
         style="@style/btn"
-        android:text="@string/btn_register"
-        android:onClick="RegisterBtnClick" />
+        android:text="@string/btn_register" />
     
     <TextView
         android:id="@+id/err_reg"
