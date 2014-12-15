@@ -34,23 +34,16 @@ public class ChatActivity extends Activity implements
         GroupFragment.OnFragmentInteractionListener
 
 {
-    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
-    private Firebase firebaseRef;
-
-    ArrayList<Group> group = new ArrayList<Group>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Firebase.setAndroidContext(this); //Initialize Firebase library.
-        firebaseRef = new Firebase(FIREBASE_URL);
-
         GroupFragment fragment = GroupFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
-        fT.add(R.id.chatcontainer, fragment, null);
+        fT.replace(R.id.chatcontainer, fragment, null);
+        fT.addToBackStack("go to group fragmement");
         fT.commit();
     }
 
@@ -102,12 +95,6 @@ public class ChatActivity extends Activity implements
         fT.commit();
 
     }
-
-   /* //Returns the current timestamp this is the id in Group.java
-    public String GetCurrTimeStamp() {
-        java.util.Date date = new java.util.Date();
-        return date.toString();
-    }*/
 }
 
 

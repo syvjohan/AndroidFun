@@ -1,6 +1,8 @@
 package com.example.johan.laboration1_ab5785.Fragment;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,27 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.johan.laboration1_ab5785.GroupAdapter;
 import com.example.johan.laboration1_ab5785.R;
 import com.example.johan.laboration1_ab5785.Group;
-import com.example.johan.laboration1_ab5785.GroupAdapter;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +40,15 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Button AddChatGroupBtnClick;
+
+    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
+    private Firebase firebaseRef;
+
+    ArrayList<Group> group = new ArrayList<Group>();
+
+    GroupAdapter mAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -81,41 +82,69 @@ public class GroupFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
+
+        Firebase.setAndroidContext(getActivity()); //Initialize Firebase library.
+        firebaseRef = new Firebase(FIREBASE_URL);
+
+        group.add(new Group("1", "android"));
+        group.add(new Group("2", "iPhone"));
+        group.add(new Group("3", "windowsPhone"));
+
+        mAdapter = new GroupAdapter(getActivity(), group);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //Declare the UI components
-        final GroupAdapter groupAdapter;
+        View view = inflater.inflate(R.layout.fragment_group, container, false);
 
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_group, container, false);
+        //Save a new group to firebase.
+        AddChatGroupBtnClick = (Button)view.findViewById(R.id.btn_group_createNewGroup);
+        AddChatGroupBtnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View view) {
+                String editGroupName = ((EditText)view.findViewById(R.id.txtgroup_name)).getText().toString();
+                Firebase usersRef = firebaseRef.push();
 
-        ListView list = (ListView) root.findViewById(R.id.group_list);
-        list.setAdapter(groupAdapter);
+                group.add(new Group(usersRef.getKey(), editGroupName));
+                usersRef.setValue(group);
 
-        // list.setOnItemClickListener(mOnItemClickListener);
+                //After adding chat group enter chat!
+                ChatFragment fragment = ChatFragment.newInstance("", "");
+                FragmentManager fM = getFragmentManager();
+                FragmentTransaction fT = fM.beginTransaction();
+                fT.replace(R.id.chatcontainer, fragment, null);
+                fT.addToBackStack("got to chat");
+                fT.commit();
+            }
+        });
 
-        //list.setOnItemLongClickListener(mOnItemLongClickListener);
+        ListView list = (ListView) view.findViewById(R.id.chatcontainer);
+        list.setAdapter(mAdapter);
 
-        return root;
+        list.setOnItemClickListener(mOnItemClickListener);
+
+        list.setOnItemLongClickListener(mOnItemLongClickListener);
+
+        return view;
     }
 
     private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-           // String groupName = group.get(position).getName();
-           // Toast.makeText(getActivity(), "Short click on " + groupName, Toast.LENGTH_SHORT).show();
+            String groupName = group.get(position).getName();
+            Toast.makeText(getActivity(), "Short click on " + groupName, Toast.LENGTH_SHORT).show();
         }
     };
 
     private AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-           // String groupName = group.get(position).getName();
-           // Toast.makeText(getActivity(), "Long click on " + groupName, Toast.LENGTH_SHORT).show();
+            String groupName = group.get(position).getName();
+            Toast.makeText(getActivity(), "Long click on " + groupName, Toast.LENGTH_SHORT).show();
             return false;
         }
     };

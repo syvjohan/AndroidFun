@@ -7,8 +7,7 @@
    <Button
        style="@style/btn"
        android:text="@string/btn_login"
-       android:id="@+id/btn_login"
-       android:onClick="LoginBtnClick"/>
+       android:id="@+id/btn_login"/>
 
     <EditText
         android:layout_marginTop="10dp"
@@ -29,13 +28,13 @@
         style="@style/btn"
         android:text="@string/btn_about"
         android:id="@+id/btn_about"
-        android:onClick="GotoAboutBtnClick" />
+        />
 
     <Button
         style="@style/btn"
         android:id="@+id/btn_goto_register"
         android:text="@string/btn_Register_new_user"
-        android:onClick="GotoRegisterBtnClick" />
+         />
 
     <TextView
         android:id="@+id/err_login"

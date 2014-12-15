@@ -25,67 +25,18 @@ import java.util.TreeMap;
 /**
  * Created by johan on 2014-12-07.
  */
-public class GroupAdapter extends ArrayList<Group> {
-
-    private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
-    private Firebase firebaseRef = new Firebase(FIREBASE_URL);
-
-    private ArrayList<Group> arrayList;
+public class GroupAdapter extends ArrayAdapter<Group> {
 
     private LayoutInflater mLayoutInflater;
 
+    public GroupAdapter(Context context, ArrayList<Group> objects) {
+        super(context, R.layout.fragment_item_grid, objects);
 
-    public GroupAdapter(Context context, ArrayList<Group> arrayList) {
-        this.arrayList = arrayList;
         mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        firebaseRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String s) {
-
-                Map<String, Object> groupMap = new TreeMap<String, Object>();
-                groupMap = (TreeMap<String, Object>) snapshot.getValue();
-                add((Group) groupMap);
-
-                s = (String)groupMap.get("group äppel");
-
-
-              /*  for (DataSnapshot child : snapshot.getChildren()) {
-                    groupMap.put(child.getKey(), child.getValue());
-                }*/
-
-
-                Iterator iterator = groupMap.keySet().iterator();
-                while (iterator.hasNext()) {
-                    String key = iterator.next().toString();
-                    String value = groupMap.get(key).toString();
-
-                    System.out.println(key + " " + value);
-                }
-
-            }
-            @Override
-            public void onChildChanged(DataSnapshot snapshot, String s) {
-
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot snapshot) {
-
-            }
-            @Override
-            public void onChildMoved(DataSnapshot snapshot, String s) {
-
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
         ViewHolder holder = null;
 
         if (convertView == null) {
@@ -101,8 +52,8 @@ public class GroupAdapter extends ArrayList<Group> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(arrayList.get(position).getName());
-        holder.id.setText(arrayList.get(position).getId());
+        holder.name.setText(getItem(position).name);
+        holder.id.setText(getItem(position).id);
 
         return convertView;
     }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Start screen.
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="label_welcome_msg">Welcome to my fabulous chat program</string>
+
+    //Application info.
+    <string name="app_name">Laboration2_AB5785</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    //Register.
+    <string name="btn_register">Register</string>
+    <string name="err_reg">ERROR:invalid email, please  try again</string>
+    <string name="reg_txtUsername">bobbo@gmail.com</string>
+    <string name="reg_txtPassword">passwordhej</string>
+
+    //Chat
+    <string name="title_activity_chat">Group list</string>
+
+    //Menu(start)
+    <string name="btn_login">Login</string>
+    <string name="login_txtUsername">bobbo@gmail.com</string>
+    <string name="login_txtPassword">passwordhej</string>
+    <string name="btn_about">About</string>
+    <string name="btn_Register_new_user">Register new user</string>
+    <string name="err_login">Error: invalid login data, please try again</string>
+
+    //About.
+    <string name="about_loremipsum">A briefly description off the application and the application name. The app version is 1.0. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius libero justo, sed cursus augue lobortis id. Donec quam diam, auctor sit amet semper dignissim, dignissim at felis. Aliquam fringilla lacinia eros. Fusce vitae congue sem, posuere commodo est. Suspendisse potenti. Mauris vel dictum quam. Maecenas luctus justo et vestibulum lacinia. Pellentesque et vestibulum massa, sit amet euismod orci. Donec et pellentesque eros, eleifend ultrices eros. Donec nec cursus mi, nec placerat urna. Etiam interdum tortor magna, quis venenatis odio vestibulum placerat. Aenean elit nibh, venenatis eget elit at, sagittis mattis lectus. Nulla commodo turpis at felis condimentum porttitor.</string>
+    <string name="btn_about_back">Back</string>
+
+    //Group.
+    <string name="group_startNewGroup">group bannan</string>
+    <string name="btn_createNewGroup">Create new group</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
