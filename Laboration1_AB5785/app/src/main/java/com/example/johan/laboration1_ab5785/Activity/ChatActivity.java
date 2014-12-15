@@ -86,10 +86,11 @@ public class ChatActivity extends Activity implements
     public void AddChatGroupBtnClick(View v) {
         //GroupAdapter groupAdapter = new GroupAdapter(getActivity(), group);
 
-        EditText editGroupName = (EditText)findViewById(R.id.txtgroup_name);
-        Firebase usersRef = firebaseRef.child(editGroupName.getText().toString());
-
-        group.add(new Group(GetCurrTimeStamp(), editGroupName.getText().toString()));
+        String editGroupName = ((EditText)findViewById(R.id.txtgroup_name)).getText().toString();
+        //Firebase usersRef = firebaseRef.child(editGroupName.getText().toString());
+        Firebase usersref = firebaseRef.push();
+        group.add(new Group (usersref.getKey(), editGroupName));
+        //group.add(new Group(GetCurrTimeStamp(), editGroupName));
         usersRef.setValue(group);
 
         //After adding chat group enter chat!
@@ -102,11 +103,11 @@ public class ChatActivity extends Activity implements
 
     }
 
-    //Returns the current timestamp this is the id in Group.java
+   /* //Returns the current timestamp this is the id in Group.java
     public String GetCurrTimeStamp() {
         java.util.Date date = new java.util.Date();
         return date.toString();
-    }
+    }*/
 }
 
 
