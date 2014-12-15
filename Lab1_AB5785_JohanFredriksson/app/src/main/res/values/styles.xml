@@ -12,7 +12,7 @@
     <style name="btn">
        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">50dp</item>
+        <item name="android:layout_marginTop">10dp</item>
         <item name="android:height">100dp</item>
         <item name="android:textSize">30dp</item>
         <item name="android:background">#D7C5E0</item>
@@ -51,7 +51,7 @@
     <style name="lstView">
         <item name="android:background">#A3A375</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_marginTop">10dp</item>
 
     </style>

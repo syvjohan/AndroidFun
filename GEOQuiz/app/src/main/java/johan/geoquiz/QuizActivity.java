@@ -1,20 +1,34 @@
 package johan.geoquiz;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class QuizActivity extends Activity {
     private Button mTrueButton;
     private Button mFalseButton;
 
+    Button btnClickMe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        Context context = this;
+        String desc = context.getResources().getString(R.string.myDescription);
+
+        Log.e("LENGHT:", "" + Toast.LENGTH_LONG);
+
+
+
 
         mTrueButton = (Button)findViewById(R.id.true_button);
         mFalseButton = (Button)findViewById(R.id.false_button);

@@ -6,5 +6,8 @@
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="menu_settings">Settings</string>
+    <string name="btn_clickMe">Click Me</string>
+    <string name="action_settings">Settings</string>
+    <string name="myDescription">Detta är min description</string>
 
 </resources>
