@@ -1,4 +1,4 @@
-package johan.geoquiz;
+package com.example.johan.geoquiz;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

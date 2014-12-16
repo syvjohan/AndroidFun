@@ -5,26 +5,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-
-import com.example.johan.laboration1_ab5785.Fragment.AboutFragment;
 import com.example.johan.laboration1_ab5785.Fragment.ChatFragment;
 import com.example.johan.laboration1_ab5785.Fragment.GroupFragment;
-import com.example.johan.laboration1_ab5785.Group;
-import com.example.johan.laboration1_ab5785.GroupAdapter;
 import com.example.johan.laboration1_ab5785.R;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
-import java.security.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by johan on 11/24/2014.
@@ -34,6 +20,7 @@ public class ChatActivity extends Activity implements
         GroupFragment.OnFragmentInteractionListener
 
 {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

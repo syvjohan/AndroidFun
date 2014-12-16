@@ -3,6 +3,7 @@ package johan.lab1_ab5785_johanfredriksson.Activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import johan.lab1_ab5785_johanfredriksson.Fragment.FragmentLogin;
 import johan.lab1_ab5785_johanfredriksson.Fragment.FragmentMenu;
 import johan.lab1_ab5785_johanfredriksson.Fragment.FragmentRegistration;
 import johan.lab1_ab5785_johanfredriksson.R;
@@ -18,32 +20,18 @@ import johan.lab1_ab5785_johanfredriksson.R;
 /**
  * Created by johan on 2014-11-23.
  */
-public class StartMenuActivity extends Activity {
-    Button btnLogin, btnRegisterNewUser;
+public class StartMenuActivity extends Activity implements FragmentLogin.OnFragmentInteractionListener {
+    Button btnRegisterNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startmenu_layout);
 
-        btnLogin = (Button)findViewById(R.id.btn_login);
+
         btnRegisterNewUser = (Button)findViewById(R.id.btn_register_new_user);
 
-        //Login fragment
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-
-                FragmentMenu fMenu = new FragmentMenu();
-                ft.replace(R.id.frag_startmenu, fMenu);
-                ft.addToBackStack("frag login");
-                ft.commit();
-                Log.d("login","login btn was pressed");
-            }
-        });
 
         //Register fragment
         btnRegisterNewUser.setOnClickListener(new View.OnClickListener() {
@@ -87,5 +75,10 @@ public class StartMenuActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

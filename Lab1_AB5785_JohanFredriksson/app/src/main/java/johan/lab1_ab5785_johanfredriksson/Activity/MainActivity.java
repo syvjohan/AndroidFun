@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 
         FragmentStartMenu  fStartMenu = new FragmentStartMenu();
         ft.replace(R.id.canvas, fStartMenu);
-        ft.addToBackStack("frag start menu");
+        //ft.addToBackStack("frag start menu");
         ft.commit();
 
         //Call next activity.

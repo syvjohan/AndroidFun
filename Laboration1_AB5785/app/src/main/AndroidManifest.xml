@@ -27,7 +27,7 @@
         <!-- Main activity -->
         <activity
             android:name="com.example.johan.laboration1_ab5785.Activity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="MainActivity" >
         </activity>
 
         <!-- Sub Main activity-->

@@ -1,6 +1,7 @@
 package com.example.johan.firstapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,12 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
+import com.example.johan.firstapplication.SecondActivity.SecondActivity;
+
 public class MainActivity extends Activity {
 
     private Button btnTrue;
     private Button btnFalse;
-
-
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,7 @@ public class MainActivity extends Activity {
 
         btnFalse = (Button)findViewById(R.id.btn_false);
         btnTrue = (Button)findViewById(R.id.btn_true);
+context = this;
 
         btnTrue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,8 +40,6 @@ public class MainActivity extends Activity {
                 CharSequence msg = "Yeay! true was pressed";
                 Toast.makeText(context, msg, duration).show();
 
-
-
                 Log.e("true", "true button was pressed");
             }
         });
@@ -47,14 +48,18 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //showOnClick();
-              Context context = getApplicationContext();
-               int duration = Toast.LENGTH_SHORT;
+
+             /*  int duration = Toast.LENGTH_SHORT;
                CharSequence msg = "Yeay! false was pressed";
-               Toast.makeText(context, msg, duration).show();
+               Toast.makeText(context, msg, duration).show();*/
+
+                Intent intent = new Intent(context, SecondActivity.class);
+                ((MainActivity)context).startActivity(intent);
 
                Log.e("false","false button was pressed");
             }
         });
+
     }
 
     @Override

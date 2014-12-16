@@ -39,6 +39,7 @@ public class LoginFragment extends Fragment {
 	private Button GotoRegisterBtnClick;
 	private Button GotoAboutBtnClick;
 	private Button LoginBtnClick;
+    private Button GotoRegister;
 
 	private static final String FIREBASE_URL ="https://luminous-heat-420.firebaseio.com";
 	private Firebase firebaseRef;
@@ -89,19 +90,7 @@ public class LoginFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-		// go to a new fragment
-		GotoRegisterBtnClick = (Button) view.findViewById(R.id.btn_goto_register);
-		GotoRegisterBtnClick.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				RegisterFragment fragment = RegisterFragment.newInstance("", "");
-				FragmentManager fM = getFragmentManager();
-				FragmentTransaction fT = fM.beginTransaction();
-				fT.replace(R.id.container, fragment, null);
-				fT.addToBackStack("goto register");
-				fT.commit();
-			}
-		});
+
 
 		// go to a new fragment
 		GotoAboutBtnClick = (Button) view.findViewById(R.id.btn_about);
@@ -117,13 +106,26 @@ public class LoginFragment extends Fragment {
 			}
 		});
 
+        GotoRegisterBtnClick = (Button) view.findViewById(R.id.btn_goto_register);
+        GotoRegisterBtnClick.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterFragment fragment = RegisterFragment.newInstance("", "");
+                FragmentManager fM = getFragmentManager();
+                FragmentTransaction fT = fM.beginTransaction();
+                fT.replace(R.id.container, fragment, null);
+                fT.addToBackStack("got to register");
+                fT.commit();
+            }
+        }));
+
 	    LoginBtnClick = (Button)view.findViewById(R.id.btn_login);
 		LoginBtnClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
-                final EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
-                Log.d(editPwd.toString(), editName.toString());
+                EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
+                EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
+
                 //Authenticate the user
                 firebaseRef.authWithPassword(editName.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
                     @Override
