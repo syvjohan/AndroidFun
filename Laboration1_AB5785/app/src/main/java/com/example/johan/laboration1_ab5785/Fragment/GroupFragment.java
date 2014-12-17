@@ -26,7 +26,9 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -112,8 +114,12 @@ public class GroupFragment extends ListFragment {
                         groupList);
                     setListAdapter((android.widget.ListAdapter) groupList);
                 }
-                Group newGroup = new Group(dataSnapshot.getKey(), (String) dataSnapshot.child("name").getValue());
+                Group newGroup = new Group(dataSnapshot.child("id").getName(), (String) dataSnapshot.child("name").getValue());
                 groupList.add(newGroup);
+
+               /* Map<String,String> m=new LinkedHashMap<String,String>();
+                for(Map.Entry<String,String> entry: m.entrySet())
+                    System.out.println(entry.getKey() + ": " + entry.getValue());*/
             }
 
 
