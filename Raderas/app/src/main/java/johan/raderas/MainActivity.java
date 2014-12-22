@@ -19,6 +19,7 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -32,25 +33,26 @@ public class MainActivity extends ActionBarActivity {
         String FIREBASE_URL = "https://luminous-heat-420.firebaseio.com/";
         Firebase firebase = new Firebase(FIREBASE_URL);
 
-        CreateInfo(firebase);
+        ReadData(firebase);
+        CreateNewGroup(firebase);
         //CreateNewPost(firebase);
         //UpdateInfo(firebase);
-        ReadData(firebase);
+
 
     }
 
-    public void CreateInfo(Firebase firebase) {
+    public void CreateNewGroup(Firebase firebaseRef) {
+        String name = "alans grupp";
+        String id = firebaseRef.push().getKey();
 
-        Group alan = new Group("Alan Turing", "1");
-        Group gracehop = new Group("Grace Hopper", "2");
+        Group grupp1 = new Group(name, id);
 
-        Firebase userRef = firebase.child("users");
+        Firebase groupRef = firebaseRef.child("groups");
 
-        Map<String, Group> users = new HashMap<String, Group>();
-        users.put("Alan", alan);
-        users.put("Gracehop", gracehop);
+        Map<String,Object> group = new HashMap<String,Object>();
+        group.put(id, grupp1);
 
-        firebase.push().setValue(users, new Firebase.CompletionListener() {
+        firebaseRef.setValue(group, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
@@ -67,12 +69,11 @@ public class MainActivity extends ActionBarActivity {
         ListView view = (ListView) findViewById(R.id.lstView);
         ArrayList<String> arrList = new ArrayList<>();
 
-        for (String key : newPost.keySet()) {
+        /*for (String key : newPost.keySet()) {
             arrList.add(key);
-        }
+        }*/
 
-        //arrList.add(newPost.get("alan").toString());
-        //arrList.add(newPost.get("gracehop").toString());
+        arrList.add(newPost.get("name").toString());
 
         ListAdapter arrAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrList);
 

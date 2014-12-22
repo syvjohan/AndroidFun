@@ -8,13 +8,13 @@
         android:id="@+id/group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="name"/>
+        android:text="grupp 1"/>
 
     <TextView
         android:id="@+id/group_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="username"
-        android:layout_below="@+id/student_name"/>
+        android:text="id nummer"
+        android:layout_below="@+id/group_name"/>
 
 </LinearLayout>

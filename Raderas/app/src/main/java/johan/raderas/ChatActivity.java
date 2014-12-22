@@ -2,6 +2,7 @@ package johan.raderas;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -30,24 +31,28 @@ public class ChatActivity extends ActionBarActivity {
         String FIREBASE_URL = "https://luminous-heat-420.firebaseio.com/";
         Firebase firebaseRef = new Firebase(FIREBASE_URL);
 
-        //ReadData(firebaseRef);
-        CreateInfo(firebaseRef);
+        ReadData(firebaseRef);
+        CreateNewMessage(firebaseRef);
     }
 
-    public void CreateInfo(Firebase firebase) {
-        String from = "Alan";
-        String message = "Hej på dig";
-        String time = "12:54";
+    public void CreateNewMessage(Firebase firebaseRef) {
+        String from = "";
+        String message = "";
+        String time = "";
+        String id = "";
 
-        Chat chatGroup = new Chat(from, message, time);
-        chatGroup.getTime();
+        ChatMessage cm = new ChatMessage(from, message, time, id);
 
-        Firebase userRef = firebase.child("Groups");
+        time = cm.getTime();
+        id = firebaseRef.push().getKey();
+        message = findViewById(R.id.newmsg).toString();
+        from = cm.getFrom();
 
-        Map<String, Chat> chat = new HashMap<String, Chat>();
-        chat.put("fffff", chatGroup);
+        Map<String, Object> chatMessage = new HashMap<String, Object>();
+        chatMessage.put(id, cm);
+        //firebaseRef.updateChildren(chatMessage);
 
-        firebase.push().setValue(chat, new Firebase.CompletionListener() {
+        firebaseRef.push().setValue(chatMessage, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
@@ -103,12 +108,11 @@ public class ChatActivity extends ActionBarActivity {
         ListView view = (ListView) findViewById(R.id.lstView);
         ArrayList<String> arrList = new ArrayList<>();
 
-        for (String key : newPost.keySet()) {
+        /*for (String key : newPost.keySet()) {
             arrList.add(key);
-        }
+        }*/
 
-        //arrList.add(newPost.get("alan").toString());
-        //arrList.add(newPost.get("gracehop").toString());
+        arrList.add(newPost.get("message").toString());
 
         ListAdapter arrAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrList);
 
