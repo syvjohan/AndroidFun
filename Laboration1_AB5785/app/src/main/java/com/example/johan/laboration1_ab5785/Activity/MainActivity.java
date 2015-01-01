@@ -3,19 +3,12 @@ package com.example.johan.laboration1_ab5785.Activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
 
 import com.example.johan.laboration1_ab5785.Fragment.AboutFragment;
 import com.example.johan.laboration1_ab5785.Fragment.LoginFragment;

@@ -11,15 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -33,9 +32,8 @@ public class MainActivity extends ActionBarActivity {
         String FIREBASE_URL = "https://luminous-heat-420.firebaseio.com/";
         Firebase firebase = new Firebase(FIREBASE_URL);
 
-        ReadData(firebase);
         CreateNewGroup(firebase);
-        //CreateNewPost(firebase);
+        ReadData(firebase);
         //UpdateInfo(firebase);
 
 
@@ -45,35 +43,21 @@ public class MainActivity extends ActionBarActivity {
         String name = "alans grupp";
         String id = firebaseRef.push().getKey();
 
-        Group grupp1 = new Group(name, id);
+        if ((!name.isEmpty() && !id.isEmpty())) {
+            Firebase groupID = firebaseRef.child("id");
+            groupID.setValue(id);
 
-        Firebase groupRef = firebaseRef.child("groups");
-
-        Map<String,Object> group = new HashMap<String,Object>();
-        group.put(id, grupp1);
-
-        firebaseRef.setValue(group, new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                if (firebaseError != null) {
-                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
-                } else {
-                    System.out.println("Data saved successfully.");
-                }
-            }
-        });
+            Firebase groupName = firebaseRef.child("name");
+            groupName.setValue(name);
+        }
     }
 
-    public void AddDataToListView(Map<String, Object> newPost) {
+    public void AddDataToListView(String groupName) {
 
         ListView view = (ListView) findViewById(R.id.lstView);
-        ArrayList<String> arrList = new ArrayList<>();
+        ArrayList<String> arrList = new ArrayList<String>();
 
-        /*for (String key : newPost.keySet()) {
-            arrList.add(key);
-        }*/
-
-        arrList.add(newPost.get("name").toString());
+        arrList.add(groupName);
 
         ListAdapter arrAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrList);
 
@@ -107,42 +91,26 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void ReadData(final Firebase firebase) {
-
-        firebase.addChildEventListener(new ChildEventListener() {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> newPost = (Map<String, Object>)dataSnapshot.getValue();
-                System.out.println("Author: " + newPost.get("alan"));
-                System.out.println("Title: " + newPost.get("gracehop"));
+            public void onDataChange(DataSnapshot snapshot) {
+                Map<String, Object> newPost = (Map<String, Object>) snapshot.getValue();
+                String groupName = newPost.get("name").toString();
 
-                AddDataToListView(newPost);
-
-                //TextView view = (TextView) findViewById(R.id.txt1);
-                //view.setText(newPost.get("alan").toString());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String title = (String) dataSnapshot.child("title").getValue();
-                System.out.println("The updated post title is " + title);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String title = (String) dataSnapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                if (!groupName.isEmpty()) {
+                    AddDataToListView(groupName);
+                    Log.d("Added new group to group list: ", groupName);
+                } else {
+                    Log.d("No group name could be found:", groupName);
+                }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                System.out.print("The read failed" + firebaseError.getMessage());
+                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
+
     }
 
     @Override

@@ -5,13 +5,13 @@
     tools:context="com.example.johan.laboration1_ab5785.Fragment.GroupFragment">
 
     <TextView
-        android:id="@+id/user_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:textColor="#343434"
-        android:textSize="12sp"
-        android:text="name"/>
+    android:id="@+id/user_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dip"
+    android:textColor="#343434"
+    android:textSize="12sp"
+    android:text="name"/>
 
     <TextView
         android:id="@+id/user_name"

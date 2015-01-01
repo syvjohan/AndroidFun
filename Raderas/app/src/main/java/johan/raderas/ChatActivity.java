@@ -1,11 +1,15 @@
 package johan.raderas;
 
+import android.app.DownloadManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -13,6 +17,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +25,9 @@ import java.util.Map;
 
 
 public class ChatActivity extends ActionBarActivity {
+
+    private ImageButton btnSend;
+    EditText editMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,66 +37,70 @@ public class ChatActivity extends ActionBarActivity {
         Firebase.setAndroidContext(this);
 
         String FIREBASE_URL = "https://luminous-heat-420.firebaseio.com/";
-        Firebase firebaseRef = new Firebase(FIREBASE_URL);
+        final Firebase firebaseRef = new Firebase(FIREBASE_URL);
 
-        ReadData(firebaseRef);
-        CreateNewMessage(firebaseRef);
-    }
-
-    public void CreateNewMessage(Firebase firebaseRef) {
-        String from = "";
-        String message = "";
-        String time = "";
-        String id = "";
-
-        ChatMessage cm = new ChatMessage(from, message, time, id);
-
-        time = cm.getTime();
-        id = firebaseRef.push().getKey();
-        message = findViewById(R.id.newmsg).toString();
-        from = cm.getFrom();
-
-        Map<String, Object> chatMessage = new HashMap<String, Object>();
-        chatMessage.put(id, cm);
-        //firebaseRef.updateChildren(chatMessage);
-
-        firebaseRef.push().setValue(chatMessage, new Firebase.CompletionListener() {
+        btnSend = (ImageButton)findViewById(R.id.btn_new_msg_send);
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                if (firebaseError != null) {
-                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
-                } else {
-                    System.out.println("Data saved successfully.");
-                }
+            public void onClick(View v) {
+                ReadData(firebaseRef);
+                CreateNewMessage(firebaseRef);
             }
         });
     }
 
-    public void ReadData(final Firebase firebase) {
+    public void CreateNewMessage(Firebase firebaseRef) {
+        ChatMessage cm = new ChatMessage("", "", "");
 
-        firebase.addChildEventListener(new ChildEventListener() {
+        editMsg = (EditText)findViewById(R.id.newmsg);
+
+        Firebase userRef = firebaseRef.child("message");
+        String from =  cm.getFrom();
+        String message = editMsg.getText().toString();
+        String time = cm.getTime();
+        String id =  firebaseRef.push().getKey();
+
+        cm = new ChatMessage(from, message, time);
+
+        Map<String, Object> chatMessage = new HashMap<>();
+        chatMessage.put(id, cm);
+
+        userRef.setValue(chatMessage, new Firebase.CompletionListener() {
+                @Override
+                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                    if (firebaseError != null) {
+                        System.out.println("ChatActivity Data could not be saved. " + firebaseError.getMessage());
+                    } else {
+                        System.out.println("ChatActivity Data saved successfully.");
+                    }
+            }
+        });
+    }
+
+    public void ReadData(final Firebase firebaseRef) {
+        firebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> newPost = (Map<String, Object>) dataSnapshot.getValue();
-                System.out.println("Author: " + newPost.get("alan"));
-                System.out.println("Title: " + newPost.get("gracehop"));
+                ChatMessage newChatMessage = new ChatMessage(
+                        (String) dataSnapshot.child("from").getValue(),
+                        (String) dataSnapshot.child("message").getValue(), (String) dataSnapshot.child("id").getValue());
 
-                AddDataToListView(newPost);
+                Query q = firebaseRef.orderByChild("id");
+                dataSnapshot.getValue();
 
-                //TextView view = (TextView) findViewById(R.id.txt1);
-                //view.setText(newPost.get("alan").toString());
+                AddDataToListView(newChatMessage);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 String title = (String) dataSnapshot.child("title").getValue();
-                System.out.println("The updated post title is " + title);
+                //System.out.println("The updated post title is " + title);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String title = (String) dataSnapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
+                //System.out.println("The blog post titled " + title + " has been deleted");
             }
 
             @Override
@@ -98,26 +110,23 @@ public class ChatActivity extends ActionBarActivity {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                System.out.print("The read failed" + firebaseError.getMessage());
+                //System.out.print("The read failed" + firebaseError.getMessage());
             }
         });
     }
 
-    public void AddDataToListView(Map<String, Object> newPost) {
+    public void AddDataToListView(ChatMessage newChatMessage) {
 
-        ListView view = (ListView) findViewById(R.id.lstView);
+        ListView view = (ListView) findViewById(R.id.list_item);
         ArrayList<String> arrList = new ArrayList<>();
 
-        /*for (String key : newPost.keySet()) {
-            arrList.add(key);
-        }*/
-
-        arrList.add(newPost.get("message").toString());
+        String message = newChatMessage.getMessage();
+        arrList.add(message);
+        System.out.println(message);
 
         ListAdapter arrAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrList);
 
         view.setAdapter(arrAdapter);
-
     }
 
     @Override

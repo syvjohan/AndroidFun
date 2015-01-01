@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="johan.laboration2_ab5785.chat_app.Fragment.GroupFragment">
+
+    <EditText
+        android:id="@+id/txtgroup_name"
+        style="@style/editTextView"
+        android:text="@string/group_startNewGroup"
+        android:inputType="textPersonName"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/btn_group_createNewGroup"
+        android:text="@string/btn_createNewGroup"
+        style="@style/btn"
+        android:layout_below="@+id/txtgroup_name"/>
+
+    <ListView
+        style="@style/lstView"
+        android:id="@+id/group_list"
+        android:layout_below="@id/btn_group_createNewGroup"
+        android:layout_marginTop="30dp" />
+
+</RelativeLayout>

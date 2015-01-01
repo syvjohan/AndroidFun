@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="johan.laboration2_ab5785.chat_app.Fragment.RegisterFragment"
+    android:orientation="vertical"
+    android:weightSum="1" >
+
+    <EditText
+        android:id="@+id/reg_txtUsername"
+        style="@style/editTextView"
+        android:text="@string/reg_txtUsername"
+        android:inputType="textPersonName" />
+    <!--android:hint="@string/reg_txtUsername"-->
+
+    <EditText
+        android:id="@+id/reg_txtPassword"
+        style="@style/editTextView"
+        android:text="@string/reg_txtPassword"
+        android:inputType="textPassword"/>
+    <!--android:hint="@string/reg_txtPassword"-->
+
+
+    <Button
+        android:id="@+id/btn_do_register"
+        style="@style/btn"
+        android:text="@string/btn_register" />
+
+    <TextView
+        android:id="@+id/err_reg"
+        style="@style/error_msg"
+        android:text="@string/err_reg"
+        android:visibility="invisible" />
+
+</LinearLayout>

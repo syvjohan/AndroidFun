@@ -7,22 +7,15 @@ public class ChatMessage {
     String from;
     String message;
     String time;
-    String id;
 
     public ChatMessage() {}
 
-    public ChatMessage(String from, String message, String time, String id) {
+    public ChatMessage(String from, String message, String time) {
         this.from = from;
         this.message = message;
         this.time = time;
-        this.id = id;
     }
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
+
     public String getFrom() {
         return this.from;
     }
