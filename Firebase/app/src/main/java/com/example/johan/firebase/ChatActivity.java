@@ -4,22 +4,36 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ChatActivity extends ActionBarActivity {
 
-    class Message {
-        String from = "";
-        String msg = "";
-        String time = "";
+    public String GetGroupID() {
+        Bundle b = getIntent().getExtras();
+        String groupID;
+        if (b != null) {
+            groupID = b.getString("groupID");
+            return groupID;
+        }
+
+        return "";
     }
 
     @Override
@@ -36,19 +50,77 @@ public class ChatActivity extends ActionBarActivity {
         Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
         CreateNewChatMessage(firebaserootRef);
+        CreateNewChatMessage2(firebaserootRef);
     }
 
-    public void CreateNewChatMessage(Firebase firebaseRoot) {
+    public void CreateNewChatMessage(Firebase firebaseRootRef) {
         //Message
         Message message = new Message();
+        message.msg = "hej på dig min vän!";
+        message.from = "dito";
+        message.time = "14:44";
 
-        /*Firebase firebaseParentMsg = firebaseGroup.child("messages");
+        Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
 
-        firebaseMsg.child("from").setValue(message.msg);
-        firebaseMsg.child("message").setValue(message.from);
-        firebaseMsg.child("time").setValue(message.time);*/
+        firebaseMsg.child("from").setValue(message.from);
+        firebaseMsg.child("message").setValue(message.msg);
+        firebaseMsg.child("time").setValue(message.time);
     }
+
+    public void CreateNewChatMessage2(Firebase firebaseRootRef) {
+        //Message
+        Message message = new Message();
+        message.msg = "hej på dig med!!";
+        message.from = "nisse";
+        message.time = "14:55";
+
+        Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
+        Firebase firebaseMsg = firebaseParentMsg.push();
+
+        firebaseMsg.child("from").setValue(message.from);
+        firebaseMsg.child("message").setValue(message.msg);
+        firebaseMsg.child("time").setValue(message.time);
+    }
+
+    public void ReadChatMessages(final Firebase firebaseRootRef) {
+        firebaseRootRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String s) {
+
+                String name = (String) snapshot.child("messages").getValue();
+
+                //AddToLstViewGroup(name);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot snapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot snapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot snapshot, String s) {
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+    }
+
+    public void AddToLstViewGroup(String name) {
+        groupNameList.add(name);
+
+        lstViewGroup = (ListView)findViewById(R.id.listView_group);
+
+        ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                android.R.id.text1, groupNameList);
+
+        lstViewGroup.setAdapter(groupAdapter);
+
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

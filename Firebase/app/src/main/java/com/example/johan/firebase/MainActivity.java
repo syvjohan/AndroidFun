@@ -17,18 +17,13 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
-import com.example.johan.firebase.ChatActivity;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    class Group {
-        String groupName = "";
-        String groupId = "";
-    };
-
     static ArrayList<String> groupNameList = new ArrayList<String>();
     ListView lstViewGroup;
+    String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +33,11 @@ public class MainActivity extends ActionBarActivity {
         Firebase.setAndroidContext(this);
         Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
-        CreateNewGroup(firebaserootRef);
-        CreateNewGroup2(firebaserootRef);
+        groupId = CreateNewGroup(firebaserootRef);
         ReadData(firebaserootRef);
     }
 
-    public void CreateNewGroup(Firebase firebaseRootRef) {
+    public String CreateNewGroup(Firebase firebaseRootRef) {
         Group group = new Group();
 
         Firebase firebaseGroup = firebaseRootRef.child("").push();
@@ -56,18 +50,19 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-        /*Message message = new Message();
+        Message message = new Message();
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
-        Firebase firebaseMsg = firebaseParentMsg.push();
+        /*Firebase firebaseMsg = firebaseParentMsg.push();
 
         firebaseMsg.child("from").setValue(message.msg);
         firebaseMsg.child("message").setValue(message.from);
         firebaseMsg.child("time").setValue(message.time);*/
 
+        return group.groupId;
     }
 
-    public void CreateNewGroup2(Firebase firebaseRootRef) {
+    public String CreateNewGroup2(Firebase firebaseRootRef) {
 
         Group group = new Group();
 
@@ -81,15 +76,16 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-       /* Message message = new Message();
+        Message message = new Message();
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
-        Firebase firebaseMsg = firebaseParentMsg.push();
+       /* Firebase firebaseMsg = firebaseParentMsg.push();
 
         firebaseMsg.child("from").setValue(message.msg);
         firebaseMsg.child("message").setValue(message.from);
         firebaseMsg.child("time").setValue(message.time);*/
 
+        return group.groupId;
     }
 
     public void AddToLstViewGroup(String name) {
@@ -158,15 +154,18 @@ public class MainActivity extends ActionBarActivity {
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            intent.putExtra("groupID",groupId);
             startActivity(intent);
+            finish();
         }
     };
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            intent.putExtra("groupID",groupId);
             startActivity(intent);
             return true;
         }
