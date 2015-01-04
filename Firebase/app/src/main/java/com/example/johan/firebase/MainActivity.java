@@ -1,11 +1,13 @@
 package com.example.johan.firebase;
 
-import android.os.DropBoxManager;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,11 +16,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import com.example.johan.firebase.ChatActivity;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,13 +27,8 @@ public class MainActivity extends ActionBarActivity {
         String groupId = "";
     };
 
-    class Message {
-        String from = "";
-        String msg = "";
-        String time = "";
-    }
-
     static ArrayList<String> groupNameList = new ArrayList<String>();
+    ListView lstViewGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +56,14 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-        Message message = new Message();
+        /*Message message = new Message();
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
 
         firebaseMsg.child("from").setValue(message.msg);
         firebaseMsg.child("message").setValue(message.from);
-        firebaseMsg.child("time").setValue(message.time);
+        firebaseMsg.child("time").setValue(message.time);*/
 
     }
 
@@ -87,26 +81,30 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-        Message message = new Message();
+       /* Message message = new Message();
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
 
         firebaseMsg.child("from").setValue(message.msg);
         firebaseMsg.child("message").setValue(message.from);
-        firebaseMsg.child("time").setValue(message.time);
+        firebaseMsg.child("time").setValue(message.time);*/
 
     }
 
     public void AddToLstViewGroup(String name) {
         groupNameList.add(name);
 
-        ListView lstViewGroup = (ListView)findViewById(R.id.listView_group);
+        lstViewGroup = (ListView)findViewById(R.id.listView_group);
 
         ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                 android.R.id.text1, groupNameList);
 
         lstViewGroup.setAdapter(groupAdapter);
+
+        lstViewGroup.setOnItemClickListener(onItemClickListener);
+        lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
+
     }
 
     public void ReadData(final Firebase firebaseRootRef) {
@@ -156,4 +154,21 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            startActivity(intent);
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            startActivity(intent);
+            return true;
+        }
+    };
 }

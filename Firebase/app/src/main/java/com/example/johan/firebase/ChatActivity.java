@@ -16,23 +16,38 @@ import com.firebase.client.Firebase;
 
 public class ChatActivity extends ActionBarActivity {
 
+    class Message {
+        String from = "";
+        String msg = "";
+        String time = "";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.fragment_chat);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.chat_container, new PlaceholderFragment())
                     .commit();
         }
+
+        Firebase.setAndroidContext(this);
+        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+
+        CreateNewChatMessage(firebaserootRef);
     }
 
-    public void CreateNewChatMessage() {
+    public void CreateNewChatMessage(Firebase firebaseRoot) {
+        //Message
+        Message message = new Message();
+
         /*Firebase firebaseParentMsg = firebaseGroup.child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
-        firebaseMsg.child("from").setValue("from");
-        firebaseMsg.child("message").setValue("message here");
-        firebaseMsg.child("time").setValue("time here");*/
+
+        firebaseMsg.child("from").setValue(message.msg);
+        firebaseMsg.child("message").setValue(message.from);
+        firebaseMsg.child("time").setValue(message.time);*/
     }
 
     @Override
