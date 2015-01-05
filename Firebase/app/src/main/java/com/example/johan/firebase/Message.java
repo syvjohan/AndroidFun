@@ -7,6 +7,12 @@ import com.firebase.client.Firebase;
  */
 public class Message {
     String from = "";
-    String msg = "";
+    String message = "";
     String time = "";
+
+    public Message(String from, String message, String time) {
+        this.from = from;
+        this.time = time;
+        this.message = message;
+    }
 }

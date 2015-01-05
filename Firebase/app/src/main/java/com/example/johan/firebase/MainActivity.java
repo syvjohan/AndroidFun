@@ -50,7 +50,10 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-        Message message = new Message();
+        String from = "";
+        String msg = "";
+        String time = "";
+        Message message = new Message(from, msg, time);
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
         /*Firebase firebaseMsg = firebaseParentMsg.push();
@@ -76,7 +79,10 @@ public class MainActivity extends ActionBarActivity {
         firebaseGroup.child("name").setValue(group.groupName);
 
         //Message
-        Message message = new Message();
+        String from = "";
+        String msg = "";
+        String time = "";
+        Message message = new Message(from, msg, time);
 
         Firebase firebaseParentMsg = firebaseGroup.child("messages");
        /* Firebase firebaseMsg = firebaseParentMsg.push();

@@ -13,6 +13,30 @@
         android:id="@+id/listView_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/message_from"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/listView_chat"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+    android:id="@+id/message_time"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="108dp" />
+
+    <TextView
+    android:id="@+id/message_message"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:text="message"
+    android:layout_marginTop="119dp"  />
 
 </RelativeLayout>
