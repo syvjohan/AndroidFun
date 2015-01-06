@@ -23,11 +23,11 @@ import com.firebase.client.FirebaseError;
 
 
 import java.util.ArrayList;
-
+import java.util.Map;
 
 
 public class ChatActivity extends ActionBarActivity {
-    static ArrayList<Message> chatMsgList = new ArrayList<>();
+    static ArrayList<Map<String, Message>> chatMsgList = new ArrayList<>();
     ListView lstViewChat;
 
     public String GetGroupID() {
@@ -63,21 +63,25 @@ public class ChatActivity extends ActionBarActivity {
         String msg = "hej på dig min vän!";
         String from = "dito";
         String time = "14:44";
+        String id = "";
         //Message
         Message message = new Message(from, msg, time);
+        if (GetGroupID() != "" || GetGroupID() != null) {
+            Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
+            Firebase firebaseMsg = firebaseParentMsg.push();
 
-        Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
-        Firebase firebaseMsg = firebaseParentMsg.push();
-
-        firebaseMsg.child("from").setValue(message.from);
-        firebaseMsg.child("message").setValue(message.message);
-        firebaseMsg.child("time").setValue(message.time);
+            id = firebaseParentMsg.getKey();
+            firebaseMsg.child("from").setValue(message.from);
+            firebaseMsg.child("message").setValue(message.message);
+            firebaseMsg.child("time").setValue(message.time);
+        }
     }
 
     public void CreateNewChatMessage2(Firebase firebaseRootRef) {
         String msg = "hej på dig med!!";
         String from = "nisse";
         String time = "14:55";
+        String id = "";
         //Message
         Message message = new Message(from, msg, time);
 
@@ -85,6 +89,7 @@ public class ChatActivity extends ActionBarActivity {
         Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
 
+        id = firebaseParentMsg.getKey();
         firebaseMsg.child("from").setValue(message.from);
         firebaseMsg.child("message").setValue(message.message);
         firebaseMsg.child("time").setValue(message.time);
@@ -95,14 +100,16 @@ public class ChatActivity extends ActionBarActivity {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
 
-               Message newMessage = new Message((String) snapshot.child("from").getValue(),
-                       (String) snapshot.child("message").getValue(),
-                       (String) snapshot.child("time").getValue());
 
+              /*Message newMessage = new Message(
+                       snapshot.child("messages").child("id").getValue().toString(),
+                       snapshot.child("messages").child("from").getValue().toString(),
+                       snapshot.child("messages").child("message").getValue().toString(),
+                       snapshot.child("messages").child("time").getValue().toString());*/
 
-                System.out.println(newMessage);
+               Map<String, Message> newMessage = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
 
-                AddToLstViewGroup(newMessage);
+              AddToLstViewGroup(newMessage);
             }
 
             @Override
@@ -120,7 +127,7 @@ public class ChatActivity extends ActionBarActivity {
         });
     }
 
-    public void AddToLstViewGroup(Message newMessage) {
+    public void AddToLstViewGroup(Map<String, Message> newMessage) {
         chatMsgList.add(newMessage);
 
         lstViewChat = (ListView)findViewById(R.id.listView_chat);
@@ -169,15 +176,16 @@ public class ChatActivity extends ActionBarActivity {
         }
     }
 
-    public class ChatAdapter extends ArrayAdapter<Message> {
-        public ChatAdapter(Context context, ArrayList<Message> users) {
-            super(context, 0, users);
+    public class ChatAdapter extends ArrayAdapter<Map<String, Message>> {
+        public ChatAdapter(Context context, ArrayList<Map<String, Message>> messages) {
+            super(context, 0, messages);
+            //System.out.println(messages);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Get the data item for this position
-            Message message = getItem(position);
+            Map<String, Message> message = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_chat, parent, false);
@@ -187,9 +195,9 @@ public class ChatActivity extends ActionBarActivity {
             TextView chatMessage = (TextView) convertView.findViewById(R.id.message_message);
             TextView chatTime = (TextView) convertView.findViewById(R.id.message_time);
             // Populate the data into the template view using the data object
-            chatFrom.setText(message.from);
-            chatMessage.setText(message.message);
-            chatTime.setText((message.time));
+            chatFrom.setText((CharSequence) message.get("from"));
+            chatMessage.setText((CharSequence) message.get("message"));
+            chatTime.setText((CharSequence) message.get("time"));
             // Return the completed view to render on screen
             return convertView;
         }
