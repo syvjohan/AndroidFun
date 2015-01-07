@@ -29,6 +29,7 @@ import java.util.Map;
 public class ChatActivity extends ActionBarActivity {
     static ArrayList<Map<String, Message>> chatMsgList = new ArrayList<>();
     ListView lstViewChat;
+    CharSequence username = "Mig";
 
     public String GetGroupID() {
         Bundle b = getIntent().getExtras();
@@ -55,13 +56,13 @@ public class ChatActivity extends ActionBarActivity {
         Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
         CreateNewChatMessage(firebaserootRef);
-        //CreateNewChatMessage2(firebaserootRef);
+        CreateNewChatMessage2(firebaserootRef);
         ReadChatMessages(firebaserootRef);
     }
 
     public void CreateNewChatMessage(Firebase firebaseRootRef) {
         String msg = "hej på dig min vän!";
-        String from = "dito";
+        String from = username.toString();
         String time = "14:44";
         String id = "";
         //Message
@@ -85,7 +86,6 @@ public class ChatActivity extends ActionBarActivity {
         //Message
         Message message = new Message(from, msg, time);
 
-
         Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
         Firebase firebaseMsg = firebaseParentMsg.push();
 
@@ -99,13 +99,6 @@ public class ChatActivity extends ActionBarActivity {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-
-
-              /*Message newMessage = new Message(
-                       snapshot.child("messages").child("id").getValue().toString(),
-                       snapshot.child("messages").child("from").getValue().toString(),
-                       snapshot.child("messages").child("message").getValue().toString(),
-                       snapshot.child("messages").child("time").getValue().toString());*/
 
                Map<String, Message> newMessage = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
 
@@ -130,7 +123,7 @@ public class ChatActivity extends ActionBarActivity {
     public void AddToLstViewGroup(Map<String, Message> newMessage) {
         chatMsgList.add(newMessage);
 
-        lstViewChat = (ListView)findViewById(R.id.listView_chat);
+        lstViewChat = (ListView)findViewById(R.id.listView_chat_message_me);
 
         ChatAdapter chatAdapter = new ChatAdapter(this, chatMsgList);
 
@@ -179,25 +172,47 @@ public class ChatActivity extends ActionBarActivity {
     public class ChatAdapter extends ArrayAdapter<Map<String, Message>> {
         public ChatAdapter(Context context, ArrayList<Map<String, Message>> messages) {
             super(context, 0, messages);
-            //System.out.println(messages);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Get the data item for this position
             Map<String, Message> message = getItem(position);
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_chat, parent, false);
+
+
+            //Check who has sent the message me or someone else...
+            if (username.equals((CharSequence) message.get("from"))) {
+                // Check if an existing view is being reused, otherwise inflate the view
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_me, parent, false);
+                }
+
+                System.out.println(((CharSequence) message.get("from")));
+                TextView chatFrom = (TextView) convertView.findViewById(R.id.txt_message_me_from);
+                TextView chatMessage = (TextView) convertView.findViewById(R.id.txt_message_me_message);
+                TextView chatTime = (TextView) convertView.findViewById(R.id.txt_message_me_time);
+
+                // Populate the data into the template view using the data object
+                chatFrom.setText("From: " + (CharSequence) message.get("from"));
+                chatMessage.setText((CharSequence) message.get("message"));
+                chatTime.setText("Time: " + (CharSequence) message.get("time"));
+
+            } else {
+                // Check if an existing view is being reused, otherwise inflate the view
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_others, parent, false);
+                }
+
+                TextView chatFrom = (TextView) convertView.findViewById(R.id.txt_message_others_from);
+                TextView chatMessage = (TextView) convertView.findViewById(R.id.txt_message_others_message);
+                TextView chatTime = (TextView) convertView.findViewById(R.id.txt_message_others_time);
+
+                // Populate the data into the template view using the data object
+                chatFrom.setText("From: " + (CharSequence) message.get("from"));
+                chatMessage.setText((CharSequence) message.get("message"));
+                chatTime.setText("Time: " + (CharSequence) message.get("time"));
             }
-            // Lookup view for data population
-            TextView chatFrom = (TextView) convertView.findViewById(R.id.message_from);
-            TextView chatMessage = (TextView) convertView.findViewById(R.id.message_message);
-            TextView chatTime = (TextView) convertView.findViewById(R.id.message_time);
-            // Populate the data into the template view using the data object
-            chatFrom.setText((CharSequence) message.get("from"));
-            chatMessage.setText((CharSequence) message.get("message"));
-            chatTime.setText((CharSequence) message.get("time"));
+
             // Return the completed view to render on screen
             return convertView;
         }
