@@ -1,10 +1,13 @@
 package com.example.johan.firebase;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,15 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,6 +33,8 @@ public class ChatActivity extends ActionBarActivity {
     static ArrayList<Map<String, Message>> chatMsgList = new ArrayList<>();
     ListView lstViewChat;
     CharSequence username = "Mig";
+
+    Button btnSend;
 
     public String GetGroupID() {
         Bundle b = getIntent().getExtras();
@@ -53,22 +58,32 @@ public class ChatActivity extends ActionBarActivity {
         }
 
         Firebase.setAndroidContext(this);
-        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+        final Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
-        CreateNewChatMessage(firebaserootRef);
-        CreateNewChatMessage2(firebaserootRef);
         ReadChatMessages(firebaserootRef);
+
+        final EditText editMsg = (EditText) findViewById(R.id.txt_message_input);
+        btnSend = (Button) findViewById(R.id.btnSend);
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String textMsg = editMsg.getText().toString();
+                CreateNewMessage(firebaserootRef, textMsg);
+                }
+            };
+
+        //CreateNewChatMessage2(firebaserootRef);
     }
 
-    public void CreateNewChatMessage(Firebase firebaseRootRef) {
-        String msg = "hej på dig min vän!";
+    public void  CreateNewMessage(Firebase firebaserootRef, String textMsg) {
+        String msg = textMsg;
         String from = username.toString();
         String time = "14:44";
         String id = "";
         //Message
         Message message = new Message(from, msg, time);
         if (GetGroupID() != "" || GetGroupID() != null) {
-            Firebase firebaseParentMsg = firebaseRootRef.child(GetGroupID()).child("messages");
+            Firebase firebaseParentMsg = firebaserootRef.child(GetGroupID()).child("messages");
             Firebase firebaseMsg = firebaseParentMsg.push();
 
             id = firebaseParentMsg.getKey();
@@ -99,10 +114,11 @@ public class ChatActivity extends ActionBarActivity {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
+                if (snapshot.child("messages").getValue() != null) {
+                    Map<String, Message> newMessage = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
 
-               Map<String, Message> newMessage = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
-
-              AddToLstViewGroup(newMessage);
+                    AddToLstViewGroup(newMessage);
+                }
             }
 
             @Override
@@ -121,11 +137,16 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     public void AddToLstViewGroup(Map<String, Message> newMessage) {
+
         chatMsgList.add(newMessage);
 
-        lstViewChat = (ListView)findViewById(R.id.listView_chat_message_me);
-
         ChatAdapter chatAdapter = new ChatAdapter(this, chatMsgList);
+
+        if(chatAdapter.IsMsgFromMe(newMessage)) {
+            lstViewChat = (ListView)findViewById(R.id.listView_chat_message_me);
+        } else {
+            lstViewChat = (ListView)findViewById(R.id.listView_chat_message_others);
+        }
 
         lstViewChat.setAdapter(chatAdapter);
 
@@ -165,6 +186,7 @@ public class ChatActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+
             return rootView;
         }
     }
@@ -174,20 +196,24 @@ public class ChatActivity extends ActionBarActivity {
             super(context, 0, messages);
         }
 
+        public boolean IsMsgFromMe(Map<String, Message> message) {
+            boolean isSenderMe = username.equals((CharSequence) message.get("from"));
+            return isSenderMe;
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Get the data item for this position
             Map<String, Message> message = getItem(position);
 
-
             //Check who has sent the message me or someone else...
-            if (username.equals((CharSequence) message.get("from"))) {
+            if (IsMsgFromMe(message)) {
+                System.out.println("I did send the message");
                 // Check if an existing view is being reused, otherwise inflate the view
                 if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_me, parent, false);
                 }
 
-                System.out.println(((CharSequence) message.get("from")));
                 TextView chatFrom = (TextView) convertView.findViewById(R.id.txt_message_me_from);
                 TextView chatMessage = (TextView) convertView.findViewById(R.id.txt_message_me_message);
                 TextView chatTime = (TextView) convertView.findViewById(R.id.txt_message_me_time);
@@ -198,6 +224,7 @@ public class ChatActivity extends ActionBarActivity {
                 chatTime.setText("Time: " + (CharSequence) message.get("time"));
 
             } else {
+                System.out.println("Someone else send the message");
                 // Check if an existing view is being reused, otherwise inflate the view
                 if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_others, parent, false);
@@ -217,4 +244,5 @@ public class ChatActivity extends ActionBarActivity {
             return convertView;
         }
     }
+
 }

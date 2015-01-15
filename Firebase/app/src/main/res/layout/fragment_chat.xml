@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" />
 
         <ListView
-            android:id="@+id/listView_chat_others"
+            android:id="@+id/listView_chat_message_others"
             android:layout_width="0dp"
             android:layout_weight=".50"
             android:layout_margin="2dp"
@@ -37,15 +37,28 @@
         android:id="@+id/linear_bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/txt_message_input"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight=".75"
+            android:layout_margin="2dp"
             android:layout_height="100dp"
             android:hint = "write text here"
             android:textSize="15sp"
             android:background="#F8F8F8"/>
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:layout_margin="2dp"
+            android:layout_height="100dp"
+            android:textSize ="15sp"
+            android:background="#400000"
+            android:text="Send"/>
         </LinearLayout>
 
 </RelativeLayout>
