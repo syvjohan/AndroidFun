@@ -59,29 +59,6 @@ public class MainActivity extends ActionBarActivity {
         return group.groupId;
     }
 
-    public String CreateNewGroup2(Firebase firebaseRootRef) {
-
-        Group group = new Group();
-
-        Firebase firebaseGroup = firebaseRootRef.child("").push();
-        group.groupId = firebaseGroup.getKey();
-        group.groupName = "Jakobs grupp";
-        String empty = "";
-
-
-        firebaseGroup.child("id").setValue(group.groupId);
-        firebaseGroup.child("name").setValue(group.groupName);
-
-        Firebase firebaseParentMsg = firebaseGroup.child("messages");
-       /* Firebase firebaseMsg = firebaseParentMsg.push();
-
-        firebaseMsg.child("from").setValue(message.msg);
-        firebaseMsg.child("message").setValue(message.from);
-        firebaseMsg.child("time").setValue(message.time);*/
-
-        return group.groupId;
-    }
-
     public void AddToLstViewGroup(String name) {
         groupNameList.add(name);
 
