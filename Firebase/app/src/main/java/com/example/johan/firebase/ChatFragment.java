@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,11 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -46,6 +48,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     final Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
     static ArrayList<Map<String, Message>> chatMsgList = new ArrayList<>();
+    ArrayList<String> mesgKeyValues = new ArrayList<>();
+
     ListView lstViewChat;
     CharSequence username = "Mig";
 
@@ -117,48 +121,76 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     }
 
     public void  CreateNewMessage(Firebase firebaserootRef, String textMsg) {
+        Map<String, Message> chatMessages = new HashMap<>();
+
         String msg = textMsg;
         String from = username.toString();
         String time = "14:44";
         String id = "";
 
         //Message
-        Message message = new Message(from, msg, time);
         String groupID = GetGroupID();
 
         if (groupID != "") {
             Firebase firebaseParentMsg = firebaserootRef.child(groupID).child("messages");
             Firebase firebaseMsg = firebaseParentMsg.push();
 
-            id = firebaseParentMsg.getKey();
-            firebaseMsg.child("from").setValue(message.from);
-            firebaseMsg.child("message").setValue(message.message);
-            firebaseMsg.child("time").setValue(message.time);
+            Message cm = new Message(id, from, msg, time);
+
+            id = firebaseMsg.getKey();
+            firebaseMsg.child("from").setValue(cm.from);
+            firebaseMsg.child("message").setValue(cm.message);
+            firebaseMsg.child("time").setValue(cm.time);
+
+            chatMessages.put(id,cm);
+           // System.out.println(ChatMessages);
         }
 
         ReadChatMessages(firebaserootRef);
     }
 
-    public void ReadChatMessages(Firebase firebaseRootRef) {
+    public void ReadChatMessages(final Firebase firebaseRootRef) {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.child("messages").getValue() != null) {
-                    Map<String, Message> newMessage = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
 
-                    AddToLstViewGroup(newMessage);
+                    //Map<String, Message> groupMessages = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
+
+                    for (DataSnapshot c : snapshot.child("messages").getChildren()) {
+                        String key = c.getKey();
+
+                        Message newMessage = new Message();
+                        newMessage.from = (String) c.child("from").getValue();
+                        newMessage.message = (String) c.child("message").getValue();
+                        newMessage.time = (String) c.child("time").getValue();
+
+                        if (!chatMsgList.equals(key)) {
+                            mesgKeyValues.add(key);
+
+                            Map<String, Message> chatMessage = new HashMap<String, Message>();
+                            chatMessage.put(key, newMessage);
+
+                            AddToLstViewGroup(chatMessage);
+
+                            chatMessage.clear();
+                        }
+                    }
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot snapshot, String s) {
             }
+
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {
             }
+
             @Override
             public void onChildMoved(DataSnapshot snapshot, String s) {
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
@@ -166,6 +198,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     }
 
     public void AddToLstViewGroup(Map<String, Message> newMessage) {
+
+        System.out.println(newMessage);
         chatMsgList.add(newMessage);
 
         ChatAdapter chatAdapter = new ChatAdapter(getView().getContext(), chatMsgList);

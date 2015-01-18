@@ -13,16 +13,22 @@ public class Message {
 
     public Message() {}
 
-    public Message(String from, String message, String time) {
+    public Message(String id, String from, String message, String time) {
         this.from = from;
         this.time = time;
         this.message = message;
+        this.id = id;
 
     }
 
     public String GetFrom() {
         return this.from;
     }
+
+    public String GetTime() {
+        return this.time;
+    }
+
     public String GetId() {
         return id;
     }
