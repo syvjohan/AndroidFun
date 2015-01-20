@@ -21,17 +21,34 @@ public class Message {
 
     }
 
+    public String GetMsg() {
+        return this.message;
+    }
+
+    public String SetMsg(String message) {
+        return this.message = message;
+    }
+
     public String GetFrom() {
         return this.from;
+    }
+
+    public String SetFrom(String from) {
+        return this.from = from;
     }
 
     public String GetTime() {
         return this.time;
     }
 
+    public String SetTime(String time) {
+        return this.time = time;
+    }
+
     public String GetId() {
         return id;
     }
+
     public String SetId(String id) {
         return this.id = id;
     }

@@ -1,18 +1,18 @@
 package com.example.johan.firebase;
 
 import android.app.Activity;
-import android.content.Context;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -22,7 +22,7 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 
 
 /**
@@ -47,11 +47,11 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     final Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
 
-    static ArrayList<Map<String, Message>> chatMsgList = new ArrayList<>();
-    ArrayList<String> mesgKeyValues = new ArrayList<>();
-
+    static ArrayList<Message> chatMsgList = new ArrayList<>();
+    static ArrayList<String> msgKeyValues = new ArrayList<>();
+    ChatAdapter chatAdapter = null;
     ListView lstViewChat;
-    CharSequence username = "Mig";
+    static String username = "Mig";
 
     EditText editMsg;
     Button btnSend;
@@ -108,7 +108,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
         ReadChatMessages(firebaserootRef);
 
-
         return view;
     }
 
@@ -124,7 +123,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         Map<String, Message> chatMessages = new HashMap<>();
 
         String msg = textMsg;
-        String from = username.toString();
+        String from = username;
         String time = "14:44";
         String id = "";
 
@@ -143,38 +142,30 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             firebaseMsg.child("time").setValue(cm.time);
 
             chatMessages.put(id,cm);
-           // System.out.println(ChatMessages);
         }
 
         ReadChatMessages(firebaserootRef);
     }
 
-    public void ReadChatMessages(final Firebase firebaseRootRef) {
+    public void ReadChatMessages(Firebase firebaseRootRef) {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.child("messages").getValue() != null) {
-
-                    //Map<String, Message> groupMessages = (Map<String, Message>) snapshot.child("messages").getChildren().iterator().next().getValue();
-
                     for (DataSnapshot c : snapshot.child("messages").getChildren()) {
                         String key = c.getKey();
 
                         Message newMessage = new Message();
-                        newMessage.from = (String) c.child("from").getValue();
-                        newMessage.message = (String) c.child("message").getValue();
-                        newMessage.time = (String) c.child("time").getValue();
+                        newMessage.SetFrom((String) c.child("from").getValue());
+                        newMessage.SetMsg((String) c.child("message").getValue());
+                        newMessage.SetTime((String) c.child("time").getValue());
+                        newMessage.SetId((String) c.child("id").getValue());
 
-                        if (!chatMsgList.equals(key)) {
-                            mesgKeyValues.add(key);
+                        if (!msgKeyValues.contains(key)) {
+                            msgKeyValues.add(key);
 
-                            Map<String, Message> chatMessage = new HashMap<String, Message>();
-                            chatMessage.put(key, newMessage);
-
-                            AddToLstViewGroup(chatMessage);
-
-                            chatMessage.clear();
-                        }
+                            AddToLstViewGroup(newMessage);
+                       }
                     }
                 }
             }
@@ -197,75 +188,25 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    public void AddToLstViewGroup(Map<String, Message> newMessage) {
+    public boolean IsMsgFromMe(Message message) {
+        boolean isSenderMe = username.equals((CharSequence) message.GetFrom());
+        return isSenderMe;
+    }
 
-        System.out.println(newMessage);
+    public void AddToLstViewGroup(Message newMessage) {
         chatMsgList.add(newMessage);
 
-        ChatAdapter chatAdapter = new ChatAdapter(getView().getContext(), chatMsgList);
+        if (chatAdapter == null) {
+            chatAdapter = new ChatAdapter(getActivity(), chatMsgList);
+        }
 
-        if(chatAdapter.IsMsgFromMe(newMessage)) {
+        if(IsMsgFromMe(newMessage)) {
             lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
         } else {
             lstViewChat = (ListView)getView().findViewById(R.id.listView_chat_message_others);
         }
 
         lstViewChat.setAdapter(chatAdapter);
-
-    }
-
-    public class ChatAdapter extends ArrayAdapter<Map<String, Message>> {
-        public ChatAdapter(Context context, ArrayList<Map<String, Message>> messages) {
-            super(context, 0, messages);
-        }
-
-        public boolean IsMsgFromMe(Map<String, Message> message) {
-            boolean isSenderMe = username.equals((CharSequence) message.get("from"));
-            return isSenderMe;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Get the data item for this position
-            Map<String, Message> message = getItem(position);
-
-            //Check who has sent the message me or someone else...
-            if (IsMsgFromMe(message)) {
-                System.out.println("I did send the message");
-                // Check if an existing view is being reused, otherwise inflate the view
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_me, parent, false);
-                }
-
-                TextView chatFrom = (TextView) convertView.findViewById(R.id.txt_message_me_from);
-                TextView chatMessage = (TextView) convertView.findViewById(R.id.txt_message_me_message);
-                TextView chatTime = (TextView) convertView.findViewById(R.id.txt_message_me_time);
-
-                // Populate the data into the template view using the data object
-                chatFrom.setText("From: " + (CharSequence) message.get("from"));
-                chatMessage.setText((CharSequence) message.get("message"));
-                chatTime.setText("Time: " + (CharSequence) message.get("time"));
-
-            } else {
-                System.out.println("Someone else send the message");
-                // Check if an existing view is being reused, otherwise inflate the view
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_others, parent, false);
-                }
-
-                TextView chatFrom = (TextView) convertView.findViewById(R.id.txt_message_others_from);
-                TextView chatMessage = (TextView) convertView.findViewById(R.id.txt_message_others_message);
-                TextView chatTime = (TextView) convertView.findViewById(R.id.txt_message_others_time);
-
-                // Populate the data into the template view using the data object
-                chatFrom.setText("From: " + (CharSequence) message.get("from"));
-                chatMessage.setText((CharSequence) message.get("message"));
-                chatTime.setText("Time: " + (CharSequence) message.get("time"));
-            }
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
