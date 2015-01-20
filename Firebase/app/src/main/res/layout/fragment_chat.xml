@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linear_bottom"
         android:layout_marginBottom="30dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <ListView
             android:id="@+id/listView_chat_message_me"

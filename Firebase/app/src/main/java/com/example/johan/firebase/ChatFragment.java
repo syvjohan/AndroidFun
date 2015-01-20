@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -106,7 +104,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         btnSend = (Button) view.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        ReadChatMessages(firebaserootRef);
+        //ReadChatMessages(firebaserootRef);
 
         return view;
     }
@@ -165,6 +163,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                             msgKeyValues.add(key);
 
                             AddToLstViewGroup(newMessage);
+
+                            //Automatic scrolls to last line in listView.
+                            lstViewChat.setSelection(chatAdapter.getCount() -1);
                        }
                     }
                 }
