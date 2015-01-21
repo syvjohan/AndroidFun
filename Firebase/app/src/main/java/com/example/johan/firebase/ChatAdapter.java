@@ -27,7 +27,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         Message message = ChatFragment.chatMsgList.get(position);
-        System.out.println(message.GetMsg());
+
         //Check who has sent the message me or someone else...
         if (IsMsgFromMe(message)) {
             System.out.println("I did send the message");

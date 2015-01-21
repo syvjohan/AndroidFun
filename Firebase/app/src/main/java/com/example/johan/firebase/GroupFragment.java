@@ -45,6 +45,7 @@ public class GroupFragment extends Fragment {
     GroupAdapter groupAdapter;
     ListView lstViewGroup;
     String groupId;
+    String groupName = "Pelles grupp";
 
     private OnFragmentInteractionListener mListener;
 
@@ -108,14 +109,13 @@ public class GroupFragment extends Fragment {
         Group group = new Group();
 
         group.SetID(firebaseGroup.getKey());
-        group.SetName("Pelles grupp");
+        group.SetName(groupName);
 
         String id = firebaseGroup.getKey();
         firebaseGroup.child("id").setValue(group.GetId());
         firebaseGroup.child("name").setValue(group.GetName());
 
         newGroup.put(id, group);
-        Log.d(group.GetId().toString(), group.GetName().toString());
         //Firebase firebaseParentMsg = firebaseGroup.child("messages");
 
         return group.GetId();
@@ -126,16 +126,13 @@ public class GroupFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.getValue() != null) {
-                    for (DataSnapshot c : snapshot.getChildren()) {
-                        Group newGroup = new Group();
-                        newGroup.SetName((String) c.child("name").getValue());
-                        newGroup.SetID((String) c.getKey());
-                        //System.out.println(c);
-                        if(!groupKeyValues.contains(newGroup.GetId())) {
-                            groupKeyValues.add(newGroup.GetId());
 
-                            AddToLstViewGroup(newGroup);
-                        }
+                    Group newGroup = new Group((String) snapshot.child("name").getValue(), snapshot.getKey());
+
+                    if(!groupKeyValues.contains(newGroup.GetId())) {
+                        groupKeyValues.add(newGroup.GetId());
+
+                        AddToLstViewGroup(newGroup);
                     }
                 }
             }
