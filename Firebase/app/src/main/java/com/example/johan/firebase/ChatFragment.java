@@ -135,9 +135,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             Message cm = new Message(id, from, msg, time);
 
             id = firebaseMsg.getKey();
-            firebaseMsg.child("from").setValue(cm.from);
-            firebaseMsg.child("message").setValue(cm.message);
-            firebaseMsg.child("time").setValue(cm.time);
+            firebaseMsg.child("from").setValue(cm.GetFrom());
+            firebaseMsg.child("message").setValue(cm.GetMsg());
+            firebaseMsg.child("time").setValue(cm.GetTime());
 
             chatMessages.put(id,cm);
         }
@@ -162,7 +162,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                         if (!msgKeyValues.contains(key)) {
                             msgKeyValues.add(key);
 
-                            AddToLstViewGroup(newMessage);
+                            AddToLstViewChat(newMessage);
 
                             //Automatic scrolls to last line in listView.
                             lstViewChat.setSelection(chatAdapter.getCount() -1);
@@ -194,7 +194,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         return isSenderMe;
     }
 
-    public void AddToLstViewGroup(Message newMessage) {
+    public void AddToLstViewChat(Message newMessage) {
         chatMsgList.add(newMessage);
 
         if (chatAdapter == null) {

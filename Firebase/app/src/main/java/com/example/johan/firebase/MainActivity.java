@@ -1,12 +1,19 @@
 package com.example.johan.firebase;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,86 +26,21 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
-
-    static ArrayList<String> groupNameList = new ArrayList<String>();
-    ListView lstViewGroup;
-    String groupId;
+public class MainActivity extends Activity implements GroupFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main);
+        setContentView(R.layout.activity_main);
 
-        Firebase.setAndroidContext(this);
-        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
-
-        groupId = CreateNewGroup(firebaserootRef);
-        ReadData(firebaserootRef);
-    }
-
-    public String CreateNewGroup(Firebase firebaseRootRef) {
-        Group group = new Group();
-
-        Firebase firebaseGroup = firebaseRootRef.child("").push();
-        group.groupId = firebaseGroup.getKey();
-        group.groupName = "Pelles grupp";
-        String empty = "";
-
-
-        firebaseGroup.child("id").setValue(group.groupId);
-        firebaseGroup.child("name").setValue(group.groupName);
-
-        Firebase firebaseParentMsg = firebaseGroup.child("messages");
-        /*Firebase firebaseMsg = firebaseParentMsg.push();
-
-        firebaseMsg.child("from").setValue(message.msg);
-        firebaseMsg.child("message").setValue(message.from);
-        firebaseMsg.child("time").setValue(message.time);*/
-
-        return group.groupId;
-    }
-
-    public void AddToLstViewGroup(String name) {
-        groupNameList.add(name);
-
-        lstViewGroup = (ListView)findViewById(R.id.listView_group);
-
-        ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                android.R.id.text1, groupNameList);
-
-        lstViewGroup.setAdapter(groupAdapter);
-
-        lstViewGroup.setOnItemClickListener(onItemClickListener);
-        lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
+        GroupFragment fragment = GroupFragment.newInstance("", "");
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.container, fragment, null);
+        fT.addToBackStack("go to group fragmement");
+        fT.commit();
 
     }
-
-    public void ReadData(final Firebase firebaseRootRef) {
-        firebaseRootRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String s) {
-
-                String name = (String) snapshot.child("name").getValue();
-
-                AddToLstViewGroup(name);
-             }
-
-            @Override
-            public void onChildChanged(DataSnapshot snapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot snapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot snapshot, String s) {
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-            }
-        });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,23 +64,26 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-            intent.putExtra("groupID",groupId);
-            startActivity(intent);
-            finish();
-        }
-    };
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
 
-    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-            intent.putExtra("groupID",groupId);
-            startActivity(intent);
-            return true;
+        public PlaceholderFragment() {
         }
-    };
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.activity_chat, container, false);
+
+            return rootView;
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 }

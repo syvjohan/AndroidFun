@@ -40,8 +40,6 @@ public class ChatActivity extends Activity implements ChatFragment.OnFragmentInt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Firebase.setAndroidContext(this);
-
         //Send groupID to ChatFragmment.
         Bundle b = new Bundle();
         b.putString("groupID", GetGroupID());
@@ -55,7 +53,6 @@ public class ChatActivity extends Activity implements ChatFragment.OnFragmentInt
         fT.replace(R.id.container, chatFragmentInfo);
         fT.addToBackStack("go to chat fragmement");
         fT.commit();
-
     }
 
     public String GetGroupID() {
