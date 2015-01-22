@@ -3,67 +3,35 @@ package com.example.johan.firebase;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-
-public class ChatActivity extends Activity implements ChatFragment.OnFragmentInteractionListener {
+public class ChatActivity extends Activity implements
+        GroupFragment.OnFragmentInteractionListener,
+        ChatFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        //Send groupID to ChatFragmment.
-        Bundle b = new Bundle();
-        b.putString("groupID", GetGroupID());
-        ChatFragment chatFragmentInfo = new ChatFragment();
-        chatFragmentInfo.setArguments(b);
+        Firebase.setAndroidContext(this);
 
-        //Call chat Fragment
-        ChatFragment fragment = ChatFragment.newInstance("", "");
+        GroupFragment groupFragment = GroupFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.container, chatFragmentInfo);
-        fT.addToBackStack("go to chat fragmement");
+        fT.replace(R.id.container_chat, groupFragment, null);
+        fT.addToBackStack("go to group fragmement");
         fT.commit();
-    }
-
-    public String GetGroupID() {
-        Bundle b = getIntent().getExtras();
-        String groupID;
-        if (b != null) {
-            groupID = b.getString("groupID");
-            return groupID;
-        }
-
-        return "";
     }
 
     @Override
@@ -88,6 +56,11 @@ public class ChatActivity extends Activity implements ChatFragment.OnFragmentInt
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -103,10 +76,5 @@ public class ChatActivity extends Activity implements ChatFragment.OnFragmentInt
 
             return rootView;
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }

@@ -26,17 +26,20 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity implements GroupFragment.OnFragmentInteractionListener {
+public class MainActivity extends Activity implements
+            RegisterFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GroupFragment fragment = GroupFragment.newInstance("", "");
+        Firebase.setAndroidContext(this); //Initialize Firebase library.
+
+        RegisterFragment fragment = RegisterFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.container, fragment, null);
+        fT.replace(R.id.container_main, fragment, null);
         fT.addToBackStack("go to group fragmement");
         fT.commit();
 
@@ -64,6 +67,11 @@ public class MainActivity extends Activity implements GroupFragment.OnFragmentIn
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -75,15 +83,10 @@ public class MainActivity extends Activity implements GroupFragment.OnFragmentIn
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_chat, container, false);
+            View rootView = inflater.inflate(R.layout.activity_main, container, false);
 
             return rootView;
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 }

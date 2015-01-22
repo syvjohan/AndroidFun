@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ChatFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ChatFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ChatFragment extends Fragment implements View.OnClickListener {
+public class ChatFragment extends Fragment implements
+        View.OnClickListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,14 +38,15 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
-    final Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
-
     static ArrayList<Message> chatMsgList = new ArrayList<>();
     static ArrayList<String> msgKeyValues = new ArrayList<>();
     ChatAdapter chatAdapter = null;
     ListView lstViewChat;
-    static String username = "Mig";
 
+    private String groupId;
+
+    Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+    static String username = "Me";
     EditText editMsg;
     Button btnSend;
 
@@ -83,15 +79,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
 
-    public String GetGroupID() {
-        Bundle bundle = this.getArguments();
-        String groupID = bundle.getString("groupID");
-        if (groupID == null) {
-            return "";
-        }
-        return groupID;
+        ReadChatMessages(firebaserootRef);
     }
 
     @Override
@@ -104,8 +93,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         btnSend = (Button) view.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        //ReadChatMessages(firebaserootRef);
-
         return view;
     }
 
@@ -113,6 +100,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         String txtMsg = editMsg.getText().toString();
         if (txtMsg != "") {
+            System.out.println("GOTO CreateNewMessage!");
             CreateNewMessage(firebaserootRef, txtMsg);
         }
     }
@@ -126,10 +114,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         String id = "";
 
         //Message
-        String groupID = GetGroupID();
-
-        if (groupID != "") {
-            Firebase firebaseParentMsg = firebaserootRef.child(groupID).child("messages");
+        if (groupId != "") {
+            Firebase firebaseParentMsg = firebaserootRef.child(GetGroupId()).child("messages");
             Firebase firebaseMsg = firebaseParentMsg.push();
 
             Message cm = new Message(id, from, msg, time);
@@ -140,6 +126,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             firebaseMsg.child("time").setValue(cm.GetTime());
 
             chatMessages.put(id,cm);
+            System.out.println("Succesfuly created a new message.");
         }
 
         ReadChatMessages(firebaserootRef);
@@ -149,7 +136,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                if (snapshot.child("messages").getValue() != null) {
+                System.out.println(snapshot.child(GetGroupId()));
+                if (snapshot.child(GetGroupId()).child("messages").getValue() != null) {
                     for (DataSnapshot c : snapshot.child("messages").getChildren()) {
                         String key = c.getKey();
 
@@ -234,19 +222,17 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public String GetGroupId() {
+        System.out.println(groupId);
+        return groupId;
+    }
+
+    public void SetGroupID(String groupId) {
+        this.groupId = groupId;
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }

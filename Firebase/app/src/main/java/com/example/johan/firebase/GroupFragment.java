@@ -1,7 +1,9 @@
 package com.example.johan.firebase;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.firebase.client.ChildEventListener;
@@ -22,14 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GroupFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GroupFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class GroupFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,8 +39,8 @@ public class GroupFragment extends Fragment {
     static ArrayList<String> groupKeyValues = new ArrayList<String>();
     GroupAdapter groupAdapter;
     ListView lstViewGroup;
-    String groupId;
-    String groupName = "Pelles grupp";
+
+    private Button RegisterNewGroup;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,19 +74,29 @@ public class GroupFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        Firebase.setAndroidContext(getActivity());
-        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
-
-        groupId = CreateNewGroup(firebaserootRef);
-        ReadData(firebaserootRef);
+        ReadData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+        View view = inflater.inflate(R.layout.fragment_group, container, false);
+
+        RegisterNewGroup = (Button)view.findViewById(R.id.btn_reg_new_group);
+        RegisterNewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    EditText editRegNewGr = (EditText) getView().findViewById(R.id.txt_group_name);
+
+                    String groupName = editRegNewGr.getText().toString();
+                    if (groupName != "") {
+                        CreateNewGroup(groupName);
+                    }
+                }
+            });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -101,10 +106,12 @@ public class GroupFragment extends Fragment {
         }
     }
 
-    public String CreateNewGroup(Firebase firebaseRootRef) {
+    public void CreateNewGroup(String groupName) {
+
         Map<String, Group> newGroup = new HashMap<>();
 
-        Firebase firebaseGroup = firebaseRootRef.child("").push();
+        Firebase  firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+        Firebase firebaseGroup = firebaserootRef.child("").push();
 
         Group group = new Group();
 
@@ -116,23 +123,24 @@ public class GroupFragment extends Fragment {
         firebaseGroup.child("name").setValue(group.GetName());
 
         newGroup.put(id, group);
-        //Firebase firebaseParentMsg = firebaseGroup.child("messages");
 
-        return group.GetId();
+        ChangeToChatFragment(group.GetId());
     }
 
-    public void ReadData(final Firebase firebaseRootRef) {
-        firebaseRootRef.addChildEventListener(new ChildEventListener() {
+    public void ReadData() {
+        Firebase  firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+        firebaserootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.getValue() != null) {
 
-                    Group newGroup = new Group((String) snapshot.child("name").getValue(), snapshot.getKey());
+                    Group newGroup = new Group((String) snapshot.child("name").getValue(), (String) snapshot.child("id").getValue());
 
                     if(!groupKeyValues.contains(newGroup.GetId())) {
                         groupKeyValues.add(newGroup.GetId());
 
                         AddToLstViewGroup(newGroup);
+                        System.out.println("Read group data from firebase and inserted in listView");
                     }
                 }
             }
@@ -164,6 +172,8 @@ public class GroupFragment extends Fragment {
         lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
 
         lstViewGroup.setAdapter(groupAdapter);
+
+        groupAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -183,37 +193,35 @@ public class GroupFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    public void ChangeToChatFragment(String groupId) {
+        ChatFragment groupFragment = ChatFragment.newInstance("", "");
+        groupFragment.SetGroupID(groupId);
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.container_chat, groupFragment, null);
+        fT.addToBackStack("go to chat fragmement");
+        fT.commit();
     }
 
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getActivity().getBaseContext(), ChatActivity.class);
-            intent.putExtra("groupID",groupId);
-            startActivity(intent);
+            Log.d("Clicked on group item in listView!", "GOTO Chatfragment");
+            //ChangeToChatFragment();
         }
     };
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getActivity().getBaseContext(), ChatActivity.class);
-            intent.putExtra("groupID",groupId);
-            startActivity(intent);
+            Log.d("Clicked on group item in listView!", "GOTO Chatfragment");
+           //ChangeToChatFragment();
             return true;
         }
     };
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
+    }
 }
