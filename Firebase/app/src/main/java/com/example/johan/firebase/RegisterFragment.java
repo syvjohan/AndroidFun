@@ -102,24 +102,23 @@ public class RegisterFragment extends Fragment {
 
                             @Override
                             public void onAuthenticationError(FirebaseError firebaseError) {
-                                TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
+                                TextView errMsg = (TextView) getView().findViewById(R.id.err_reg);
 
                                 switch(firebaseError.getCode()) {
                                     case FirebaseError.EMAIL_TAKEN:
-                                        errMsg.setText("email address is already in use.");
+                                        errMsg.setText(R.string.EMAIL_TAKEN);
                                         break;
                                     case FirebaseError.NETWORK_ERROR:
-                                        errMsg.setText("An error occurred while attempting to contact the authentication server.");
+                                        errMsg.setText(R.string.NETWORK_ERROR);
                                         break;
                                     case FirebaseError.UNKNOWN_ERROR:
-                                        errMsg.setText("Root of error is unknown!");
+                                        errMsg.setText(R.string.UNKNOWN_ERROR);
                                         break;
                                     default:
-                                        errMsg.setText("could not localize the error");
+                                        errMsg.setText(R.string.DEFAULT_ERROR);
                                         break;
 
                                 }
-                                //Failed to Authenticate the new created user
                                 errMsg.setVisibility(View.VISIBLE);
                                 errMsg.getText().toString();
 
@@ -129,20 +128,20 @@ public class RegisterFragment extends Fragment {
 
                     @Override
                     public void onError(FirebaseError firebaseError) {
-                        TextView errMsg = (TextView) getView().findViewById(R.id.err_reg);
+                        TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
 
                         switch(firebaseError.getCode()) {
                             case FirebaseError.EMAIL_TAKEN:
-                                errMsg.setText("The new user account cannot be created because the specified email address is already in use.");
+                                errMsg.setText(R.string.EMAIL_TAKEN);
                                 break;
                             case FirebaseError.NETWORK_ERROR:
-                                errMsg.setText("An error occurred while attempting to contact the authentication server.");
+                                errMsg.setText(R.string.NETWORK_ERROR);
                                 break;
                             case FirebaseError.UNKNOWN_ERROR:
-                                errMsg.setText("Root of error is unknown!");
+                                errMsg.setText(R.string.UNKNOWN_ERROR);
                                 break;
                             default:
-                                errMsg.setText("could not localize the error");
+                                errMsg.setText(R.string.DEFAULT_ERROR);
                                 break;
 
                         }

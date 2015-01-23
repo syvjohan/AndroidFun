@@ -126,7 +126,7 @@ public class ChatFragment extends Fragment implements
             firebaseMsg.child("time").setValue(cm.GetTime());
 
             chatMessages.put(id,cm);
-            System.out.println("Succesfuly created a new message.");
+            System.out.println("Succesfully created a new message.");
         }
 
         ReadChatMessages(firebaserootRef);

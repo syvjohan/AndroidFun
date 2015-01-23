@@ -22,4 +22,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_gg">gg</string>
 
+    //Firebase Error Codes
+    <string name="INVALID_PASSWORD">The specified user account password is incorrect.</string>
+    <string name="UNKNOWN_ERROR">Root of error is unknown!</string>
+    <string name="NETWORK_ERROR">An error occurred while attempting to contact the authentication server.</string>
+    <string name="USER_DOES_NOT_EXIST">The specified user account does not exist.</string>
+    <string name="EMAIL_TAKEN">User account cannot be created because the specified email address is already in use.</string>
+    <string name="DEFAULT_ERROR">could not localize the error.</string>
 </resources>

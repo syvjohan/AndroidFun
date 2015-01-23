@@ -134,19 +134,19 @@ public class LoginFragment extends Fragment {
 
                         switch(firebaseError.getCode()) {
                             case FirebaseError.INVALID_PASSWORD:
-                                errMsg.setText("The specified user account password is incorrect.");
+                                errMsg.setText(R.string.INVALID_PASSWORD);
                                 break;
                             case FirebaseError.UNKNOWN_ERROR:
-                                errMsg.setText("Root of error is unknown!");
+                                errMsg.setText(R.string.UNKNOWN_ERROR);
                                 break;
                             case FirebaseError.NETWORK_ERROR:
-                                errMsg.setText("An error occurred while attempting to contact the authentication server.");
+                                errMsg.setText(R.string.NETWORK_ERROR);
                                 break;
                             case FirebaseError.USER_DOES_NOT_EXIST:
-                                errMsg.setText("The specified user account does not exist.");
+                                errMsg.setText(R.string.USER_DOES_NOT_EXIST);
                                 break;
                             default:
-                                errMsg.setText("could not localize the error");
+                                errMsg.setText(R.string.DEFAULT_ERROR);
                                 break;
 
                         }
