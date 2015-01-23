@@ -3,6 +3,7 @@ package com.example.johan.firebase;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ import org.apache.http.client.methods.AbortableHttpRequest;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity implements
+public class MainActivity extends ActionBarActivity implements
             RegisterFragment.OnFragmentInteractionListener,
             LoginFragment.OnFragmentInteractionListener,
             AboutFragment.OnFragmentInteractionListener {

@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_weight=".75"
             android:layout_height="match_parent"
-            android:background="#F8F8F8"
+            android:background="#CBCBB2"
             android:hint="pelles grupp" />
 
         <Button
@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:text="Create new group"
             android:textSize ="15sp"
-            android:background="#999900"
+            android:background="#D7C5E0"
             android:layout_toRightOf="@+id/txt_group_name" />
 
     </LinearLayout>
