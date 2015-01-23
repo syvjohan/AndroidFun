@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.johan.laboration1_ab5785.Fragment.AboutFragment" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/about_loremipsum"
+        android:id="@+id/aboutList" />
+
+
+    <Button
+        style="@style/btn"
+        android:text="@string/btn_about_back"
+        android:id="@+id/btn_about_back"
+        android:layout_gravity="center_horizontal|bottom" />
+
+
+</FrameLayout>

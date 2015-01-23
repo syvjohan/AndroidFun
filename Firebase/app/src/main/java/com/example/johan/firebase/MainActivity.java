@@ -23,11 +23,15 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import org.apache.http.client.methods.AbortableHttpRequest;
+
 import java.util.ArrayList;
 
 
 public class MainActivity extends Activity implements
-            RegisterFragment.OnFragmentInteractionListener {
+            RegisterFragment.OnFragmentInteractionListener,
+            LoginFragment.OnFragmentInteractionListener,
+            AboutFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +40,11 @@ public class MainActivity extends Activity implements
 
         Firebase.setAndroidContext(this); //Initialize Firebase library.
 
-        RegisterFragment fragment = RegisterFragment.newInstance("", "");
+        LoginFragment fragment = LoginFragment.newInstance("", "");
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container_main, fragment, null);
-        fT.addToBackStack("go to group fragmement");
+        fT.addToBackStack("got to Login fragment");
         fT.commit();
 
     }

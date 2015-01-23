@@ -77,4 +77,15 @@ public class ChatActivity extends Activity implements
             return rootView;
         }
     }
+
+    /*@Override
+    public void onBackPressed() {
+        GroupFragment groupFragment = GroupFragment.newInstance("", "");
+        groupFragment.R();
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.container_chat, groupFragment, null);
+        fT.addToBackStack("go to chat fragmement");
+        fT.commit();
+    }*/
 }

@@ -194,6 +194,7 @@ public class ChatFragment extends Fragment implements
             lstViewChat = (ListView)getView().findViewById(R.id.listView_chat_message_others);
         }
 
+        chatAdapter.notifyDataSetChanged();
         lstViewChat.setAdapter(chatAdapter);
     }
 

@@ -1,6 +1,8 @@
 package com.example.johan.firebase;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +23,12 @@ import com.firebase.client.FirebaseError;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RegisterFragment.OnFragmentInteractionListener} interface
+ * {@link LoginFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RegisterFragment#newInstance} factory method to
+ * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterFragment extends Fragment {
+public class LoginFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,10 +38,11 @@ public class RegisterFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Firebase firebaseRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+    private Button GotoRegisterBtnClick;
+    private Button GotoAboutBtnClick;
+    private Button LoginBtnClick;
 
-    private Button RegisterBtnClick;
-
+    Firebase firebaseRootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -48,11 +51,11 @@ public class RegisterFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
+     * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
+    public static LoginFragment newInstance(String param1, String param2) {
+        LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,7 +63,7 @@ public class RegisterFragment extends Fragment {
         return fragment;
     }
 
-    public RegisterFragment() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
@@ -77,69 +80,70 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        RegisterBtnClick = (Button)view.findViewById(R.id.btn_register);
-        RegisterBtnClick.setOnClickListener(new View.OnClickListener() {
+
+
+        // go to a new fragment
+        GotoAboutBtnClick = (Button) view.findViewById(R.id.btn_about);
+        GotoAboutBtnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AboutFragment aboutFragment = AboutFragment.newInstance("", "");
+                FragmentManager fM = getFragmentManager();
+                FragmentTransaction fT = fM.beginTransaction();
+                fT.replace(R.id.container_main, aboutFragment, null);
+                fT.addToBackStack("got to about");
+                fT.commit();
+            }
+        });
+
+        GotoRegisterBtnClick = (Button) view.findViewById(R.id.btn_goto_register);
+        GotoRegisterBtnClick.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editPwd = (EditText) getView().findViewById(R.id.reg_txtPassword);
-                final EditText editUser = (EditText) getView().findViewById(R.id.reg_txtUsername);
-                Log.d(editUser.getText().toString(), editPwd.getText().toString());
-                //Create a new user.
-                firebaseRef.createUser(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.ResultHandler() {
+                RegisterFragment fragment = RegisterFragment.newInstance("", "");
+                FragmentManager fM = getFragmentManager();
+                FragmentTransaction fT = fM.beginTransaction();
+                fT.replace(R.id.container_main, fragment, null);
+                fT.addToBackStack("got to register");
+                fT.commit();
+            }
+        }));
+
+        LoginBtnClick = (Button)view.findViewById(R.id.btn_login);
+        LoginBtnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
+                EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
+
+                //Authenticate the user
+                firebaseRootRef.authWithPassword(editName.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
                     @Override
-                    public void onSuccess() {
-                        //Authenticate the user
-                        firebaseRef.authWithPassword(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
-                            @Override
-                            public void onAuthenticated(AuthData authData) {
-                                //Succeded to create and authenticate the new user.
-                                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            }
-
-                            @Override
-                            public void onAuthenticationError(FirebaseError firebaseError) {
-                                TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
-
-                                switch(firebaseError.getCode()) {
-                                    case FirebaseError.EMAIL_TAKEN:
-                                        errMsg.setText("email address is already in use.");
-                                        break;
-                                    case FirebaseError.NETWORK_ERROR:
-                                        errMsg.setText("An error occurred while attempting to contact the authentication server.");
-                                        break;
-                                    case FirebaseError.UNKNOWN_ERROR:
-                                        errMsg.setText("Root of error is unknown!");
-                                        break;
-                                    default:
-                                        errMsg.setText("could not localize the error");
-                                        break;
-
-                                }
-                                //Failed to Authenticate the new created user
-                                errMsg.setVisibility(View.VISIBLE);
-                                errMsg.getText().toString();
-
-                            }
-                        });
+                    public void onAuthenticated(AuthData authData) {
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
                     }
 
                     @Override
-                    public void onError(FirebaseError firebaseError) {
-                        TextView errMsg = (TextView) getView().findViewById(R.id.err_reg);
+                    public void onAuthenticationError(FirebaseError firebaseError) {
+                        //Failed to Authenticate the new created user
+                        TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
 
                         switch(firebaseError.getCode()) {
-                            case FirebaseError.EMAIL_TAKEN:
-                                errMsg.setText("The new user account cannot be created because the specified email address is already in use.");
+                            case FirebaseError.INVALID_PASSWORD:
+                                errMsg.setText("The specified user account password is incorrect.");
+                                break;
+                            case FirebaseError.UNKNOWN_ERROR:
+                                errMsg.setText("Root of error is unknown!");
                                 break;
                             case FirebaseError.NETWORK_ERROR:
                                 errMsg.setText("An error occurred while attempting to contact the authentication server.");
                                 break;
-                            case FirebaseError.UNKNOWN_ERROR:
-                                errMsg.setText("Root of error is unknown!");
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                errMsg.setText("The specified user account does not exist.");
                                 break;
                             default:
                                 errMsg.setText("could not localize the error");
@@ -150,12 +154,13 @@ public class RegisterFragment extends Fragment {
                         errMsg.getText().toString();
                     }
                 });
+
             }
+
         });
 
         return view;
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

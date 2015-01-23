@@ -171,11 +171,13 @@ public class GroupFragment extends Fragment {
             lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
         }
 
-        groupAdapter.notifyDataSetChanged();
         lstViewGroup.setOnItemClickListener(onItemClickListener);
         lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
 
+        groupAdapter.notifyDataSetChanged();
         lstViewGroup.setAdapter(groupAdapter);
+
+
     }
 
     @Override
@@ -208,16 +210,18 @@ public class GroupFragment extends Fragment {
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("Clicked on group item in listView!", "GOTO Chatfragment");
-            //ChangeToChatFragment();
+            Log.d("Short clicked on group item in listView!", "GOTO Chatfragment");
+            Group group = groupAdapter.getItem(position);
+            ChangeToChatFragment(group.GetId());
         }
     };
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("Clicked on group item in listView!", "GOTO Chatfragment");
-           //ChangeToChatFragment();
+            Log.d("Long clicked on group item in listView!", "GOTO Chatfragment");
+            Group group = groupAdapter.getItem(position);
+            ChangeToChatFragment(group.GetId());
             return true;
         }
     };
