@@ -74,7 +74,7 @@ public class GroupFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        ReadData();
+        ReadGroupData();
     }
 
     @Override
@@ -105,6 +105,7 @@ public class GroupFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+    // TODO, Skapa ett testmeddelande!
 
     public void CreateNewGroup(String groupName) {
 
@@ -127,13 +128,12 @@ public class GroupFragment extends Fragment {
         ChangeToChatFragment(group.GetId());
     }
 
-    public void ReadData() {
+    public void ReadGroupData() {
         Firebase  firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
         firebaserootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.getValue() != null) {
-
                     Group newGroup = new Group((String) snapshot.child("name").getValue(), (String) snapshot.child("id").getValue());
 
                     if(!groupKeyValues.contains(newGroup.GetId())) {
@@ -167,13 +167,15 @@ public class GroupFragment extends Fragment {
             groupAdapter = new GroupAdapter(getActivity(), groupNameList);
         }
 
-        lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+        if (lstViewGroup == null) {
+            lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+        }
+
+        groupAdapter.notifyDataSetChanged();
         lstViewGroup.setOnItemClickListener(onItemClickListener);
         lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
 
         lstViewGroup.setAdapter(groupAdapter);
-
-        groupAdapter.notifyDataSetChanged();
     }
 
     @Override

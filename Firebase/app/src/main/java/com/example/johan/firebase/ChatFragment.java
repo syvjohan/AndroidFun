@@ -136,8 +136,7 @@ public class ChatFragment extends Fragment implements
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                System.out.println(snapshot.child(GetGroupId()));
-                if (snapshot.child(GetGroupId()).child("messages").getValue() != null) {
+                if (snapshot.child(GetGroupId()).child("messages").getChildren() != null) {
                     for (DataSnapshot c : snapshot.child("messages").getChildren()) {
                         String key = c.getKey();
 
