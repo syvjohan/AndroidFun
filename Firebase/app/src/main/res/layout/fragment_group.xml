@@ -17,7 +17,7 @@
             android:layout_weight=".75"
             android:layout_height="match_parent"
             android:background="#CBCBB2"
-            android:hint="pelles grupp" />
+            android:hint="grupp name" />
 
         <Button
             android:id="@+id/btn_reg_new_group"

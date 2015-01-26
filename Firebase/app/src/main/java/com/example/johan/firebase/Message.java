@@ -52,4 +52,5 @@ public class Message {
     public String SetId(String id) {
         return this.id = id;
     }
+
 }

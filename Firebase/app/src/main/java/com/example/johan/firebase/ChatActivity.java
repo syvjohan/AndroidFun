@@ -79,14 +79,12 @@ public class ChatActivity extends ActionBarActivity implements
         }
     }
 
-    /*@Override
+    @Override
     public void onBackPressed() {
-        GroupFragment groupFragment = GroupFragment.newInstance("", "");
-        groupFragment.R();
-        FragmentManager fM = getFragmentManager();
-        FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.container_chat, groupFragment, null);
-        fT.addToBackStack("go to chat fragmement");
-        fT.commit();
-    }*/
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
+    }
 }

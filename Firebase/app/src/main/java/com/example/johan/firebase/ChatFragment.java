@@ -20,7 +20,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class ChatFragment extends Fragment implements
 
     static ArrayList<Message> chatMsgList = new ArrayList<>();
     static ArrayList<String> msgKeyValues = new ArrayList<>();
-    ChatAdapter chatAdapter = null;
+    ChatAdapter chatAdapter;
     ListView lstViewChat;
 
     private String groupId;
@@ -110,7 +112,7 @@ public class ChatFragment extends Fragment implements
 
         String msg = textMsg;
         String from = username;
-        String time = "14:44";
+        String time = TimeStamp();
         String id = "";
 
         //Message
@@ -137,7 +139,7 @@ public class ChatFragment extends Fragment implements
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (snapshot.child(GetGroupId()).child("messages").getChildren() != null) {
-                    for (DataSnapshot c : snapshot.child("messages").getChildren()) {
+                    for (DataSnapshot c : snapshot.child(GetGroupId()).child("messages").getChildren()) {
                         String key = c.getKey();
 
                         Message newMessage = new Message();
@@ -146,7 +148,7 @@ public class ChatFragment extends Fragment implements
                         newMessage.SetTime((String) c.child("time").getValue());
                         newMessage.SetId((String) c.child("id").getValue());
 
-                        if (!msgKeyValues.contains(key)) {
+                        if ((!msgKeyValues.contains(key)) || newMessage.GetFrom() != "") {
                             msgKeyValues.add(key);
 
                             AddToLstViewChat(newMessage);
@@ -234,5 +236,10 @@ public class ChatFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    public String TimeStamp() {
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        return timeStamp;
     }
 }

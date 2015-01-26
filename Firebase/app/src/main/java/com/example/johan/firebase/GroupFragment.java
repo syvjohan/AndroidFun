@@ -167,6 +167,9 @@ public class GroupFragment extends Fragment {
             groupAdapter = new GroupAdapter(getActivity(), groupNameList);
         }
 
+            groupAdapter.notifyDataSetChanged();
+
+
         if (lstViewGroup == null) {
             lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
         }
@@ -176,8 +179,6 @@ public class GroupFragment extends Fragment {
 
         groupAdapter.notifyDataSetChanged();
         lstViewGroup.setAdapter(groupAdapter);
-
-
     }
 
     @Override
@@ -230,4 +231,5 @@ public class GroupFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
 }
