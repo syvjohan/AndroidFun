@@ -20,6 +20,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import org.apache.http.impl.client.DefaultTargetAuthenticationHandler;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,8 +83,6 @@ public class ChatFragment extends Fragment implements
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        ReadChatMessages(firebaserootRef);
     }
 
     @Override
@@ -94,6 +94,8 @@ public class ChatFragment extends Fragment implements
         editMsg = (EditText)  view.findViewById(R.id.txt_message_input);
         btnSend = (Button) view.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
+
+        ReadChatMessages(firebaserootRef);
 
         return view;
     }
@@ -129,16 +131,16 @@ public class ChatFragment extends Fragment implements
 
             chatMessages.put(id,cm);
             System.out.println("Succesfully created a new message.");
-        }
 
-        ReadChatMessages(firebaserootRef);
+            ReadChatMessages(firebaserootRef);
+        }
     }
 
     public void ReadChatMessages(Firebase firebaseRootRef) {
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                if (snapshot.child(GetGroupId()).child("messages").getChildren() != null) {
+                if (snapshot.child(GetGroupId()).child("messages").exists()) {
                     for (DataSnapshot c : snapshot.child(GetGroupId()).child("messages").getChildren()) {
                         String key = c.getKey();
 
@@ -148,7 +150,7 @@ public class ChatFragment extends Fragment implements
                         newMessage.SetTime((String) c.child("time").getValue());
                         newMessage.SetId((String) c.child("id").getValue());
 
-                        if ((!msgKeyValues.contains(key)) || newMessage.GetFrom() != "") {
+                        if (!msgKeyValues.contains(key)) {
                             msgKeyValues.add(key);
 
                             AddToLstViewChat(newMessage);

@@ -97,7 +97,6 @@ public class RegisterFragment extends Fragment {
                                 //Succeded to create and authenticate the new user.
                                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                                 startActivity(intent);
-                                getActivity().finish();
                             }
 
                             @Override

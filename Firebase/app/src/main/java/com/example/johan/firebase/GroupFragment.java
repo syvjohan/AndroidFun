@@ -35,8 +35,8 @@ public class GroupFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    static ArrayList<Group> groupNameList = new ArrayList<Group>();
-    static ArrayList<String> groupKeyValues = new ArrayList<String>();
+   static ArrayList<Group> groupList = new ArrayList<Group>();
+
     GroupAdapter groupAdapter;
     ListView lstViewGroup;
 
@@ -74,7 +74,6 @@ public class GroupFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        ReadGroupData();
     }
 
     @Override
@@ -95,6 +94,9 @@ public class GroupFragment extends Fragment {
                     }
                 }
             });
+
+
+        ReadGroupData();
 
         return view;
     }
@@ -133,15 +135,11 @@ public class GroupFragment extends Fragment {
         firebaserootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                if (snapshot.getValue() != null) {
+                if (snapshot.exists()) {
                     Group newGroup = new Group((String) snapshot.child("name").getValue(), (String) snapshot.child("id").getValue());
 
-                    if(!groupKeyValues.contains(newGroup.GetId())) {
-                        groupKeyValues.add(newGroup.GetId());
-
-                        AddToLstViewGroup(newGroup);
-                        System.out.println("Read group data from firebase and inserted in listView");
-                    }
+                    AddToLstViewGroup(newGroup);
+                    System.out.println("Read group data from firebase and inserted in listView");
                 }
             }
 
@@ -160,26 +158,49 @@ public class GroupFragment extends Fragment {
         });
     }
 
-    public void AddToLstViewGroup(Group newGroup) {
-        groupNameList.add(newGroup);
-
-        if(groupAdapter == null) {
-            groupAdapter = new GroupAdapter(getActivity(), groupNameList);
+    public boolean ComapareValue(Group gr1, ArrayList<Group> lst) {
+        for (Group s : lst) {
+            if (gr1.GetId() == s.GetId()) {
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    public void AddToLstViewGroup(Group newGroup) {
+       if (newGroup != null) {
+            if (ComapareValue(newGroup, groupList) == false) {
+                groupList.add(newGroup);
+            }
+
+            if (lstViewGroup == null) {
+               lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+            }
+
+            if(groupAdapter == null) {
+                groupAdapter = new GroupAdapter(getActivity(), groupList);
+                lstViewGroup.setAdapter(groupAdapter);
+            }
+
+            lstViewGroup.setOnItemClickListener(onItemClickListener);
+            lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
 
             groupAdapter.notifyDataSetChanged();
 
-
-        if (lstViewGroup == null) {
-            lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+            System.out.println("Passerat 1 varv");
         }
-
-        lstViewGroup.setOnItemClickListener(onItemClickListener);
-        lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
-
-        groupAdapter.notifyDataSetChanged();
-        lstViewGroup.setAdapter(groupAdapter);
     }
+
+  /*  @Override
+    public boolean equals(Object other){
+
+        if (other == null) return false;
+        if (other == this) return true;
+        if (this == null) return false;
+        if (!(other instanceof GroupFragment))return false;
+        GroupFragment otherMyClass = (GroupFragment)other;
+    }*/
 
     @Override
     public void onAttach(Activity activity) {
