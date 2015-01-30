@@ -36,10 +36,7 @@ public class GroupFragment extends Fragment {
     private String mParam2;
 
    static ArrayList<Group> groupList = new ArrayList<Group>();
-
     GroupAdapter groupAdapter;
-    ListView lstViewGroup;
-
     private Button RegisterNewGroup;
 
     private OnFragmentInteractionListener mListener;
@@ -91,10 +88,10 @@ public class GroupFragment extends Fragment {
                     String groupName = editRegNewGr.getText().toString();
                     if (groupName != "") {
                         CreateNewGroup(groupName);
+                        editRegNewGr.setText("");
                     }
                 }
             });
-
 
         ReadGroupData();
 
@@ -139,6 +136,7 @@ public class GroupFragment extends Fragment {
                     Group newGroup = new Group((String) snapshot.child("name").getValue(), (String) snapshot.child("id").getValue());
 
                     AddToLstViewGroup(newGroup);
+
                     System.out.println("Read group data from firebase and inserted in listView");
                 }
             }
@@ -174,33 +172,19 @@ public class GroupFragment extends Fragment {
                 groupList.add(newGroup);
             }
 
-            if (lstViewGroup == null) {
-               lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
-            }
+            ListView lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
 
             if(groupAdapter == null) {
                 groupAdapter = new GroupAdapter(getActivity(), groupList);
-                lstViewGroup.setAdapter(groupAdapter);
             }
 
             lstViewGroup.setOnItemClickListener(onItemClickListener);
             lstViewGroup.setOnItemLongClickListener(onItemLongClickListener);
 
+            lstViewGroup.setAdapter(groupAdapter);
             groupAdapter.notifyDataSetChanged();
-
-            System.out.println("Passerat 1 varv");
         }
     }
-
-  /*  @Override
-    public boolean equals(Object other){
-
-        if (other == null) return false;
-        if (other == this) return true;
-        if (this == null) return false;
-        if (!(other instanceof GroupFragment))return false;
-        GroupFragment otherMyClass = (GroupFragment)other;
-    }*/
 
     @Override
     public void onAttach(Activity activity) {

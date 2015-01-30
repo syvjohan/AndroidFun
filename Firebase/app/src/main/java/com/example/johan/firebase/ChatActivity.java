@@ -84,8 +84,6 @@ public class ChatActivity extends ActionBarActivity implements
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
 
-           // GroupFragment groupFragment = GroupFragment.newInstance("", "");
-           // groupFragment.ReadGroupData();
         } else {
             super.onBackPressed();
         }

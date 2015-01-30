@@ -43,7 +43,7 @@ public class ChatFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
 
     static ArrayList<Message> chatMsgList = new ArrayList<>();
-    static ArrayList<String> msgKeyValues = new ArrayList<>();
+
     ChatAdapter chatAdapter;
     ListView lstViewChat;
 
@@ -106,6 +106,7 @@ public class ChatFragment extends Fragment implements
         if (txtMsg != "") {
             System.out.println("GOTO CreateNewMessage!");
             CreateNewMessage(firebaserootRef, txtMsg);
+            editMsg.setText("");
         }
     }
 
@@ -140,24 +141,20 @@ public class ChatFragment extends Fragment implements
         firebaseRootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                if (snapshot.child(GetGroupId()).child("messages").exists()) {
+                if (!(snapshot.child(GetGroupId()).child("messages").getChildren().equals(null))) {
                     for (DataSnapshot c : snapshot.child(GetGroupId()).child("messages").getChildren()) {
                         String key = c.getKey();
-
+                        System.out.println("NU KÖRS DEN HÄR WEEEE!");
                         Message newMessage = new Message();
                         newMessage.SetFrom((String) c.child("from").getValue());
                         newMessage.SetMsg((String) c.child("message").getValue());
                         newMessage.SetTime((String) c.child("time").getValue());
                         newMessage.SetId((String) c.child("id").getValue());
 
-                        if (!msgKeyValues.contains(key)) {
-                            msgKeyValues.add(key);
+                        AddToLstViewChat(newMessage);
 
-                            AddToLstViewChat(newMessage);
-
-                            //Automatic scrolls to last line in listView.
-                            lstViewChat.setSelection(chatAdapter.getCount() -1);
-                       }
+                        //Automatic scrolls to last line in listView.
+                        lstViewChat.setSelection(chatAdapter.getCount() -1);
                     }
                 }
             }
@@ -180,26 +177,41 @@ public class ChatFragment extends Fragment implements
         });
     }
 
+    public boolean ComapareValue(Message msg, ArrayList<Message> lst) {
+        for (Message s : lst) {
+            if (msg.GetId() == s.GetId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean IsMsgFromMe(Message message) {
         boolean isSenderMe = username.equals((CharSequence) message.GetFrom());
         return isSenderMe;
     }
 
     public void AddToLstViewChat(Message newMessage) {
-        chatMsgList.add(newMessage);
+        if (newMessage != null) {
+            if (ComapareValue(newMessage, chatMsgList) == false) {
+                 chatMsgList.add(newMessage);
+            }
 
-        if (chatAdapter == null) {
-            chatAdapter = new ChatAdapter(getActivity(), chatMsgList);
+            if(IsMsgFromMe(newMessage)) {
+                lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
+            } else {
+                lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_others);
+            }
+
+            if (chatAdapter == null) {
+                chatAdapter = new ChatAdapter(getActivity(), chatMsgList);
+            }
+
+            lstViewChat.setAdapter(chatAdapter);
+            chatAdapter.notifyDataSetChanged();
         }
 
-        if(IsMsgFromMe(newMessage)) {
-            lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
-        } else {
-            lstViewChat = (ListView)getView().findViewById(R.id.listView_chat_message_others);
-        }
-
-        chatAdapter.notifyDataSetChanged();
-        lstViewChat.setAdapter(chatAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
