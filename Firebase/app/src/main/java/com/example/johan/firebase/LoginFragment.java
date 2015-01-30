@@ -116,47 +116,53 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
-                EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
+                final EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
 
                 //Authenticate the user
                 firebaseRootRef.authWithPassword(editName.getText().toString(), editPwd.getText().toString(), new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) {
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("USERNAME", editName.getText().toString());
                         startActivity(intent);
-                        getActivity().finish();
                     }
 
                     @Override
                     public void onAuthenticationError(FirebaseError firebaseError) {
-                        //Failed to Authenticate the new created user
-                        TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
+                    TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
 
                         switch(firebaseError.getCode()) {
                             case FirebaseError.INVALID_PASSWORD:
                                 errMsg.setText(R.string.INVALID_PASSWORD);
                                 break;
-                            case FirebaseError.UNKNOWN_ERROR:
-                                errMsg.setText(R.string.UNKNOWN_ERROR);
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                errMsg.setText(R.string.USER_DOES_NOT_EXIST);
                                 break;
                             case FirebaseError.NETWORK_ERROR:
                                 errMsg.setText(R.string.NETWORK_ERROR);
                                 break;
-                            case FirebaseError.USER_DOES_NOT_EXIST:
-                                errMsg.setText(R.string.USER_DOES_NOT_EXIST);
+                            case FirebaseError.UNKNOWN_ERROR:
+                                errMsg.setText(R.string.UNKNOWN_ERROR);
+                                break;
+                            case FirebaseError.INVALID_CREDENTIALS:
+                                errMsg.setText(R.string.INVALID_CREDENTIALS);
+                                break;
+                            case FirebaseError.INVALID_TOKEN:
+                                errMsg.setText(R.string.INVALID_TOKEN);
+                                break;
+                            case FirebaseError.INVALID_AUTH_ARGUMENTS:
+                                errMsg.setText(R.string.INVALID_AUTH_ARGUMENTS);
                                 break;
                             default:
                                 errMsg.setText(R.string.DEFAULT_ERROR);
                                 break;
-
                         }
                         errMsg.setVisibility(View.VISIBLE);
                         errMsg.getText().toString();
+
                     }
                 });
-
             }
-
         });
 
         return view;
@@ -200,5 +206,4 @@ public class LoginFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }

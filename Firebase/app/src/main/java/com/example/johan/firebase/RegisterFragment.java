@@ -86,6 +86,7 @@ public class RegisterFragment extends Fragment {
                 final EditText editPwd = (EditText) getView().findViewById(R.id.reg_txtPassword);
                 final EditText editUser = (EditText) getView().findViewById(R.id.reg_txtUsername);
                 Log.d(editUser.getText().toString(), editPwd.getText().toString());
+
                 //Create a new user.
                 firebaseRef.createUser(editUser.getText().toString(), editPwd.getText().toString(), new Firebase.ResultHandler() {
                     @Override
@@ -96,6 +97,7 @@ public class RegisterFragment extends Fragment {
                             public void onAuthenticated(AuthData authData) {
                                 //Succeded to create and authenticate the new user.
                                 Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                intent.putExtra("USERNAME", editUser.getText().toString());
                                 startActivity(intent);
                             }
 
@@ -113,6 +115,15 @@ public class RegisterFragment extends Fragment {
                                     case FirebaseError.UNKNOWN_ERROR:
                                         errMsg.setText(R.string.UNKNOWN_ERROR);
                                         break;
+                                    case FirebaseError.INVALID_CREDENTIALS:
+                                        errMsg.setText(R.string.INVALID_CREDENTIALS);
+                                        break;
+                                    case FirebaseError.INVALID_TOKEN:
+                                        errMsg.setText(R.string.INVALID_TOKEN);
+                                        break;
+                                    case FirebaseError.INVALID_AUTH_ARGUMENTS:
+                                        errMsg.setText(R.string.INVALID_AUTH_ARGUMENTS);
+                                        break;
                                     default:
                                         errMsg.setText(R.string.DEFAULT_ERROR);
                                         break;
@@ -127,7 +138,7 @@ public class RegisterFragment extends Fragment {
 
                     @Override
                     public void onError(FirebaseError firebaseError) {
-                        TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
+                        TextView errMsg = (TextView) getView().findViewById(R.id.err_reg);
 
                         switch(firebaseError.getCode()) {
                             case FirebaseError.EMAIL_TAKEN:
@@ -139,6 +150,15 @@ public class RegisterFragment extends Fragment {
                             case FirebaseError.UNKNOWN_ERROR:
                                 errMsg.setText(R.string.UNKNOWN_ERROR);
                                 break;
+                            case FirebaseError.INVALID_CREDENTIALS:
+                                errMsg.setText(R.string.INVALID_CREDENTIALS);
+                                break;
+                            case FirebaseError.INVALID_TOKEN:
+                                errMsg.setText(R.string.INVALID_TOKEN);
+                                break;
+                            case FirebaseError.INVALID_AUTH_ARGUMENTS:
+                                errMsg.setText(R.string.INVALID_AUTH_ARGUMENTS);
+                                break;
                             default:
                                 errMsg.setText(R.string.DEFAULT_ERROR);
                                 break;
@@ -146,6 +166,7 @@ public class RegisterFragment extends Fragment {
                         }
                         errMsg.setVisibility(View.VISIBLE);
                         errMsg.getText().toString();
+
                     }
                 });
             }

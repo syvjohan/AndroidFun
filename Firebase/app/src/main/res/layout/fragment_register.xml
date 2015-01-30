@@ -28,7 +28,6 @@
     <TextView
         android:id="@+id/err_reg"
         style="@style/error_msg"
-        android:text="@string/err_reg"
         android:visibility="invisible" />
 
 </LinearLayout>

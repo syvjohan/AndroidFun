@@ -38,7 +38,7 @@ public class GroupFragment extends Fragment {
    static ArrayList<Group> groupList = new ArrayList<Group>();
     GroupAdapter groupAdapter;
     private Button RegisterNewGroup;
-
+    private String username;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -204,19 +204,25 @@ public class GroupFragment extends Fragment {
     }
 
     public void ChangeToChatFragment(String groupId) {
-        ChatFragment groupFragment = ChatFragment.newInstance("", "");
-        groupFragment.SetGroupID(groupId);
+        ChatFragment chatFragment = ChatFragment.newInstance("", "");
+        chatFragment.SetGroupID(groupId);
+        chatFragment.GetUsername(username);
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.container_chat, groupFragment, null);
+        fT.replace(R.id.container_chat, chatFragment, null);
         fT.addToBackStack("go to chat fragmement");
         fT.commit();
+    }
+
+    public void SetUsername(String username) {
+        this.username = username;
+
     }
 
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("Short clicked on group item in listView!", "GOTO Chatfragment");
+            Log.d("(Short click) clicked on group item in listView!", "GOTO Chatfragment");
             Group group = groupAdapter.getItem(position);
             ChangeToChatFragment(group.GetId());
         }
@@ -225,7 +231,7 @@ public class GroupFragment extends Fragment {
     private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("Long clicked on group item in listView!", "GOTO Chatfragment");
+            Log.d("(Long click) clicked on group item in listView!", "GOTO Chatfragment");
             Group group = groupAdapter.getItem(position);
             ChangeToChatFragment(group.GetId());
             return true;

@@ -48,11 +48,10 @@ public class ChatFragment extends Fragment implements
     ListView lstViewChat;
 
     private String groupId;
+    static String username;
 
-    Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
-    static String username = "Me";
     EditText editMsg;
-    Button btnSend;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -92,10 +91,10 @@ public class ChatFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         editMsg = (EditText)  view.findViewById(R.id.txt_message_input);
-        btnSend = (Button) view.findViewById(R.id.btnSend);
+        Button  btnSend = (Button) view.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        ReadChatMessages(firebaserootRef);
+        ReadChatMessages();
 
         return view;
     }
@@ -105,12 +104,14 @@ public class ChatFragment extends Fragment implements
         String txtMsg = editMsg.getText().toString();
         if (txtMsg != "") {
             System.out.println("GOTO CreateNewMessage!");
-            CreateNewMessage(firebaserootRef, txtMsg);
+            CreateNewMessage(txtMsg);
             editMsg.setText("");
         }
     }
 
-    public void  CreateNewMessage(Firebase firebaserootRef, String textMsg) {
+    public void  CreateNewMessage(String textMsg) {
+        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+
         Map<String, Message> chatMessages = new HashMap<>();
 
         String msg = textMsg;
@@ -133,17 +134,19 @@ public class ChatFragment extends Fragment implements
             chatMessages.put(id,cm);
             System.out.println("Succesfully created a new message.");
 
-            ReadChatMessages(firebaserootRef);
+            ReadChatMessages();
         }
     }
 
-    public void ReadChatMessages(Firebase firebaseRootRef) {
-        firebaseRootRef.addChildEventListener(new ChildEventListener() {
+    public void ReadChatMessages() {
+        Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
+        firebaserootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (!(snapshot.child(GetGroupId()).child("messages").getChildren().equals(null))) {
+                    System.out.println(snapshot.child(GetGroupId()).child("messages").child("message"));
                     for (DataSnapshot c : snapshot.child(GetGroupId()).child("messages").getChildren()) {
-                        String key = c.getKey();
+
                         System.out.println("NU KÖRS DEN HÄR WEEEE!");
                         Message newMessage = new Message();
                         newMessage.SetFrom((String) c.child("from").getValue());
@@ -239,13 +242,17 @@ public class ChatFragment extends Fragment implements
     }
 
     public String GetGroupId() {
-        System.out.println(groupId);
         return groupId;
     }
 
     public void SetGroupID(String groupId) {
         this.groupId = groupId;
     }
+
+    public void GetUsername(String username) {
+        this.username = username;
+    }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

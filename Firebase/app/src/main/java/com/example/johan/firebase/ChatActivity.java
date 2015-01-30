@@ -27,7 +27,11 @@ public class ChatActivity extends ActionBarActivity implements
 
         Firebase.setAndroidContext(this);
 
+        //Gets username from login or registration fragments.
+        String username = getIntent().getStringExtra("USERNAME");
+
         GroupFragment groupFragment = GroupFragment.newInstance("", "");
+        groupFragment.SetUsername(username);
         FragmentManager fM = getFragmentManager();
         FragmentTransaction fT = fM.beginTransaction();
         fT.replace(R.id.container_chat, groupFragment, null);

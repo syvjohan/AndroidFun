@@ -39,6 +39,5 @@
     <TextView
         android:id="@+id/err_login"
         style="@style/error_msg"
-        android:text="@string/err_login"
         android:visibility="invisible" />
 </LinearLayout>
