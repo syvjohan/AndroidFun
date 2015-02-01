@@ -174,7 +174,7 @@ public class GroupFragment extends Fragment implements
     }
 
     public void AddToLstViewGroup(Group newGroup) {
-       if (newGroup != null) {
+       if (newGroup.GetName() != null) {
             if (ComapareId(newGroup, groupList) == false) {
                 groupList.add(newGroup);
             }
