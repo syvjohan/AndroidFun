@@ -8,14 +8,14 @@
     <EditText
         android:id="@+id/reg_txtUsername"
         style="@style/editTextView"
-        android:text="@string/reg_txtUsername"
+        android:hint="@string/reg_txtUsername"
         android:inputType="textPersonName" />
     <!--android:hint="@string/reg_txtUsername"-->
 
     <EditText
         android:id="@+id/reg_txtPassword"
         style="@style/editTextView"
-        android:text="@string/reg_txtPassword"
+        android:hint="@string/reg_txtPassword"
         android:inputType="textPassword"/>
     <!--android:hint="@string/reg_txtPassword"-->
 

@@ -12,14 +12,14 @@
     <EditText
         android:layout_marginTop="10dp"
         style="@style/editTextView"
-        android:text="@string/login_txtUsername"
+        android:hint="@string/login_txtUsername"
         android:inputType="textPersonName"
         android:id="@+id/login_txtUsername" />
 
     <EditText
         android:layout_marginTop="5dp"
         style="@style/editTextView"
-        android:text="@string/login_txtPassword"
+        android:hint="@string/login_txtPassword"
         android:inputType="textPassword"
         android:id="@+id/login_txtPassword" />
 

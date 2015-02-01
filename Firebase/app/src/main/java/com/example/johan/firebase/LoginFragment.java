@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+
+import java.util.regex.Pattern;
 
 
 /**
@@ -115,7 +118,7 @@ public class LoginFragment extends Fragment {
         LoginBtnClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
+                final EditText editPwd = (EditText) getView().findViewById(R.id.login_txtPassword);
                 final EditText editName = (EditText) getView().findViewById(R.id.login_txtUsername);
 
                 //Authenticate the user
@@ -131,7 +134,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onAuthenticationError(FirebaseError firebaseError) {
                     TextView errMsg = (TextView) getView().findViewById(R.id.err_login);
-
+                        Pattern pathEmail = Patterns.EMAIL_ADDRESS;
                         switch(firebaseError.getCode()) {
                             case FirebaseError.INVALID_PASSWORD:
                                 errMsg.setText(R.string.INVALID_PASSWORD);
