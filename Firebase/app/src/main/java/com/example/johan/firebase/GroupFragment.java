@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
+import android.app.ListFragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupFragment extends Fragment {
+public class GroupFragment extends Fragment implements
+        View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,6 +39,7 @@ public class GroupFragment extends Fragment {
 
    static ArrayList<Group> groupList = new ArrayList<Group>();
     GroupAdapter groupAdapter;
+    ListView lstViewGroup;
     private Button RegisterNewGroup;
     private String username;
     private OnFragmentInteractionListener mListener;
@@ -70,7 +73,6 @@ public class GroupFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -80,22 +82,22 @@ public class GroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
 
         RegisterNewGroup = (Button)view.findViewById(R.id.btn_reg_new_group);
-        RegisterNewGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    EditText editRegNewGr = (EditText) getView().findViewById(R.id.txt_group_name);
-
-                    String groupName = editRegNewGr.getText().toString();
-                    if (groupName != "") {
-                        CreateNewGroup(groupName);
-                        editRegNewGr.setText("");
-                    }
-                }
-            });
+        RegisterNewGroup.setOnClickListener(this);
 
         ReadGroupData();
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+            EditText editRegNewGr = (EditText) getView().findViewById(R.id.txt_group_name);
+
+            String groupName = editRegNewGr.getText().toString();
+            if (groupName != "") {
+                CreateNewGroup(groupName);
+                editRegNewGr.setText("");
+            }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -144,12 +146,15 @@ public class GroupFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot snapshot, String s) {
             }
+
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {
             }
+
             @Override
             public void onChildMoved(DataSnapshot snapshot, String s) {
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
@@ -172,7 +177,11 @@ public class GroupFragment extends Fragment {
                 groupList.add(newGroup);
             }
 
-            ListView lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+            try {
+                lstViewGroup = (ListView) getView().findViewById(R.id.listView_group);
+            } catch (NullPointerException e) {
+                System.out.println("lstViewGroup is null in method AddtoLstViewGroup in GroupFragment class." + e.getMessage());
+            }
 
             if(groupAdapter == null) {
                 groupAdapter = new GroupAdapter(getActivity(), groupList);

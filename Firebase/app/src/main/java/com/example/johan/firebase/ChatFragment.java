@@ -145,9 +145,7 @@ public class ChatFragment extends Fragment implements
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
                 if (!(snapshot.child(GetGroupId()).child("messages").exists())) {
-
                     for (DataSnapshot c : snapshot.child("messages").getChildren()) {
-
                         if (snapshot.getKey().equals(GetGroupId())) {
 
                             Message newMessage = new Message();
@@ -156,6 +154,7 @@ public class ChatFragment extends Fragment implements
                             newMessage.SetTime((String) c.child("time").getValue());
                             newMessage.SetId((String) c.getKey());
 
+                            //Check if GetGroupId value has been changed.
                             if (temp == GetGroupId()) {
                                 AddToLstViewChat(newMessage);
                             } else {
@@ -199,6 +198,7 @@ public class ChatFragment extends Fragment implements
         return false;
     }
 
+    //Check who has sent the received message.
     public boolean IsMsgFromMe(Message message) {
         boolean isSenderMe = username.equals((CharSequence) message.GetFrom());
         return isSenderMe;
@@ -210,11 +210,17 @@ public class ChatFragment extends Fragment implements
                   chatMsgList.add(newMessage);
             }
 
-            if(IsMsgFromMe(newMessage)) {
-                lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
-            } else {
-                lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_others);
+            //Sets different listView depending on sender
+            try {
+                if(IsMsgFromMe(newMessage)) {
+                    lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
+                } else {
+                    lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_others);
+                }
+            } catch (NullPointerException e) {
+                System.out.println("lstView_chat_message_me/others is null in method AddtoLstViewChat in ChatFragment class." + e.getMessage());
             }
+
 
             if (chatAdapter == null) {
                 chatAdapter = new ChatAdapter(getActivity(), chatMsgList);
@@ -253,6 +259,7 @@ public class ChatFragment extends Fragment implements
         return groupId;
     }
 
+    //Receives the group id from ChatFragment (ChangeToChatFragment(String groupId)).
     public void SetGroupID(String groupId) {
         this.groupId = groupId;
     }

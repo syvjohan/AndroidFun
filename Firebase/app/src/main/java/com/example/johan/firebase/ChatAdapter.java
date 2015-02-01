@@ -30,7 +30,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         //Check who has sent the message me or someone else...
         if (IsMsgFromMe(message)) {
-            System.out.println("I did send the message");
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_me, parent, false);
@@ -46,7 +45,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             chatTime.setText("Date: " + (CharSequence) message.GetTime());
 
         } else {
-            System.out.println("Someone else send the message");
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_others, parent, false);
