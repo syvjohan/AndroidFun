@@ -43,7 +43,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             // Populate the data into the template view using the data object
             chatFrom.setText("From: " + (CharSequence) message.GetFrom());
             chatMessage.setText((CharSequence) message.GetMsg());
-            chatTime.setText("Time: " + (CharSequence) message.GetTime());
+            chatTime.setText("Date: " + (CharSequence) message.GetTime());
 
         } else {
             System.out.println("Someone else send the message");

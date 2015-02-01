@@ -156,9 +156,9 @@ public class GroupFragment extends Fragment {
         });
     }
 
-    public boolean ComapareValue(Group gr1, ArrayList<Group> lst) {
-        for (Group s : lst) {
-            if (gr1.GetId() == s.GetId()) {
+    public boolean ComapareId(Group gr1, ArrayList<Group> lst) {
+        for (Group g : lst) {
+            if (gr1.GetId() == g.GetId()) {
                 return true;
             }
         }
@@ -168,7 +168,7 @@ public class GroupFragment extends Fragment {
 
     public void AddToLstViewGroup(Group newGroup) {
        if (newGroup != null) {
-            if (ComapareValue(newGroup, groupList) == false) {
+            if (ComapareId(newGroup, groupList) == false) {
                 groupList.add(newGroup);
             }
 

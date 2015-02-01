@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ChatFragment extends Fragment implements
@@ -43,10 +44,10 @@ public class ChatFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
 
     static ArrayList<Message> chatMsgList = new ArrayList<>();
-
+    int sizetMsg = 0;
     ChatAdapter chatAdapter;
     ListView lstViewChat;
-
+    private String temp;
     private String groupId;
     static String username;
 
@@ -143,21 +144,29 @@ public class ChatFragment extends Fragment implements
         firebaserootRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String s) {
-                if (!(snapshot.child(GetGroupId()).child("messages").getChildren().equals(null))) {
-                    System.out.println(snapshot.child(GetGroupId()).child("messages").child("message"));
-                    for (DataSnapshot c : snapshot.child(GetGroupId()).child("messages").getChildren()) {
+                if (!(snapshot.child(GetGroupId()).child("messages").exists())) {
 
-                        System.out.println("NU KÖRS DEN HÄR WEEEE!");
-                        Message newMessage = new Message();
-                        newMessage.SetFrom((String) c.child("from").getValue());
-                        newMessage.SetMsg((String) c.child("message").getValue());
-                        newMessage.SetTime((String) c.child("time").getValue());
-                        newMessage.SetId((String) c.child("id").getValue());
+                    for (DataSnapshot c : snapshot.child("messages").getChildren()) {
 
-                        AddToLstViewChat(newMessage);
+                        if (snapshot.getKey().equals(GetGroupId())) {
 
-                        //Automatic scrolls to last line in listView.
-                        lstViewChat.setSelection(chatAdapter.getCount() -1);
+                            Message newMessage = new Message();
+                            newMessage.SetFrom((String) c.child("from").getValue());
+                            newMessage.SetMsg((String) c.child("message").getValue());
+                            newMessage.SetTime((String) c.child("time").getValue());
+                            newMessage.SetId((String) c.getKey());
+
+                            if (temp == GetGroupId()) {
+                                AddToLstViewChat(newMessage);
+                            } else {
+                                chatMsgList.clear();
+                                temp = GetGroupId();
+                                AddToLstViewChat(newMessage);
+                            }
+
+                            //Automatic scrolls to last line in listView.
+                            lstViewChat.setSelection(chatAdapter.getCount() -1);
+                        }
                     }
                 }
             }
@@ -180,13 +189,13 @@ public class ChatFragment extends Fragment implements
         });
     }
 
-    public boolean ComapareValue(Message msg, ArrayList<Message> lst) {
-        for (Message s : lst) {
-            if (msg.GetId() == s.GetId()) {
+    //Check if ArrayList contains the message.
+    public boolean ComapareId(Message msg, ArrayList<Message> lst) {
+        for (Message m : lst) {
+            if (msg.GetId() == m.GetId()) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -197,8 +206,8 @@ public class ChatFragment extends Fragment implements
 
     public void AddToLstViewChat(Message newMessage) {
         if (newMessage != null) {
-            if (ComapareValue(newMessage, chatMsgList) == false) {
-                 chatMsgList.add(newMessage);
+            if (!ComapareId(newMessage, chatMsgList)) {
+                  chatMsgList.add(newMessage);
             }
 
             if(IsMsgFromMe(newMessage)) {
@@ -214,7 +223,6 @@ public class ChatFragment extends Fragment implements
             lstViewChat.setAdapter(chatAdapter);
             chatAdapter.notifyDataSetChanged();
         }
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -125,6 +125,7 @@ public class LoginFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
                         intent.putExtra("USERNAME", editName.getText().toString());
                         startActivity(intent);
+                        getActivity().finish();
                     }
 
                     @Override
