@@ -25,6 +25,7 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class GroupFragment extends Fragment implements
         View.OnClickListener {
@@ -81,6 +82,7 @@ public class GroupFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
 
+        lstViewGroup = (ListView) view.findViewById(R.id.listView_group);
         RegisterNewGroup = (Button)view.findViewById(R.id.btn_reg_new_group);
         RegisterNewGroup.setOnClickListener(this);
 
@@ -91,13 +93,13 @@ public class GroupFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-            EditText editRegNewGr = (EditText) getView().findViewById(R.id.txt_group_name);
+        EditText editRegNewGr = (EditText) getView().findViewById(R.id.txt_group_name);
 
-            String groupName = editRegNewGr.getText().toString();
-            if (groupName != "") {
-                CreateNewGroup(groupName);
-                editRegNewGr.setText("");
-            }
+        String groupName = editRegNewGr.getText().toString();
+        if (!groupName.isEmpty()) {
+            CreateNewGroup(groupName);
+            editRegNewGr.setText("");
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

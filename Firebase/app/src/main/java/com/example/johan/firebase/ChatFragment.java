@@ -103,7 +103,7 @@ public class ChatFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         String txtMsg = editMsg.getText().toString();
-        if (txtMsg != "") {
+        if (!txtMsg.isEmpty()) {
             System.out.println("GOTO CreateNewMessage!");
             CreateNewMessage(txtMsg);
             editMsg.setText("");
