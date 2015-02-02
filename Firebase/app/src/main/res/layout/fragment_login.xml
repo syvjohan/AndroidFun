@@ -12,14 +12,14 @@
     <EditText
         android:layout_marginTop="10dp"
         style="@style/editTextView"
-        android:hint="@string/login_txtUsername"
+        android:text="johan@gmail.com"
         android:inputType="textPersonName"
         android:id="@+id/login_txtUsername" />
 
     <EditText
         android:layout_marginTop="5dp"
         style="@style/editTextView"
-        android:hint="@string/login_txtPassword"
+        android:text="firebase1"
         android:inputType="textPassword"
         android:id="@+id/login_txtPassword" />
 

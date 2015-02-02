@@ -29,8 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ChatFragment extends Fragment implements
-        View.OnClickListener {
+public class ChatFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,22 +92,24 @@ public class ChatFragment extends Fragment implements
 
         editMsg = (EditText)  view.findViewById(R.id.txt_message_input);
         Button  btnSend = (Button) view.findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(this);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String txtMsg = editMsg.getText().toString();
+                if (!txtMsg.isEmpty()) {
+                    System.out.println("GOTO CreateNewMessage!");
+                    CreateNewMessage(txtMsg);
+                    editMsg.setText("");
+                }
+            }
+        });
 
         ReadChatMessages();
 
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-        String txtMsg = editMsg.getText().toString();
-        if (!txtMsg.isEmpty()) {
-            System.out.println("GOTO CreateNewMessage!");
-            CreateNewMessage(txtMsg);
-            editMsg.setText("");
-        }
-    }
+
 
     public void  CreateNewMessage(String textMsg) {
         Firebase firebaserootRef = new Firebase("https://luminous-heat-420.firebaseio.com");
