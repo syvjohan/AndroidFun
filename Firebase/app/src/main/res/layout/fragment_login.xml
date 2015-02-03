@@ -4,11 +4,6 @@
     tools:context="com.example.johan.laboration1_ab5785.Fragment.LoginFragment"
     android:orientation="vertical" >
 
-    <Button
-        style="@style/btn"
-        android:text="@string/btn_login"
-        android:id="@+id/btn_login"/>
-
     <EditText
         android:layout_marginTop="10dp"
         style="@style/editTextView"
@@ -24,17 +19,20 @@
         android:id="@+id/login_txtPassword" />
 
     <Button
-        android:layout_gravity="center_horizontal|bottom"
         style="@style/btn"
-        android:text="@string/btn_about"
-        android:id="@+id/btn_about"
-        />
+        android:text="@string/btn_login"
+        android:id="@+id/btn_login"/>
 
     <Button
         style="@style/btn"
         android:id="@+id/btn_goto_register"
-        android:text="@string/btn_Register_new_user"
-        />
+        android:text="@string/btn_Register_new_user" />
+
+    <Button
+        android:layout_gravity="center_horizontal|bottom"
+        style="@style/btn"
+        android:text="@string/btn_about"
+        android:id="@+id/btn_about"/>
 
     <TextView
         android:id="@+id/err_login"

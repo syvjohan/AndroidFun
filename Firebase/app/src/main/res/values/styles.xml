@@ -9,7 +9,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:height">50dp</item>
+        <item name="android:height">60dp</item>
         <item name="android:textSize">25dp</item>
         <item name="android:background">#D7C5E0</item>
         <item name="android:gravity">center</item>
@@ -25,14 +25,15 @@
 
     <style name="editTextView">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">17dp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:ems">20</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:background">#CBCBB2</item>
     </style>
+
 
     <style name="textView">
         <item name="android:layout_width">fill_parent</item>
@@ -62,7 +63,7 @@
 
     <style name="error_msg">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:ellipsize">none</item>
         <item name="android:maxLines">100</item>
@@ -71,6 +72,26 @@
         <item name="android:textColor">#880000 </item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="textView_chat_others">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginRight">180dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="textView_chat_me">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginLeft">180dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:ellipsize">none</item>
     </style>
 
 </resources>

@@ -2,10 +2,13 @@ package com.example.johan.firebase;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,16 +16,15 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Text;
 
-/**
- * Created by johan on 1/19/2015.
- */
 public class ChatAdapter extends ArrayAdapter<Message> {
 
     private ArrayList<Message> lstMessages;
+    private LayoutInflater layoutInflater;
 
     public ChatAdapter(Context context, ArrayList<Message> messages) {
         super(context, 0, messages);
         this.lstMessages = messages;
+        layoutInflater = LayoutInflater.from(getContext());
     }
 
     public int IsMsgFromMe(Message message) {
@@ -46,7 +48,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     //Number of layouts
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -73,14 +75,14 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             //Check who has sent the message me or someone else...
             switch(sender) {
                 case 0:
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_me, parent, false);
+                    convertView = layoutInflater.inflate(R.layout.row_chat_me, parent, false);
 
                     holder.chatFrom = (TextView) convertView.findViewById(R.id.txt_message_me_from);
                     holder.chatMessage = (TextView) convertView.findViewById(R.id.txt_message_me_message);
                     holder.chatTime = (TextView) convertView.findViewById(R.id.txt_message_me_time);
                     break;
                 case 1:
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_chat_others, parent, false);
+                    convertView = layoutInflater.inflate(R.layout.row_chat_others, parent, false);
 
                     holder.chatFrom = (TextView) convertView.findViewById(R.id.txt_message_others_from);
                     holder.chatMessage = (TextView) convertView.findViewById(R.id.txt_message_others_message);

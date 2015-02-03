@@ -43,7 +43,6 @@ public class ChatFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     static ArrayList<Message> chatMsgList = new ArrayList<>();
-    int sizetMsg = 0;
     ChatAdapter chatAdapter;
     ListView lstViewChat;
     private String temp;
@@ -211,20 +210,14 @@ public class ChatFragment extends Fragment {
                   chatMsgList.add(newMessage);
             }
 
-            //Sets different listView depending on sender
-            try {
-                if(IsMsgFromMe(newMessage)) {
-                    lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_me);
-                } else {
-                    lstViewChat = (ListView) getView().findViewById(R.id.listView_chat_message_others);
-                }
-            } catch (NullPointerException e) {
-                System.out.println("lstView_chat_message_me/others is null in method AddtoLstViewChat in ChatFragment class." + e.getMessage());
-            }
-
-
             if (chatAdapter == null) {
                 chatAdapter = new ChatAdapter(getActivity(), chatMsgList);
+            }
+
+            try {
+                  lstViewChat = (ListView) getView().findViewById(R.id.listView_chat);
+            } catch (NullPointerException e) {
+                System.out.println("lstView_chat_message_me/others is null in method AddtoLstViewChat in ChatFragment class." + e.getMessage());
             }
 
             lstViewChat.setAdapter(chatAdapter);
