@@ -54,6 +54,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolderGr holder = null;
+        convertView = null; //Make it possible to scroll without loading data over an already existing view.
 
         if (convertView == null) {
             holder = new ViewHolderGr();
@@ -69,24 +70,9 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         Group group = lstGroups.get(position);
 
         holder.groupName.setText(group.GetName());
+        notifyDataSetChanged();
 
         return convertView;
-
-       /* // Get the data item for this position
-        Group group = GroupFragment.groupList.get(position);
-
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_group, parent, false);
-        }
-
-        TextView groupName = (TextView) convertView.findViewById(R.id.txt_group_name);
-
-        // Populate the data into the template view using the data object
-        groupName.setText(group.GetName());
-
-        // Return the completed view to render on screen
-        return convertView;*/
     }
 
     public static class ViewHolderGr {

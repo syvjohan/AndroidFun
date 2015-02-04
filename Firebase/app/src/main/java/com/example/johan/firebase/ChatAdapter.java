@@ -66,7 +66,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-
+        convertView = null; //Make it possible to scroll without loading data over an already existing view.
         int sender = getItemViewType(position);
 
         if (convertView == null) {
