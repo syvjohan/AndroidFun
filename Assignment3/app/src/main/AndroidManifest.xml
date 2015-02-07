@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/ThemeOverlay.AppCompat" >
+        android:theme="@style/Theme.AppCompat" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
