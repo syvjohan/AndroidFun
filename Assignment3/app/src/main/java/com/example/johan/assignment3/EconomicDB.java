@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -14,74 +15,104 @@ import java.util.Date;
 public class EconomicDB extends SQLiteOpenHelper {
 
     private static final String TAG = EconomicDB.class.getSimpleName();
-    private static final String DB_NAME = "economicdb";
-    private static final int DB_VERSION = 2;
+    private static String DB_NAME = "economicdb";
+    private static int DB_VERSION = 1;
 
-    private static EconomicDB instance;
     private SQLiteDatabase database;
-
-    public static void init(Context context) {
-        instance = new EconomicDB(context.getApplicationContext());
-        instance.open();
-    }
 
     public EconomicDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public static EconomicDB getInstance() {
-        return instance;
-    }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
+        if (DB_VERSION == 1) {
             db.execSQL(
-                            "CREATE TABLE income (" +
-                                    "id INTEGER PRIMARY KEY," +
-                                    "timestamp INTEGER DEFAULT (strftime('%s', 'now')));"
-
+                    "CREATE TABLE income" +
+                            "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
             );
-        db.execSQL(
-                "CREATE TABLE expense (" +
-                        "id INTEGER PRIMARY KEY," +
-                        "timestamp INTEGER DEFAULT (strftime('%s', 'now')));"
-        );
+
+            db.execSQL(
+                    "CREATE TABLE expense" +
+                            "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
+            );
+
+            DB_VERSION = 2;
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion < 2) {
-            database.execSQL(
-                    "CREATE TABLE income (" +
-                            "id INTEGET PRIMARY KEY," +
-                            "timestamp INTEGER DEFAULT (strftime('%s', 'now')));"
-            );
+        if(newVersion < DB_VERSION) {
+            this.onCreate(db);
         }
+        System.out.println(DB_VERSION);
     }
 
-    private void open() {
-        database = getWritableDatabase();
-    }
+    public ArrayList getAllIncomeContent() {
+        ArrayList<Data> arrIncome = new ArrayList<>();
+        Data data = new Data();
 
-    public String loadIncomeContent(int id) {
-        String content = null;
-        Cursor cursor = database.rawQuery("SELECT content FROM income WHERE id = ?;", new String[]{Integer.toString(id)});
-        if (cursor.moveToFirst()) {
-            content = cursor.getString(0);
+        openRead();
+        Cursor cursor = database.rawQuery("SELECT * FROM income", null);
+        int count = 0;
+        if(cursor.getCount() > 0 && cursor.getCount() >= count) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                data.SetId(cursor.getString(0));
+                data.SetAmount(cursor.getString(1));
+                data.SetTitle(cursor.getString(2));
+                data.SetDate(cursor.getString(3));
+
+                arrIncome.add(data);
+                count++;
+            }
         }
+
         cursor.close();
-        return content;
+        dbClose();
+
+        return arrIncome;
+    }
+
+    public Data loadIncomeContent(String id) {
+        Data data = new Data();
+        String[] args={id};
+        Cursor cursor = database.rawQuery("SELECT * FROM income WHERE id = ?", args);
+
+        if(cursor.getCount() > 0) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                data.SetId(cursor.getString(0));
+                data.SetAmount(cursor.getString(1));
+                data.SetTitle(cursor.getString(2));
+                data.SetDate(cursor.getString(3));
+            }
+        }
+
+        cursor.close();
+        dbClose();
+
+        return data;
 
     }
 
-    public String loadExpenseContent(int id) {
-        String content = null;
-        Cursor cursor = database.rawQuery("SELECT content FROM expense WHERE id = ?;", new String[]{Integer.toString(id)});
-        if (cursor.moveToFirst()) {
-            content = cursor.getString(0);
+    public Data loadExpenseContent(String id) {
+        Data data = new Data();
+        String[] args={id};
+        Cursor cursor = database.rawQuery("SELECT * FROM expense WHERE id = ?", args);
+
+        if(cursor.getCount() > 0) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                data.SetId(cursor.getString(0));
+                data.SetAmount(cursor.getString(1));
+                data.SetTitle(cursor.getString(2));
+                data.SetDate(cursor.getString(3));
+            }
         }
+
         cursor.close();
-        return content;
+        dbClose();
+
+        return data;
     }
 
     public synchronized boolean saveIncome(Data data) {
@@ -90,7 +121,7 @@ public class EconomicDB extends SQLiteOpenHelper {
         values.put("amount", data.GetAmount());
         values.put("title", data.GetTitle());
         values.put("date", data.GetDate());
-        boolean success = database.insert("income", null, values) != -1;
+        boolean success = database.insertOrThrow("income", null, values) != -1;
         return success;
     }
 
@@ -102,6 +133,19 @@ public class EconomicDB extends SQLiteOpenHelper {
         values.put("date", data.GetDate());
         boolean success = database.insert("expense", null, values) != -1;
         return success;
+    }
+
+    //Help methods!
+    public void openWrite() {
+        database = getWritableDatabase();
+    }
+
+    public void openRead() {
+        database = getReadableDatabase();
+    }
+
+    public void dbClose() {
+        database.close();
     }
 
 }

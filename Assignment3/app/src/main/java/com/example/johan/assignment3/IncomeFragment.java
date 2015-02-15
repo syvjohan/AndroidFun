@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -38,6 +40,10 @@ public class IncomeFragment extends Fragment {
     private Button sendBtn;
     private ListView lstIncome;
     private EconomicDB db;
+    private static ArrayList<Data> storeIncome = new ArrayList<>();
+    private String rowId;
+    private IncomeAdapter incomeAdapter;
+
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -71,37 +77,71 @@ public class IncomeFragment extends Fragment {
         }
     }
 
-    private void ReadUserInput() {
-        EditText amount = (EditText) getView().findViewById(R.id.txt_income_amount_input);
-        EditText title = (EditText) getView().findViewById(R.id.txt_income_title_input);
+    private void SaveContentToDB() {
+        EditText editAmount = (EditText) getView().findViewById(R.id.txt_income_amount_input);
+        EditText editTitle = (EditText) getView().findViewById(R.id.txt_income_title_input);
 
-        String a = amount.getText().toString();
-        int number = Integer.parseInt(a);
-        String t = title.getText().toString();
+        String amount = editAmount.getText().toString();
+        String title = editTitle.getText().toString();
 
-        if (!a.equals("") && number >= 1) {
+        String regex = "[0-9]+";
+        boolean atleasOneAlpha = title.matches(".*[a-zA-Z]+.*");
+        boolean onlyDigits = amount.matches(regex);
 
-            boolean atleasOneAlpha = t.matches(".*[a-zA-Z]+.*");
-            if (atleasOneAlpha) {
-                //Save data in database
-                Data data = new Data();
-                data.SetTitle(t);
-                data.SetAmount(a);
-                data.SetId(TimeStamp());
-                data.SetDate(TimeStamp());
+        if (!amount.isEmpty() && onlyDigits && atleasOneAlpha) {
+            //Save data in database
+            Data data = new Data();
+            data.SetTitle(title);
+            data.SetAmount(amount);
+            data.SetId(TimeStamp());
+            data.SetDate(TimeStamp());
 
-                //Push data to DB.
-                db.init(getView().getContext());
-                db.getInstance();
-                db.saveIncome(data);
-            }
+            //Push data to DB.
+            db.openWrite();
+            db.saveIncome(data);
+
+            //Store the newly inserted data id.
+            rowId = data.GetId();
+
+        } else {
+            //Fail.
+            TextView error = (TextView) getView().findViewById(R.id.txt_error);
+            error.setText(R.string.wrong_input);
+            rowId = "";
         }
 
-        //Fail.
-        TextView error = (TextView) getView().findViewById(R.id.txt_error);
-        error.setText(R.string.wrong_input);
-        amount.setText("");
-        title.setText("");
+        editAmount.setText("");
+        editTitle.setText("");
+    }
+
+    public void LoadContentFromDB() {
+        if (!rowId.isEmpty()) {
+            db.openRead();
+
+           Data newData = new Data();
+           newData = db.loadIncomeContent(rowId);
+           storeIncome.add(newData);
+
+           // Add data from db into listView.
+           AddToListView();
+        }
+    }
+
+    public void AddToListView() {
+
+        if (incomeAdapter == null) {
+            incomeAdapter = new IncomeAdapter(getActivity(), storeIncome);
+        }
+
+        try {
+            lstIncome = (ListView) getView().findViewById(R.id.listView_income);
+        } catch (NullPointerException e) {
+            System.out.println("lstView_income is null in method AddtoListView in IncomeFragment class." + e.getMessage());
+        }
+
+        lstIncome.setAdapter(incomeAdapter);
+        incomeAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -111,13 +151,24 @@ public class IncomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_income, container, false);
 
         lstIncome = (ListView) view.findViewById(R.id.listView_income);
-        //Load db into listView!!!
+
+        //Create a new database object.
+        db = new EconomicDB(view.getContext());
+
+        //Load all contents from db.
+        storeIncome.addAll(db.getAllIncomeContent());
+        if (!storeIncome.isEmpty()) {
+            AddToListView();
+        }
 
         sendBtn = (Button) view.findViewById(R.id.btn_add_income);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
         public void onClick(View v) {
-                ReadUserInput();
+                String rowId = "";
+
+                SaveContentToDB();
+                LoadContentFromDB();
             }
         });
 
