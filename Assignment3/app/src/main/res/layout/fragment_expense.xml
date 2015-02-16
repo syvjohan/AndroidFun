@@ -6,36 +6,36 @@
     tools:context="com.example.johan.assignment3.ExpenseFragment">
 
     <RelativeLayout
-        android:id="@+id/income_top_layout"
+        android:id="@+id/expense_top_layout"
         style="@style/top_layout"
-        android:layout_above="@+id/income_bottom_layout" >
+        android:layout_above="@+id/expense_bottom_layout" >
 
         <ListView
-            android:id="@+id/listView_income"
+            android:id="@+id/listView_expense"
             style="@style/listView_show_data" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/income_bottom_layout"
-        style="@style/bottom_layout" >
+        style="@style/bottom_layout"
+        android:id="@+id/expense_bottom_layout" >
 
         <TextView
             android:id="@+id/txt_error"
             style="@style/error_msg" />
 
         <EditText
-            android:id="@+id/txt_income_amount"
+            android:id="@+id/txt_expense_amount"
             style="@style/editText_input_data"
             android:text="22" />
 
         <EditText
-            android:id="@+id/txt_income_title"
+            android:id="@+id/txt_expense_title"
             style="@style/editText_input_data"
             android:text="hej" />
 
         <Button
-            android:id="@+id/btn_add_income"
+            android:id="@+id/btn_add_expense"
             style="@style/btn_add" />
 
     </LinearLayout>

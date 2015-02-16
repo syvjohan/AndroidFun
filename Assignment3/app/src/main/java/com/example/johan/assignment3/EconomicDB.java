@@ -46,7 +46,6 @@ public class EconomicDB extends SQLiteOpenHelper {
         if(newVersion < DB_VERSION) {
             this.onCreate(db);
         }
-        System.out.println(DB_VERSION);
     }
 
     public ArrayList getAllIncomeContent() {
@@ -74,7 +73,32 @@ public class EconomicDB extends SQLiteOpenHelper {
         return arrIncome;
     }
 
-    public Data loadIncomeContent(String id) {
+    public ArrayList getAllExpenseContent() {
+        ArrayList<Data> arrIncome = new ArrayList<>();
+        Data data = new Data();
+
+        openRead();
+        Cursor cursor = database.rawQuery("SELECT * FROM expense", null);
+        int count = 0;
+        if(cursor.getCount() > 0 && cursor.getCount() >= count) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                data.SetId(cursor.getString(0));
+                data.SetAmount(cursor.getString(1));
+                data.SetTitle(cursor.getString(2));
+                data.SetDate(cursor.getString(3));
+
+                arrIncome.add(data);
+                count++;
+            }
+        }
+
+        cursor.close();
+        dbClose();
+
+        return arrIncome;
+    }
+
+    public Data getIncomeContent(String id) {
         Data data = new Data();
         String[] args={id};
         Cursor cursor = database.rawQuery("SELECT * FROM income WHERE id = ?", args);
@@ -95,7 +119,7 @@ public class EconomicDB extends SQLiteOpenHelper {
 
     }
 
-    public Data loadExpenseContent(String id) {
+    public Data getExpenseContent(String id) {
         Data data = new Data();
         String[] args={id};
         Cursor cursor = database.rawQuery("SELECT * FROM expense WHERE id = ?", args);
@@ -121,7 +145,7 @@ public class EconomicDB extends SQLiteOpenHelper {
         values.put("amount", data.GetAmount());
         values.put("title", data.GetTitle());
         values.put("date", data.GetDate());
-        boolean success = database.insertOrThrow("income", null, values) != -1;
+        boolean success = database.insert("income", null, values) != -1;
         return success;
     }
 
