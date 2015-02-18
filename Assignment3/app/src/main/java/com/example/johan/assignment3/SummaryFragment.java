@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -210,5 +209,5 @@ public class SummaryFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }
+

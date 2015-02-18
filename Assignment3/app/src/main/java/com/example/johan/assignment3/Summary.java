@@ -25,3 +25,4 @@ public class Summary {
     public Double GetSummary() {return this.summary; }
     public void SetSummary(Double summary) {this.summary = summary; }
 }
+

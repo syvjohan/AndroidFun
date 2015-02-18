@@ -9,8 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-
 
 public class MainActivity extends ActionBarActivity implements
         IncomeFragment.OnFragmentInteractionListener,
@@ -109,3 +107,4 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 }
+

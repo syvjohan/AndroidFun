@@ -29,4 +29,8 @@ public class Data {
 
     public String GetTitle() {return this.title; }
     public void SetTitle(String title) {this.title = title; }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev

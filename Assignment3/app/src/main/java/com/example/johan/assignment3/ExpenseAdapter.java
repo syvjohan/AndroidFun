@@ -83,4 +83,8 @@ public class ExpenseAdapter extends ArrayAdapter<Data> {
         public TextView expenseAmount;
         public TextView expenseTitle;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev

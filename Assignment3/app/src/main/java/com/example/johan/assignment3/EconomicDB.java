@@ -25,6 +25,7 @@ public class EconomicDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+<<<<<<< HEAD
         db.execSQL(
                 "CREATE TABLE income" +
                         "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
@@ -34,6 +35,17 @@ public class EconomicDB extends SQLiteOpenHelper {
                 "CREATE TABLE expense" +
                         "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
         );
+=======
+            db.execSQL(
+                    "CREATE TABLE income" +
+                            "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
+            );
+
+            db.execSQL(
+                    "CREATE TABLE expense" +
+                            "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
+            );
+>>>>>>> dev
     }
 
     @Override
@@ -171,4 +183,8 @@ public class EconomicDB extends SQLiteOpenHelper {
         database.close();
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev

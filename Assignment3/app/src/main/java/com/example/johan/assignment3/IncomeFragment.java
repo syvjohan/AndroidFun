@@ -119,12 +119,21 @@ public class IncomeFragment extends Fragment {
         if (!rowId.isEmpty()) {
             db.openRead();
 
+<<<<<<< HEAD
             Data newData = new Data();
             newData = db.getSpecificIncomeContent(rowId);
             storeIncome.add(newData);
 
             // Add data from db into listView.
             AddToListView(view);
+=======
+           Data newData = new Data();
+           newData = db.getSpecificIncomeContent(rowId);
+           storeIncome.add(newData);
+
+           // Add data from db into listView.
+           AddToListView(view);
+>>>>>>> dev
         }
     }
 
@@ -160,7 +169,11 @@ public class IncomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+<<<<<<< HEAD
         final View view = inflater.inflate(R.layout.fragment_income, container, false);
+=======
+       final View view = inflater.inflate(R.layout.fragment_income, container, false);
+>>>>>>> dev
 
         //Sets the title in actionbar
         getActivity().setTitle(R.string.fragment_income_title);
@@ -175,7 +188,11 @@ public class IncomeFragment extends Fragment {
         AddBtn = (Button) view.findViewById(R.id.btn_add_income);
         AddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
+<<<<<<< HEAD
             public void onClick(View v) {
+=======
+        public void onClick(View v) {
+>>>>>>> dev
                 SaveContentToDB();
                 LoadSpecificContentFromDB(view);
             }
@@ -228,4 +245,8 @@ public class IncomeFragment extends Fragment {
         return timeStamp;
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev
