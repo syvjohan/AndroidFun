@@ -227,9 +227,4 @@ public class ExpenseFragment extends Fragment {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         return timeStamp;
     }
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev

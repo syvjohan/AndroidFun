@@ -54,16 +54,6 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
         ViewHolder holder = null;
 
         if (convertView == null) {
-<<<<<<< HEAD
-            holder = new ViewHolder();
-            convertView = layoutInflater.inflate(R.layout.row_income, parent, false);
-
-            holder.incomeDate = (TextView) convertView.findViewById(R.id.txt_income_date);
-            holder.incomeAmount = (TextView) convertView.findViewById(R.id.txt_income_amount);
-            holder.incomeTitle = (TextView) convertView.findViewById(R.id.txt_income_title);
-
-            convertView.setTag(holder);
-=======
                 holder = new ViewHolder();
                 convertView = layoutInflater.inflate(R.layout.row_income, parent, false);
 
@@ -72,7 +62,6 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
                 holder.incomeTitle = (TextView) convertView.findViewById(R.id.txt_income_title);
 
                 convertView.setTag(holder);
->>>>>>> dev
 
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -96,8 +85,5 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
         public TextView incomeAmount;
         public TextView incomeTitle;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev
+
