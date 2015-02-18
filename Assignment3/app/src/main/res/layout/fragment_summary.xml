@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        style="@style/linearLayout" >
+        style="@style/linearLayout_sum" >
 
         <TextView
             android:id="@+id/txt_summary_sum_text"
@@ -21,7 +21,7 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/linearLayout" >
+        style="@style/linearLayout_sum" >
 
         <TextView
             android:id="@+id/txt_summary_expense_text"
@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/linearLayout" >
+        style="@style/linearLayout_sum" >
 
         <TextView
             android:id="@+id/txt_summary_income_text"
@@ -48,5 +48,19 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        style="@style/linearLayout_pie" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/canvas_pie"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
+
 
