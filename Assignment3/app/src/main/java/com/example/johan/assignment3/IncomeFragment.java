@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -43,7 +44,6 @@ public class IncomeFragment extends Fragment {
     private static ArrayList<Data> storeIncome = new ArrayList<>();
     private String rowId;
     private IncomeAdapter incomeAdapter;
-    private boolean doOnce = false;
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,13 +76,11 @@ public class IncomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        doOnce = true;
     }
 
     private void SaveContentToDB() {
-        EditText editAmount = (EditText) getView().findViewById(R.id.txt_income_amount);
-        EditText editTitle = (EditText) getView().findViewById(R.id.txt_income_title);
+        EditText editAmount = (EditText) getView().findViewById(R.id.editxt_income_amount);
+        EditText editTitle = (EditText) getView().findViewById(R.id.editxt_income_title);
 
         String amount = editAmount.getText().toString();
         String title = editTitle.getText().toString();
@@ -117,62 +115,69 @@ public class IncomeFragment extends Fragment {
         editTitle.setText("");
     }
 
-    public void LoadContentFromDB() {
+    public void LoadSpecificContentFromDB(View view) {
         if (!rowId.isEmpty()) {
             db.openRead();
 
            Data newData = new Data();
-           newData = db.getIncomeContent(rowId);
+           newData = db.getSpecificIncomeContent(rowId);
            storeIncome.add(newData);
 
            // Add data from db into listView.
-           AddToListView();
+           AddToListView(view);
         }
     }
 
-    public void AddToListView() {
+    public void AddToListView(View view) {
 
         if (incomeAdapter == null) {
             incomeAdapter = new IncomeAdapter(getActivity(), storeIncome);
         }
 
-        this.lstIncome = (ListView) getView().findViewById(R.id.listView_income);
+        lstIncome = (ListView) view.findViewById(R.id.listView_income);
 
         lstIncome.setAdapter(incomeAdapter);
         incomeAdapter.notifyDataSetChanged();
 
     }
 
+    public void LoadAllIncomeContentFromDB(View view) {
+        ArrayList<Data> temp = new ArrayList<>();
+
+        //Load all contents from db.
+        temp.addAll(db.getAllIncomeContent());
+        if (!temp.isEmpty()) {
+            storeIncome = temp;
+
+            //Show objects in listview
+            AddToListView(view);
+        }
+        //Erase reference, GC will delete object.
+        temp = null;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_income, container, false);
+       final View view = inflater.inflate(R.layout.fragment_income, container, false);
 
-        getActivity().setTitle(R.string.fragment_income);
+        //Sets the title in actionbar
+        getActivity().setTitle(R.string.fragment_income_title);
 
         if (db == null) {
             //Create a new database object.
             db = new EconomicDB(view.getContext());
         }
 
-        //Load all contents from db.
-        if (doOnce) {
-            storeIncome.addAll(db.getAllIncomeContent());
-            if (!storeIncome.isEmpty()) {
-                doOnce = false;
-                AddToListView();
-            }
-        }
+        LoadAllIncomeContentFromDB(view);
 
         AddBtn = (Button) view.findViewById(R.id.btn_add_income);
         AddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
         public void onClick(View v) {
-                String rowId = "";
-
                 SaveContentToDB();
-                LoadContentFromDB();
+                LoadSpecificContentFromDB(view);
             }
         });
 

@@ -25,12 +25,15 @@
             style="@style/error_msg" />
 
         <EditText
-            android:id="@+id/txt_expense_amount"
+            android:id="@+id/editxt_expense_amount"
+            android:inputType="number"
+            android:hint="Write amount here!"
             style="@style/editText_input_data"
             android:text="22" />
 
         <EditText
-            android:id="@+id/txt_expense_title"
+            android:id="@+id/editxt_expense_title"
+            android:hint="Write title here!"
             style="@style/editText_input_data"
             android:text="hej" />
 

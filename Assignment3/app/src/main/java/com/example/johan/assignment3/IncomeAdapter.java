@@ -1,6 +1,7 @@
 package com.example.johan.assignment3;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
         holder.incomeDate.setText("Date: " + data.GetDate());
         holder.incomeTitle.setText("Title: " + data.GetTitle());
         holder.incomeAmount.setText("Amount: " + data.GetAmount());
+
 
         // Return the completed view to render on screen
         return convertView;

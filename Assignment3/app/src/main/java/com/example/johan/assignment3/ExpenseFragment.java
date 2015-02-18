@@ -79,8 +79,8 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void SaveContentToDB() {
-        EditText editAmount = (EditText) getView().findViewById(R.id.txt_expense_amount);
-        EditText editTitle = (EditText) getView().findViewById(R.id.txt_expense_title);
+        EditText editAmount = (EditText) getView().findViewById(R.id.editxt_expense_amount);
+        EditText editTitle = (EditText) getView().findViewById(R.id.editxt_expense_title);
 
         String amount = editAmount.getText().toString();
         String title = editTitle.getText().toString();
@@ -115,62 +115,69 @@ public class ExpenseFragment extends Fragment {
         editTitle.setText("");
     }
 
-    public void LoadContentFromDB() {
+    public void LoadSpecificContentFromDB(View view) {
         if (!rowId.isEmpty()) {
             db.openRead();
 
             Data newData = new Data();
-            newData = db.getExpenseContent(rowId);
+            newData = db.getSpecificExpenseContent(rowId);
             storeExpense.add(newData);
 
             // Add data from db into listView.
-            AddToListView();
+            AddToListView(view);
         }
     }
 
-    public void AddToListView() {
+    public void AddToListView(View view) {
 
         if (expenseAdapter == null) {
             expenseAdapter = new ExpenseAdapter(getActivity(), storeExpense);
         }
 
-        this.lstExpense = (ListView) getView().findViewById(R.id.listView_expense);
+        this.lstExpense = (ListView) view.findViewById(R.id.listView_expense);
 
         lstExpense.setAdapter(expenseAdapter);
         expenseAdapter.notifyDataSetChanged();
 
     }
 
+    public void LoadAllExpenseContentFromDB(View view) {
+        ArrayList<Data> temp = new ArrayList<>();
+
+        //Load all contents from db.
+        temp.addAll(db.getAllExpenseContent());
+        if (!temp.isEmpty()) {
+            storeExpense = temp;
+
+            //Show objects in listview
+            AddToListView(view);
+
+        }
+        //Erase reference, GC will delete object.
+        temp = null;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_expense, container, false);
+        final View view = inflater.inflate(R.layout.fragment_expense, container, false);
 
-        getActivity().setTitle(R.string.fragment_expense);
+        getActivity().setTitle(R.string.fragment_expense_title);
 
         if (db == null) {
             //Create a new database object.
             db = new EconomicDB(view.getContext());
         }
 
-        //Load all contents from db.
-        if (doOnce) {
-            storeExpense.addAll(db.getAllExpenseContent());
-            if (!storeExpense.isEmpty()) {
-                doOnce = false;
-                AddToListView();
-            }
-        }
+        LoadAllExpenseContentFromDB(view);
 
         AddBtn = (Button) view.findViewById(R.id.btn_add_expense);
         AddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String rowId = "";
-
                 SaveContentToDB();
-                LoadContentFromDB();
+                LoadSpecificContentFromDB(view);
             }
         });
 

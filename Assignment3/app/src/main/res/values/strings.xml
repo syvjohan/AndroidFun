@@ -10,8 +10,8 @@
     <string name="wrong_input">Wrong input, please try again!</string>
 
     //Fragment titles
-    <string name="fragment_income">Income</string>
-    <string name="fragment_expense">Expense</string>
-    <string name="fragment_summary">Summary</string>
+    <string name="fragment_income_title">Income:</string>
+    <string name="fragment_expense_title">Expense:</string>
+    <string name="fragment_summary_title">Summary:</string>
 
 </resources>

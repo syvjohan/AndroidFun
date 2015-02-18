@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -19,6 +20,8 @@ public class MainActivity extends ActionBarActivity implements
     private final int INCOME_MENU_ITEM = Menu.FIRST;
     private final int EXPENSE_MENU_ITEM = INCOME_MENU_ITEM + 1;
     private final int SUMMARY_MENU_ITEM = EXPENSE_MENU_ITEM + 1;
+    private double income = 0;
+    private double expense = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +49,6 @@ public class MainActivity extends ActionBarActivity implements
         switch(item.getItemId()) {
 
             case INCOME_MENU_ITEM:
-                System.out.println(item);
-                System.out.println("INCOME");
                 IncomeFragment incomeFragment = IncomeFragment.newInstance("", "");
                 FragmentManager fMI = getFragmentManager();
                 FragmentTransaction fTI = fMI.beginTransaction();
@@ -57,8 +58,6 @@ public class MainActivity extends ActionBarActivity implements
                 break;
 
             case EXPENSE_MENU_ITEM:
-                System.out.println(item);
-                System.out.println("EXPENSE");
                 ExpenseFragment expenseFragment = ExpenseFragment.newInstance("", "");
                 FragmentManager fME = getFragmentManager();
                 FragmentTransaction fTE = fME.beginTransaction();
@@ -69,6 +68,12 @@ public class MainActivity extends ActionBarActivity implements
 
             case SUMMARY_MENU_ITEM:
                 SummaryFragment summaryFragment = SummaryFragment.newInstance("", "");
+
+                Bundle b = new Bundle();
+                b.putDouble("income", income);
+                b.putDouble("expense", expense);
+                summaryFragment.setArguments(b);
+
                 FragmentManager fMS = getFragmentManager();
                 FragmentTransaction fTS = fMS.beginTransaction();
                 fTS.replace(R.id.container_main, summaryFragment, null);
@@ -81,6 +86,10 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void GetData() {
+
     }
 
     @Override

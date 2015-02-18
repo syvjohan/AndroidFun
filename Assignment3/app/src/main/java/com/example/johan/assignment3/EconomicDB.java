@@ -14,9 +14,8 @@ import java.util.Date;
  */
 public class EconomicDB extends SQLiteOpenHelper {
 
-    private static final String TAG = EconomicDB.class.getSimpleName();
     private static String DB_NAME = "economicdb";
-    private static int DB_VERSION = 1;
+    private static int DB_VERSION = 2;
 
     private SQLiteDatabase database;
 
@@ -26,7 +25,6 @@ public class EconomicDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        if (DB_VERSION == 1) {
             db.execSQL(
                     "CREATE TABLE income" +
                             "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
@@ -36,52 +34,52 @@ public class EconomicDB extends SQLiteOpenHelper {
                     "CREATE TABLE expense" +
                             "(id TEXT PRIMARY KEY, amount TEXT, title TEXT, date TEXT)"
             );
-
-            DB_VERSION = 2;
-        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(newVersion < DB_VERSION) {
+        if(oldVersion < 2) {
             this.onCreate(db);
         }
     }
 
     public ArrayList getAllIncomeContent() {
-        ArrayList<Data> arrIncome = new ArrayList<>();
-        Data data = new Data();
+        ArrayList<Data> arrListIncome = new ArrayList<>();
 
         openRead();
         Cursor cursor = database.rawQuery("SELECT * FROM income", null);
         int count = 0;
         if(cursor.getCount() > 0 && cursor.getCount() >= count) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                Data data = new Data();
+
                 data.SetId(cursor.getString(0));
                 data.SetAmount(cursor.getString(1));
                 data.SetTitle(cursor.getString(2));
                 data.SetDate(cursor.getString(3));
 
-                arrIncome.add(data);
+                arrListIncome.add(data);
                 count++;
+                data = null;
             }
         }
 
         cursor.close();
         dbClose();
 
-        return arrIncome;
+        return arrListIncome;
     }
 
     public ArrayList getAllExpenseContent() {
         ArrayList<Data> arrIncome = new ArrayList<>();
-        Data data = new Data();
 
         openRead();
         Cursor cursor = database.rawQuery("SELECT * FROM expense", null);
         int count = 0;
         if(cursor.getCount() > 0 && cursor.getCount() >= count) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                Data data = new Data();
+
                 data.SetId(cursor.getString(0));
                 data.SetAmount(cursor.getString(1));
                 data.SetTitle(cursor.getString(2));
@@ -89,6 +87,7 @@ public class EconomicDB extends SQLiteOpenHelper {
 
                 arrIncome.add(data);
                 count++;
+                data = null;
             }
         }
 
@@ -98,7 +97,7 @@ public class EconomicDB extends SQLiteOpenHelper {
         return arrIncome;
     }
 
-    public Data getIncomeContent(String id) {
+    public Data getSpecificIncomeContent(String id) {
         Data data = new Data();
         String[] args={id};
         Cursor cursor = database.rawQuery("SELECT * FROM income WHERE id = ?", args);
@@ -119,7 +118,7 @@ public class EconomicDB extends SQLiteOpenHelper {
 
     }
 
-    public Data getExpenseContent(String id) {
+    public Data getSpecificExpenseContent(String id) {
         Data data = new Data();
         String[] args={id};
         Cursor cursor = database.rawQuery("SELECT * FROM expense WHERE id = ?", args);
