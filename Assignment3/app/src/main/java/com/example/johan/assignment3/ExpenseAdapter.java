@@ -1,6 +1,7 @@
 package com.example.johan.assignment3;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class ExpenseAdapter extends ArrayAdapter<Data> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
+        Resources res = parent.getResources();
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -73,6 +75,12 @@ public class ExpenseAdapter extends ArrayAdapter<Data> {
         holder.expenseDate.setText("Date: " + data.GetDate());
         holder.expenseTitle.setText("Title: " + data.GetTitle());
         holder.expenseAmount.setText("Amount: " + data.GetAmount());
+
+        if (position % 2 == 1) {
+            convertView.setBackgroundColor(res.getColor(R.color.odd_color));
+        } else {
+            convertView.setBackgroundColor(res.getColor(R.color.even_color));
+        }
 
         // Return the completed view to render on screen
         return convertView;

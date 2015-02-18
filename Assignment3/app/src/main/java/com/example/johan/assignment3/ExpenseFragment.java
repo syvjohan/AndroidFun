@@ -139,6 +139,8 @@ public class ExpenseFragment extends Fragment {
         lstExpense.setAdapter(expenseAdapter);
         expenseAdapter.notifyDataSetChanged();
 
+        //Automatic scroll lo last item in listview
+        lstExpense.setSelection(expenseAdapter.getCount() -1);
     }
 
     public void LoadAllExpenseContentFromDB(View view) {

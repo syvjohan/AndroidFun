@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="even_color">#999966</color>
+    <color name="odd_color">#B8B894</color>
+    <color name="lstDivider">#4C4C33</color>
+    <color name="edittext_backgr">#CBCBB2</color>
+    <color name="btn_add">#D7C5E0</color>
+    <color name="err_msg_text">#880000</color>
+</resources>

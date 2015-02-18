@@ -139,6 +139,9 @@ public class IncomeFragment extends Fragment {
         lstIncome.setAdapter(incomeAdapter);
         incomeAdapter.notifyDataSetChanged();
 
+        //Automatic scroll lo last item in listview
+        lstIncome.setSelection(incomeAdapter.getCount() -1);
+
     }
 
     public void LoadAllIncomeContentFromDB(View view) {

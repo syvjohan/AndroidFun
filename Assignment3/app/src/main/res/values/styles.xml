@@ -50,7 +50,7 @@
         <item name="android:maxLines">100</item>
         <item name="android:scrollHorizontally">false</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">#880000 </item>
+        <item name="android:textColor">@color/err_msg_text</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
     </style>
@@ -61,7 +61,7 @@
         <item name="android:layout_margin">2dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:background">#D7C5E0</item>
+        <item name="android:background">@color/btn_add</item>
         <item name="android:text">Add</item>
     </style>
 
@@ -70,7 +70,7 @@
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:background">#CBCBB2</item>
+        <item name="android:background">@color/edittext_backgr</item>
     </style>
 
     <style name="listView_show_data">
@@ -79,6 +79,7 @@
         <item name="android:layout_marginLeft">2dp</item>
         <item name="android:layout_marginRight">2dp</item>
         <item name="android:dividerHeight">5dp</item>
+        <item name="android:divider">@color/lstDivider</item>
         <item name="android:fastScrollEnabled">true</item>
     </style>
 

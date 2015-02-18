@@ -1,6 +1,8 @@
 package com.example.johan.assignment3;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,7 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
+        Resources res = parent.getResources();
 
         if (convertView == null) {
                 holder = new ViewHolder();
@@ -75,6 +78,11 @@ public class IncomeAdapter extends ArrayAdapter<Data> {
         holder.incomeTitle.setText("Title: " + data.GetTitle());
         holder.incomeAmount.setText("Amount: " + data.GetAmount());
 
+        if (position % 2 == 1) {
+            convertView.setBackgroundColor(res.getColor(R.color.odd_color));
+        } else {
+            convertView.setBackgroundColor(res.getColor(R.color.even_color));
+        }
 
         // Return the completed view to render on screen
         return convertView;
