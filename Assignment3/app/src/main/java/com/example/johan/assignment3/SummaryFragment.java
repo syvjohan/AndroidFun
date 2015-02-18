@@ -7,6 +7,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 
 /**
@@ -23,9 +27,17 @@ public class SummaryFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private double sumIncome = 0;
+    private double sumExpense = 0;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EconomicDB db;
+
+    private static ArrayList<Data> storeIncome = new ArrayList<>();
+    private static ArrayList<Data> storeExpense = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,9 +76,100 @@ public class SummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view = inflater.inflate(R.layout.fragment_summary, container, false);
+        View view = inflater.inflate(R.layout.fragment_summary, container, false);
+
+        //Sets the title in actionbar
+        getActivity().setTitle(R.string.fragment_summary_title);
+
+        if (db == null) {
+            //Create a new database object.
+            db = new EconomicDB(view.getContext());
+        }
+
+        LoadAllExpenseContentFromDB();
+        LoadAllIncomeContentFromDB();
+
+        CalcExpenseSum();
+        CalcIncomeSum();
+
+        ShowSummary(CalculateSum(), view);
 
         return view;
+    }
+
+    public void ShowSummary(Summary sum, View view) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+
+        TextView txtIncome = (TextView) view.findViewById(R.id.txt_summary_income);
+        TextView txtExpense = (TextView) view.findViewById(R.id.txt_summary_expense);
+        TextView txtSum = (TextView) view.findViewById(R.id.txt_summary_sum);
+
+        String formatIncome = decimalFormat.format(sum.GetIncome());
+        String formatExpense = decimalFormat.format(sum.GetExpense());
+        String formatSum = decimalFormat.format(sum.GetSummary());
+
+        txtIncome.setText(formatIncome);
+        txtExpense.setText(formatExpense);
+        txtSum.setText(formatSum);
+    }
+
+    //Calculates the total sum
+    public Summary CalculateSum() {
+        Summary sum = new Summary();
+
+        sum.SetIncome(CalcIncomeSum());
+        sum.SetExpense(CalcExpenseSum());
+        sum.SetSummary(sum.GetIncome() - sum.GetExpense());
+
+        return sum;
+    }
+
+    public void LoadAllExpenseContentFromDB() {
+        ArrayList<Data> temp = new ArrayList<>();
+
+        //Load all contents from db.
+        temp.addAll(db.getAllExpenseContent());
+        if (!temp.isEmpty()) {
+            storeExpense = temp;
+        }
+        //Erase reference, GC will delete object.
+        temp = null;
+    }
+
+    public void LoadAllIncomeContentFromDB() {
+        ArrayList<Data> temp = new ArrayList<>();
+
+        //Load all contents from db.
+        temp.addAll(db.getAllIncomeContent());
+        if (!temp.isEmpty()) {
+            storeIncome = temp;
+        }
+        //Erase reference, GC will delete object.
+        temp = null;
+    }
+
+    public double CalcIncomeSum() {
+        Double sumAmount = 0.0;
+        if (storeIncome != null) {
+            for(int i = 0; i != storeIncome.size(); i++) {
+                double value = Double.parseDouble(storeIncome.get(i).GetAmount());
+                sumAmount = sumAmount + value;
+            }
+        }
+
+        return sumAmount;
+    }
+
+    public double CalcExpenseSum() {
+        Double sumAmount = 0.0;
+        if (storeExpense != null) {
+            for(int i = 0; i != storeExpense.size(); i++) {
+                double value = Double.parseDouble(storeExpense.get(i).GetAmount());
+                sumAmount = sumAmount + value;
+            }
+        }
+
+        return sumAmount;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

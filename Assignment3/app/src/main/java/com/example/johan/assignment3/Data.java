@@ -4,22 +4,22 @@ package com.example.johan.assignment3;
  * Created by johan on 2/7/2015.
  */
 public class Data {
-    String id = "";
-    String date = "";
-    String amount = "";
-    String title = "";
+    private String _id = "";
+    private String date = "";
+    private String amount = "";
+    private String title = "";
 
     public Data() {}
 
-    public Data(String id, String date, String amount, String title) {
-        this.id = id;
+    public Data(String _id, String date, String amount, String title) {
+        this._id = _id;
         this.date = date;
         this.amount = amount;
         this.title = title;
     }
 
-    public String GetId() {return this.id; }
-    public void SetId(String id) {this.id = id; }
+    public String GetId() {return this._id; }
+    public void SetId(String _id) {this._id = _id; }
 
     public String GetDate() {return this.date; }
     public void SetDate(String date) {this.date = date; }

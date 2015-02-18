@@ -9,20 +9,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements
         IncomeFragment.OnFragmentInteractionListener,
-        ExpensesFragment.OnFragmentInteractionListener,
+        ExpenseFragment.OnFragmentInteractionListener,
         SummaryFragment.OnFragmentInteractionListener {
 
-    @Override
+    private final int INCOME_MENU_ITEM = Menu.FIRST;
+    private final int EXPENSE_MENU_ITEM = INCOME_MENU_ITEM + 1;
+    private final int SUMMARY_MENU_ITEM = EXPENSE_MENU_ITEM + 1;
+    private double income = 0;
+    private double expense = 0;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getOverflowMenu();
-
     }
 
     private void getOverflowMenu() {
@@ -43,8 +48,7 @@ public class MainActivity extends ActionBarActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
 
-            //INCOME
-            case 0:
+            case INCOME_MENU_ITEM:
                 IncomeFragment incomeFragment = IncomeFragment.newInstance("", "");
                 FragmentManager fMI = getFragmentManager();
                 FragmentTransaction fTI = fMI.beginTransaction();
@@ -53,23 +57,27 @@ public class MainActivity extends ActionBarActivity implements
                 fTI.commit();
                 break;
 
-            //EXPENSE
-            case 1:
-                ExpensesFragment expensesFragment = ExpensesFragment.newInstance("", "");
+            case EXPENSE_MENU_ITEM:
+                ExpenseFragment expenseFragment = ExpenseFragment.newInstance("", "");
                 FragmentManager fME = getFragmentManager();
                 FragmentTransaction fTE = fME.beginTransaction();
-                fTE.replace(R.id.container_main, expensesFragment, null);
-                fTE.addToBackStack("got to Income fragment");
+                fTE.replace(R.id.container_main, expenseFragment, null);
+                fTE.addToBackStack("got to Expense fragment");
                 fTE.commit();
                 break;
 
-            //SUMMARY
-            case 2:
-                ExpensesFragment summaryFragment = ExpensesFragment.newInstance("", "");
+            case SUMMARY_MENU_ITEM:
+                SummaryFragment summaryFragment = SummaryFragment.newInstance("", "");
+
+                Bundle b = new Bundle();
+                b.putDouble("income", income);
+                b.putDouble("expense", expense);
+                summaryFragment.setArguments(b);
+
                 FragmentManager fMS = getFragmentManager();
                 FragmentTransaction fTS = fMS.beginTransaction();
                 fTS.replace(R.id.container_main, summaryFragment, null);
-                fTS.addToBackStack("got to Income fragment");
+                fTS.addToBackStack("got to Summary fragment");
                 fTS.commit();
                 break;
 
@@ -80,16 +88,20 @@ public class MainActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    public void GetData() {
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        menu.add("Income");
-        menu.add("Expense");
-        menu.add("Summary");
+        menu.add(0, INCOME_MENU_ITEM, 0 ,"Income");
+        menu.add(0, EXPENSE_MENU_ITEM, 0,"Expense");
+        menu.add(0, SUMMARY_MENU_ITEM, 0, "Summary");
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/txt_income_date"
+        style="@style/textViews_row" />
+
+    <TextView
+        android:id="@+id/txt_income_title"
+        android:layout_below="@+id/txt_income_date"
+        style="@style/textViews_row" />
+
+    <TextView
+        android:id="@+id/txt_income_amount"
+        android:layout_below="@+id/txt_income_title"
+        style="@style/textViews_row" />
+
+</RelativeLayout>

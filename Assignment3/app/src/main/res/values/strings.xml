@@ -6,4 +6,12 @@
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    //Error messages
+    <string name="wrong_input">Wrong input, please try again!</string>
+
+    //Fragment titles
+    <string name="fragment_income_title">Income:</string>
+    <string name="fragment_expense_title">Expense:</string>
+    <string name="fragment_summary_title">Summary:</string>
+
 </resources>

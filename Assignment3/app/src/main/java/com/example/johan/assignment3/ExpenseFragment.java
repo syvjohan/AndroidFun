@@ -1,11 +1,9 @@
 package com.example.johan.assignment3;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +17,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link IncomeFragment.OnFragmentInteractionListener} interface
+ * {@link ExpenseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link IncomeFragment#newInstance} factory method to
+ * Use the {@link ExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class IncomeFragment extends Fragment {
+public class ExpenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,14 +35,15 @@ public class IncomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button AddBtn;
-    private ListView lstIncome;
-    private EconomicDB db;
-    private static ArrayList<Data> storeIncome = new ArrayList<>();
-    private String rowId;
-    private IncomeAdapter incomeAdapter;
-
     private OnFragmentInteractionListener mListener;
+
+    private Button AddBtn;
+    ListView lstExpense;
+    private EconomicDB db;
+    private static ArrayList<Data> storeExpense = new ArrayList<>();
+    private String rowId;
+    private ExpenseAdapter expenseAdapter;
+    private boolean doOnce = false;
 
     /**
      * Use this factory method to create a new instance of
@@ -53,11 +51,11 @@ public class IncomeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment IncomeFragment.
+     * @return A new instance of fragment ExpensesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static IncomeFragment newInstance(String param1, String param2) {
-        IncomeFragment fragment = new IncomeFragment();
+    public static ExpenseFragment newInstance(String param1, String param2) {
+        ExpenseFragment fragment = new ExpenseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +63,7 @@ public class IncomeFragment extends Fragment {
         return fragment;
     }
 
-    public IncomeFragment() {
+    public ExpenseFragment() {
         // Required empty public constructor
     }
 
@@ -76,11 +74,13 @@ public class IncomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        doOnce = true;
     }
 
     private void SaveContentToDB() {
-        EditText editAmount = (EditText) getView().findViewById(R.id.editxt_income_amount);
-        EditText editTitle = (EditText) getView().findViewById(R.id.editxt_income_title);
+        EditText editAmount = (EditText) getView().findViewById(R.id.editxt_expense_amount);
+        EditText editTitle = (EditText) getView().findViewById(R.id.editxt_expense_title);
 
         String amount = editAmount.getText().toString();
         String title = editTitle.getText().toString();
@@ -99,7 +99,7 @@ public class IncomeFragment extends Fragment {
 
             //Push data to DB.
             db.openWrite();
-            db.saveIncome(data);
+            db.saveExpense(data);
 
             //Store the newly inserted data id.
             rowId = data.GetId();
@@ -120,8 +120,8 @@ public class IncomeFragment extends Fragment {
             db.openRead();
 
             Data newData = new Data();
-            newData = db.getSpecificIncomeContent(rowId);
-            storeIncome.add(newData);
+            newData = db.getSpecificExpenseContent(rowId);
+            storeExpense.add(newData);
 
             // Add data from db into listView.
             AddToListView(view);
@@ -130,27 +130,28 @@ public class IncomeFragment extends Fragment {
 
     public void AddToListView(View view) {
 
-        if (incomeAdapter == null) {
-            incomeAdapter = new IncomeAdapter(getActivity(), storeIncome);
+        if (expenseAdapter == null) {
+            expenseAdapter = new ExpenseAdapter(getActivity(), storeExpense);
         }
 
-        lstIncome = (ListView) view.findViewById(R.id.listView_income);
+        this.lstExpense = (ListView) view.findViewById(R.id.listView_expense);
 
-        lstIncome.setAdapter(incomeAdapter);
-        incomeAdapter.notifyDataSetChanged();
+        lstExpense.setAdapter(expenseAdapter);
+        expenseAdapter.notifyDataSetChanged();
 
     }
 
-    public void LoadAllIncomeContentFromDB(View view) {
+    public void LoadAllExpenseContentFromDB(View view) {
         ArrayList<Data> temp = new ArrayList<>();
 
         //Load all contents from db.
-        temp.addAll(db.getAllIncomeContent());
+        temp.addAll(db.getAllExpenseContent());
         if (!temp.isEmpty()) {
-            storeIncome = temp;
+            storeExpense = temp;
 
             //Show objects in listview
             AddToListView(view);
+
         }
         //Erase reference, GC will delete object.
         temp = null;
@@ -160,19 +161,18 @@ public class IncomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_income, container, false);
+        final View view = inflater.inflate(R.layout.fragment_expense, container, false);
 
-        //Sets the title in actionbar
-        getActivity().setTitle(R.string.fragment_income_title);
+        getActivity().setTitle(R.string.fragment_expense_title);
 
         if (db == null) {
             //Create a new database object.
             db = new EconomicDB(view.getContext());
         }
 
-        LoadAllIncomeContentFromDB(view);
+        LoadAllExpenseContentFromDB(view);
 
-        AddBtn = (Button) view.findViewById(R.id.btn_add_income);
+        AddBtn = (Button) view.findViewById(R.id.btn_add_expense);
         AddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
