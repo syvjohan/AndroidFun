@@ -28,14 +28,12 @@
             android:id="@+id/editxt_income_amount"
             android:inputType="number"
             android:hint="Write amount here!"
-            style="@style/editText_input_data"
-            android:text="22" />
+            style="@style/editText_input_data" />
 
         <EditText
             android:id="@+id/editxt_income_title"
             android:hint="Write title here!"
-            style="@style/editText_input_data"
-            android:text="hej" />
+            style="@style/editText_input_data" />
 
         <Button
             android:id="@+id/btn_add_income"

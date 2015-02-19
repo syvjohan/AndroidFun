@@ -185,6 +185,7 @@ public class SummaryFragment extends Fragment {
         return sumAmount;
     }
 
+    //Filles the created chart pie. Dependencis "aChartEngine"
     public void FillPieChart(Summary sum){
         Resources res = getResources();
         int[] COLORS = new int[] {res.getColor(R.color.chart_pie_color_expense), res.getColor(R.color.chart_pie_color_incom)};
@@ -207,6 +208,7 @@ public class SummaryFragment extends Fragment {
         }
     }
 
+    //Creates a pie chart. Dependencis "aChartEngine"
     public void CreatePieChart(Summary sum ,View view) {
         mRenderer.setChartTitleTextSize(40);
         mRenderer.setLabelsTextSize(25);
