@@ -24,6 +24,7 @@
         <item name="android:textSize">@dimen/abc_text_size_small_material</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:layout_weight">.20</item>
     </style>
 
@@ -31,6 +32,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">.15</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
@@ -38,12 +40,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">.55</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <style name="textviews_summary_content">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">.80</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
     //END, fragment_summary
 
@@ -82,8 +86,7 @@
     <style name="listView_show_data">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginLeft">2dp</item>
-        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:dividerHeight">5dp</item>
         <item name="android:divider">@color/lstDivider</item>
         <item name="android:fastScrollEnabled">true</item>

@@ -6,4 +6,8 @@
     <color name="edittext_backgr">#CBCBB2</color>
     <color name="btn_add">#D7C5E0</color>
     <color name="err_msg_text">#880000</color>
+
+    //Color diagram
+    <color name="chart_pie_color_incom">#D7C5E0</color>
+    <color name="chart_pie_color_expense">#4C4C33</color>
 </resources>
