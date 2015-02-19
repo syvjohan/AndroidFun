@@ -50,23 +50,14 @@
 
     <LinearLayout
         style="@style/linearLayout_pie" >
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="true"
-                android:fillViewport="true"
-                android:scrollbarStyle="outsideOverlay">
-
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="2dp"
-                    android:id="@+id/chart_pie"
-                    android:nestedScrollingEnabled="true" >
+                    android:id="@+id/chart_pie" >
 
                 </LinearLayout>
-            </ScrollView>
 
     </LinearLayout>
 

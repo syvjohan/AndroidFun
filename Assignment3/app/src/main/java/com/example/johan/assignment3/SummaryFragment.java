@@ -47,6 +47,7 @@ public class SummaryFragment extends Fragment {
 
     //Attributes for pie chart.
     CategorySeries mSeries = new CategorySeries("");
+    ArrayList pieChartTitles = new ArrayList();
     private DefaultRenderer mRenderer = new DefaultRenderer();
     public static final String TYPE = "type";
     private GraphicalView mChartView;
@@ -105,6 +106,7 @@ public class SummaryFragment extends Fragment {
         Summary sum = CalculateSum();
         ShowSummary(sum, view);
         CreatePieChart(sum, view);
+
 
         return view;
     }
@@ -191,15 +193,42 @@ public class SummaryFragment extends Fragment {
         int[] COLORS = new int[] {res.getColor(R.color.chart_pie_color_expense), res.getColor(R.color.chart_pie_color_incom)};
 
         //Calculate values in pie chart. Observe that calculation is not returning percent!
-        double valueIncome = (sum.GetSummary() / sum.GetIncome());
-        double valueExpense = (sum.GetSummary() / sum.GetExpense());
+        double valueIncome = 0;
+        double valueExpense = 0;
+        pieChartTitles.clear();
+
+        if (sum.GetSummary() == 0) {
+            valueExpense = 1;
+            valueIncome = 1;
+            pieChartTitles.add("Income");
+            pieChartTitles.add("Expense");
+        }
+        else if (sum.GetExpense() == 0) {
+            valueExpense = 0;
+            valueIncome = 1;
+
+            pieChartTitles.add("Income");
+            pieChartTitles.add("Expense");
+        }
+        else if (sum.GetIncome() == 0) {
+            valueIncome = 0;
+            valueExpense = 1;
+
+            pieChartTitles.add("Income");
+            pieChartTitles.add("Expense");
+        }
+        else {
+            valueIncome = (sum.GetSummary() / sum.GetIncome());
+            valueExpense = (sum.GetSummary() / sum.GetExpense());
+
+            pieChartTitles.add("Expense");
+            pieChartTitles.add("Income");
+        }
+
         double[] pieChartValues = {valueIncome, valueExpense};
-
-        String[] pieChartTitles = {"Expenses", "Income"};
-
-        for(int i=0;i<pieChartValues.length;i++)
+        for (int i = 0; i < pieChartValues.length;i++)
         {
-            mSeries.add(pieChartTitles[i], pieChartValues[i]);
+            mSeries.add(pieChartTitles.get(i).toString(), pieChartValues[i]);
             SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
             renderer.setColor(COLORS[(mSeries.getItemCount() - 1) % COLORS.length]);
             mRenderer.addSeriesRenderer(renderer);
@@ -222,8 +251,8 @@ public class SummaryFragment extends Fragment {
             mChartView = ChartFactory.getPieChartView(getActivity(), mSeries, mRenderer);
             mRenderer.setClickEnabled(true);
             mRenderer.setSelectableBuffer(10);
-            layout.addView(mChartView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                    ViewGroup.LayoutParams.FILL_PARENT));
+            layout.addView(mChartView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
         } else {
             mChartView.repaint();
         }
