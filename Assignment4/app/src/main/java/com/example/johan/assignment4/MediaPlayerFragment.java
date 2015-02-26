@@ -1,9 +1,10 @@
 package com.example.johan.assignment4;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class MediaPlayerFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private MediaPlayer mediaPlayer;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,8 +65,28 @@ public class MediaPlayerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getActivity().setTitle("Media Player");
+        //mediaPlayer = MediaPlayer.create(getActivity(), R.raw.song);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_media_player, container, false);
+    }
+
+    public void Play(View view) {
+
+    }
+
+    public void Pause(View view) {
+
+    }
+
+    public void Forward(View view) {
+
+    }
+
+    public void Rewind(View view) {
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

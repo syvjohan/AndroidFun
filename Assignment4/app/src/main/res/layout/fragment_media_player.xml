@@ -1,10 +1,125 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.johan.assignment4.MediaPlayerFragment">
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    tools:context="com.example.johan.assignment4.MediaPlayerFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:id="@+id/linear_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp" >
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/txt_now_playing"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:layout_height="50dp"
+            android:text="@string/now_playing" />
+
+        <TextView
+            android:id="@+id/txt_currentsong"
+            android:layout_width="0dp"
+            android:layout_weight=".70"
+            android:layout_height="50dp"
+            android:hint="denna melodi spelas nu!"
+            android:layout_toRightOf="@+id/txt_now_playing" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_midd_above"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/linear_top"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp" >
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_midd_below"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_above="@+id/linear_bottom" >
+
+        <SeekBar
+            android:id="@+id/seek_bar_elapsed_time"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".40" />
+
+        <TextView
+            android:id="@+id/txt_time_left"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight=".70"
+            android:hint="tid kvar!"
+            android:paddingLeft="25dp"
+            android:layout_below="@id/seek_bar_elapsed_time" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp" >
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:layout_alignParentLeft="true"
+            android:src="@android:drawable/ic_media_next" />
+
+        <ImageButton
+            android:id="@+id/btn_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:layout_toRightOf="@+id/btn_next"
+            android:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/btn_pause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:layout_toRightOf="@+id/btn_play"
+            android:src="@android:drawable/ic_media_pause" />
+
+        <ImageButton
+            android:id="@+id/btn_stop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:layout_toRightOf="@+id/btn_pause" />
+
+        <ImageButton
+            android:id="@+id/btn_previous"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:layout_toRightOf="@+id/btn_stop"
+            android:layout_alignParentRight="true"
+            android:src="@android:drawable/ic_media_previous" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -5,4 +5,25 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="textViews_row">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="listView_show_data">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:dividerHeight">2.5dp</item>
+        <item name="android:divider">@color/material_blue_grey_800</item>
+        <item name="android:fastScrollEnabled">true</item>
+    </style>
+
 </resources>
