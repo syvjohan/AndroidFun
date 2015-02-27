@@ -5,9 +5,15 @@ import android.app.Fragment;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -27,7 +33,29 @@ public class MediaPlayerFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     private MediaPlayer mediaPlayer;
+
+    private double endTime = 0;
+    private double startTime = 0;
+    private int forwardTime = 5000;
+    private int backwardTime = 5000;
+    public static int oneTimeOnly = 0;
+
+    private SeekBar seekBar;
+
+    private ImageButton btnPlay;
+    private ImageButton btnPause;
+    private ImageButton btnStop;
+    private ImageButton btnForward;
+    private ImageButton btnbackward;
+
+    public TextView songName;
+    public TextView txtEndTime;
+    public TextView txtStartTime;
+
+    private Handler mediaHandler = new Handler();
+    private Runnable r;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,28 +93,136 @@ public class MediaPlayerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_media_player, container, false);
 
         getActivity().setTitle("Media Player");
-        //mediaPlayer = MediaPlayer.create(getActivity(), R.raw.song);
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_media_player, container, false);
+        songName = (TextView)view.findViewById(R.id.txt_currentsong);
+        txtEndTime = (TextView)view.findViewById(R.id.txt_time_left);
+        txtStartTime = (TextView)view.findViewById(R.id.txt_time_start);
+        seekBar = (SeekBar)view.findViewById(R.id.seek_bar_elapsed_time);
+
+        btnPlay = (ImageButton)view.findViewById(R.id.btn_play);
+        btnPause = (ImageButton)view.findViewById(R.id.btn_pause);
+        btnStop = (ImageButton)view.findViewById(R.id.btn_stop);
+        btnbackward = (ImageButton)view.findViewById(R.id.btn_previous);
+        btnForward = (ImageButton)view.findViewById(R.id.btn_next);
+
+        songName.setText("familiar taste of poison.mp3");
+
+        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.familiar_taste_of_poison);
+
+        seekBar.setClickable(false);
+        btnPause.setEnabled(false);
+
+        //Click events!
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View v) {
+                pause(view);
+            }
+        });
+
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play(view);
+            }
+        });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pause(view);
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stop(view);
+            }
+        });
+
+        btnForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forward(view);
+            }
+        });
+
+        btnbackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backWard(view);
+            }
+        });
+
+        return view;
     }
 
-    public void Play(View view) {
+    public void play(View view) {
+        mediaPlayer.start();
+        endTime = mediaPlayer.getDuration();
+        startTime = mediaPlayer.getCurrentPosition();
+        if (oneTimeOnly == 0) {
+            seekBar.setMax((int) endTime);
+            oneTimeOnly = 1;
+        }
+
+        txtEndTime.setText(String.format("%d min, %d sec",
+                        TimeUnit.MILLISECONDS.toMinutes((long) endTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
+                                TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
+        );
+
+        txtStartTime.setText(String.format("%d min, %d sec",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
+        );
+        r = new Runnable() {
+            @Override
+            public void run() {
+                seekBar.setProgress((int) startTime);
+                mediaHandler.postDelayed(r, 100);
+            }
+        };
 
     }
 
-    public void Pause(View view) {
-
+    public void stop(View view) {
+        mediaPlayer.stop();
     }
 
-    public void Forward(View view) {
-
+    public void pause(View view) {
+        mediaPlayer.pause();
+        btnPause.setEnabled(true);
+        btnPlay.setEnabled(true);
     }
 
-    public void Rewind(View view) {
+    public void forward(View view) {
+        int temp = (int)startTime;
+        if ((temp + forwardTime)<= endTime) {
+            startTime = startTime + forwardTime;
+            mediaPlayer.seekTo((int) startTime);
+        }
+    }
 
+    public void backWard(View view) {
+        int temp = (int) startTime;
+        if ((temp + backwardTime)<= endTime) {
+            startTime = startTime - backwardTime;
+            mediaPlayer.seekTo((int) startTime);
+        }
+    }
+
+    public void rewind(View view) {
+        int temp = (int) startTime;
+        if ((temp-backwardTime)> 0) {
+            startTime = startTime - backwardTime;
+            mediaPlayer.seekTo((int)startTime);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -113,16 +249,6 @@ public class MediaPlayerFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
