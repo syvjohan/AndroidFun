@@ -48,7 +48,7 @@ public class MediaPlayerFragment extends Fragment {
     private ImageButton btnPause;
     private ImageButton btnStop;
     private ImageButton btnForward;
-    private ImageButton btnbackward;
+    private ImageButton btnRewind;
 
     public TextView songName;
     public TextView txtEndTime;
@@ -105,7 +105,7 @@ public class MediaPlayerFragment extends Fragment {
         btnPlay = (ImageButton)view.findViewById(R.id.btn_play);
         btnPause = (ImageButton)view.findViewById(R.id.btn_pause);
         btnStop = (ImageButton)view.findViewById(R.id.btn_stop);
-        btnbackward = (ImageButton)view.findViewById(R.id.btn_previous);
+        btnRewind = (ImageButton)view.findViewById(R.id.btn_previous);
         btnForward = (ImageButton)view.findViewById(R.id.btn_next);
 
         songName.setText("familiar taste of poison.mp3");
@@ -151,10 +151,10 @@ public class MediaPlayerFragment extends Fragment {
             }
         });
 
-        btnbackward.setOnClickListener(new View.OnClickListener() {
+        btnRewind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backWard(view);
+                rewind(view);
             }
         });
 
@@ -205,14 +205,6 @@ public class MediaPlayerFragment extends Fragment {
         int temp = (int)startTime;
         if ((temp + forwardTime)<= endTime) {
             startTime = startTime + forwardTime;
-            mediaPlayer.seekTo((int) startTime);
-        }
-    }
-
-    public void backWard(View view) {
-        int temp = (int) startTime;
-        if ((temp + backwardTime)<= endTime) {
-            startTime = startTime - backwardTime;
             mediaPlayer.seekTo((int) startTime);
         }
     }

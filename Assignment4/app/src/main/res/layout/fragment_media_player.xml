@@ -28,7 +28,6 @@
             android:layout_width="0dp"
             android:layout_weight=".70"
             android:layout_height="50dp"
-            android:hint="denna melodi spelas nu!"
             android:layout_toRightOf="@+id/txt_now_playing" />
 
     </LinearLayout>
@@ -72,7 +71,6 @@
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".50"
-                android:hint="tid start!"
                 android:layout_alignParentLeft="true"
                 android:paddingLeft="25dp" />
 
@@ -81,12 +79,10 @@
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".50"
-                android:hint="tid kvar!"
 
                 android:paddingLeft="110dp" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 
@@ -106,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".20"
             android:layout_alignParentLeft="true"
-            android:src="@android:drawable/ic_media_next" />
+            android:src="@mipmap/next" />
 
         <ImageButton
             android:id="@+id/btn_play"
@@ -114,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".20"
             android:layout_toRightOf="@+id/btn_next"
-            android:src="@android:drawable/ic_media_play" />
+            android:src="@mipmap/play" />
 
         <ImageButton
             android:id="@+id/btn_pause"
@@ -122,14 +118,15 @@
             android:layout_height="wrap_content"
             android:layout_weight=".20"
             android:layout_toRightOf="@+id/btn_play"
-            android:src="@android:drawable/ic_media_pause" />
+            android:src="@mipmap/pause" />
 
         <ImageButton
             android:id="@+id/btn_stop"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".20"
-            android:layout_toRightOf="@+id/btn_pause" />
+            android:layout_toRightOf="@+id/btn_pause"
+            android:src="@mipmap/stop"/>
 
         <ImageButton
             android:id="@+id/btn_previous"
@@ -138,7 +135,7 @@
             android:layout_weight=".20"
             android:layout_toRightOf="@+id/btn_stop"
             android:layout_alignParentRight="true"
-            android:src="@android:drawable/ic_media_previous" />
+            android:src="@mipmap/previous" />
 
     </LinearLayout>
 
