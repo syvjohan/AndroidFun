@@ -2,15 +2,19 @@ package com.example.johan.assignment4;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 /**
@@ -33,7 +37,7 @@ public class PlayListFragment extends Fragment {
 
     private PlayListAdapter playListAdapter;
     private ListView lstPlayList;
-    private ArrayList<Song> storeSongs;
+    private ArrayList<Song> storeSongs = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -72,11 +76,15 @@ public class PlayListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        getActivity().setTitle("Play List");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_play_list, container, false);
-        includeFiles();
+
+        getActivity().setTitle("Play List");
+
+        getSongList();
+        sort(storeSongs);
+        AddToListView(view);
 
         return view;
     }
@@ -95,11 +103,36 @@ public class PlayListFragment extends Fragment {
         lstPlayList.setSelection(playListAdapter.getCount() -1);
     }
 
-    private void includeFiles() {
-        String path = "C:\\Programmering\\AndroidFun\\Assignment4\\app\\src\\main\\res";
-        File f = new File(path);
-        File fileList[] = f.listFiles();
+    private void getSongList() {
+        ContentResolver musicResolver = getActivity().getContentResolver();
+        Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
 
+        if (musicCursor != null && musicCursor.moveToFirst()) {
+            //get columns
+            int titleColumns = musicCursor.getColumnIndex( MediaStore.Audio.Media.TITLE);
+            int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+
+            //Add songs to list (storeSongs).
+            do {
+                Long thisId = musicCursor.getLong(idColumn);
+                String thisTitle = musicCursor.getString(titleColumns);
+                String thisArtist = musicCursor.getString(artistColumn);
+                storeSongs.add(new Song(thisId, thisTitle, thisArtist));
+
+            } while (musicCursor.moveToNext());
+
+        }
+    }
+
+    private void sort(ArrayList<Song> songs) {
+        Collections.sort(songs, new Comparator<Song>() {
+            @Override
+            public int compare(Song lhs, Song rhs) {
+                return lhs.getTitle().compareTo(rhs.getTitle());
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

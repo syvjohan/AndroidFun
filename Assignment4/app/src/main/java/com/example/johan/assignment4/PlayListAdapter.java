@@ -68,8 +68,8 @@ public class PlayListAdapter extends ArrayAdapter<Song> {
         Song song = arrListSong.get(position);
 
         // Populate the data into the template view using the data object
-        holder.songTitle.setText(song.getTitle());
         holder.songArtist.setText(song.getArtist());
+        holder.songTitle.setText(song.getTitle());
 
         if (position % 2 == 1) {
             convertView.setBackgroundColor(res.getColor(R.color.odd_color));

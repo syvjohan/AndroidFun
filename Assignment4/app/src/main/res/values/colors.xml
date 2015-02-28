@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="even_color">#282828 </color>
-    <color name="odd_color">#505050  </color>
-    <color name="lstDivider">#4C4C33</color>
+    <color name="even_color">#181818</color>
+    <color name="odd_color">#202020</color>
+    <color name="lstDivider">#282828 </color>
 </resources>
