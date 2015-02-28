@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -28,6 +30,10 @@ public class PlayListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private PlayListAdapter playListAdapter;
+    private ListView lstPlayList;
+    private ArrayList<Song> storeSongs;
 
     private OnFragmentInteractionListener mListener;
 
@@ -73,6 +79,20 @@ public class PlayListFragment extends Fragment {
         includeFiles();
 
         return view;
+    }
+
+    private void AddToListView(View view) {
+        if (playListAdapter == null) {
+            playListAdapter = new PlayListAdapter(getActivity(), storeSongs);
+        }
+
+        this.lstPlayList = (ListView) view.findViewById(R.id.listView_play_list);
+
+        lstPlayList.setAdapter(playListAdapter);
+        playListAdapter.notifyDataSetChanged();
+
+        //Automatic scroll lo last item in listview
+        lstPlayList.setSelection(playListAdapter.getCount() -1);
     }
 
     private void includeFiles() {
