@@ -56,7 +56,7 @@
             android:id="@+id/seek_bar_elapsed_time"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".40" />
+            android:layout_weight=".30" />
 
         <LinearLayout
             android:id="@+id/linear_time"
@@ -80,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_weight=".50"
 
-                android:paddingLeft="110dp" />
+                android:paddingLeft="60dp" />
 
         </LinearLayout>
 

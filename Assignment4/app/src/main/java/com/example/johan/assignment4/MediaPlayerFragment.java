@@ -41,7 +41,7 @@ public class MediaPlayerFragment extends Fragment {
     private int forwardTime = 5000;
     private int backwardTime = 5000;
     public static int oneTimeOnly = 0;
-
+    static String url = "R.raw.familiar_taste_of_poison";
     private SeekBar seekBar;
 
     private ImageButton btnPlay;
@@ -55,7 +55,11 @@ public class MediaPlayerFragment extends Fragment {
     public TextView txtStartTime;
 
     private Handler mediaHandler = new Handler();
-    private Runnable r;
+
+    //Attributes uses for controlling when musis should start after changing seekBar state.
+    private boolean isPausePressed = false;
+    private boolean isPlayPressed = false;
+    private boolean isStopPressed = true;
 
     private OnFragmentInteractionListener mListener;
 
@@ -114,26 +118,28 @@ public class MediaPlayerFragment extends Fragment {
 
         seekBar.setClickable(false);
         btnPause.setEnabled(false);
+        btnStop.setEnabled(false);
+        btnForward.setEnabled(false);
+        btnRewind.setEnabled(false);
 
         //Click events!
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
-        public void onClick(View v) {
-                pause(view);
-            }
-        });
+            public void onClick(View v) {
+                    pause(view);
+                    isPausePressed = true;
+                    isPlayPressed = false;
+                    isStopPressed = false;
+                }
+            });
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 play(view);
-            }
-        });
-
-        btnPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pause(view);
+                isPausePressed = false;
+                isPlayPressed = true;
+                isStopPressed = false;
             }
         });
 
@@ -141,6 +147,9 @@ public class MediaPlayerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 stop(view);
+                isPausePressed = false;
+                isPlayPressed = false;
+                isStopPressed = true;
             }
         });
 
@@ -148,6 +157,9 @@ public class MediaPlayerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 forward(view);
+                isPausePressed = false;
+                isPlayPressed = false;
+                isStopPressed = false;
             }
         });
 
@@ -155,7 +167,36 @@ public class MediaPlayerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rewind(view);
+                isPausePressed = false;
+                isPlayPressed = false;
+                isStopPressed = false;
             }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStartTrackingTouch(SeekBar s) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar s) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar s, int progress, boolean fromUser) {
+                if (mediaPlayer != null && fromUser) {
+                    mediaPlayer.seekTo(progress);
+
+                    // Check if pause, play or stop buttons is pressed
+                    if(!isPausePressed && !isPlayPressed && !isStopPressed) {
+                        play(view);
+                    }
+                }
+            }
+
         });
 
         return view;
@@ -181,23 +222,43 @@ public class MediaPlayerFragment extends Fragment {
                         TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
         );
-        r = new Runnable() {
-            @Override
-            public void run() {
-                seekBar.setProgress((int) startTime);
-                mediaHandler.postDelayed(r, 100);
-            }
-        };
+
+        seekBar.setProgress((int) startTime);
+        mediaHandler.postDelayed(UpdateSongTime, 100);
+
+        btnPause.setEnabled(true);
+        btnStop.setEnabled(true);
+        btnRewind.setEnabled(true);
+        btnForward.setEnabled(true);
 
     }
 
+    private Runnable UpdateSongTime = new Runnable() {
+        public void run() {
+            startTime = mediaPlayer.getCurrentPosition();
+            txtStartTime.setText(String.format("%d min, %d sec",
+                            TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) startTime),
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
+            );
+            seekBar.setProgress((int) startTime);
+            mediaHandler.postDelayed(this, 100);
+        }
+    };
+
     public void stop(View view) {
-        mediaPlayer.stop();
+        btnPause.setEnabled(false);
+        btnForward.setEnabled(false);
+        btnRewind.setEnabled(false);
+        btnStop.setEnabled(false);
+
+        mediaPlayer.pause();
+        mediaPlayer.seekTo(0);
     }
 
     public void pause(View view) {
         mediaPlayer.pause();
-        btnPause.setEnabled(true);
+        btnPause.setEnabled(false);
         btnPlay.setEnabled(true);
     }
 
