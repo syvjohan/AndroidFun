@@ -34,14 +34,16 @@ public class MediaPlayerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
     private double endTime = 0;
     private double startTime = 0;
     private int forwardTime = 5000;
     private int backwardTime = 5000;
     public static int oneTimeOnly = 0;
-    static String url = "R.raw.familiar_taste_of_poison";
+
+    private String songPath;
+
     private SeekBar seekBar;
 
     private ImageButton btnPlay;
@@ -50,7 +52,7 @@ public class MediaPlayerFragment extends Fragment {
     private ImageButton btnForward;
     private ImageButton btnRewind;
 
-    public TextView songName;
+    public TextView songInfo;
     public TextView txtEndTime;
     public TextView txtStartTime;
 
@@ -62,6 +64,7 @@ public class MediaPlayerFragment extends Fragment {
     private boolean isStopPressed = true;
 
     private OnFragmentInteractionListener mListener;
+    private Song currentSong;
 
     /**
      * Use this factory method to create a new instance of
@@ -101,7 +104,7 @@ public class MediaPlayerFragment extends Fragment {
 
         getActivity().setTitle("Media Player");
 
-        songName = (TextView)view.findViewById(R.id.txt_currentsong);
+        songInfo = (TextView)view.findViewById(R.id.txt_currentsong);
         txtEndTime = (TextView)view.findViewById(R.id.txt_time_left);
         txtStartTime = (TextView)view.findViewById(R.id.txt_time_start);
         seekBar = (SeekBar)view.findViewById(R.id.seek_bar_elapsed_time);
@@ -112,9 +115,19 @@ public class MediaPlayerFragment extends Fragment {
         btnRewind = (ImageButton)view.findViewById(R.id.btn_previous);
         btnForward = (ImageButton)view.findViewById(R.id.btn_next);
 
-        songName.setText("familiar taste of poison.mp3");
+        songInfo.setText(currentSong.getArtist() + " - " + currentSong.getTitle());
 
-        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.familiar_taste_of_poison);
+        if (songPath != currentSong.getUri()) {
+            stop(view);
+            mediaPlayer.release();
+            mediaPlayer = null;
+
+            songPath = currentSong.getUri();
+            mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(songPath));
+
+        } else {
+            mediaPlayer.reset();
+        }
 
         seekBar.setClickable(false);
         btnPause.setEnabled(false);
@@ -203,34 +216,36 @@ public class MediaPlayerFragment extends Fragment {
     }
 
     public void play(View view) {
-        mediaPlayer.start();
-        endTime = mediaPlayer.getDuration();
-        startTime = mediaPlayer.getCurrentPosition();
-        if (oneTimeOnly == 0) {
-            seekBar.setMax((int) endTime);
-            oneTimeOnly = 1;
+        //Check if a track has been choosen from playlist...
+        if(currentSong.getId() != null) {
+            mediaPlayer.start();
+            endTime = mediaPlayer.getDuration();
+            startTime = mediaPlayer.getCurrentPosition();
+            if (oneTimeOnly == 0) {
+                seekBar.setMax((int) endTime);
+                oneTimeOnly = 1;
+            }
+
+            txtEndTime.setText(String.format("%d min, %d sec",
+                            TimeUnit.MILLISECONDS.toMinutes((long) endTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
+                                    TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
+            );
+
+            txtStartTime.setText(String.format("%d min, %d sec",
+                            TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
+            );
+
+            seekBar.setProgress((int) startTime);
+            mediaHandler.postDelayed(UpdateSongTime, 100);
+
+            btnPause.setEnabled(true);
+            btnStop.setEnabled(true);
+            btnRewind.setEnabled(true);
+            btnForward.setEnabled(true);
         }
-
-        txtEndTime.setText(String.format("%d min, %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes((long) endTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
-                                TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
-        );
-
-        txtStartTime.setText(String.format("%d min, %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
-        );
-
-        seekBar.setProgress((int) startTime);
-        mediaHandler.postDelayed(UpdateSongTime, 100);
-
-        btnPause.setEnabled(true);
-        btnStop.setEnabled(true);
-        btnRewind.setEnabled(true);
-        btnForward.setEnabled(true);
-
     }
 
     private Runnable UpdateSongTime = new Runnable() {
@@ -276,6 +291,10 @@ public class MediaPlayerFragment extends Fragment {
             startTime = startTime - backwardTime;
             mediaPlayer.seekTo((int)startTime);
         }
+    }
+
+    public void setSong(Song song) {
+        this.currentSong = song;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

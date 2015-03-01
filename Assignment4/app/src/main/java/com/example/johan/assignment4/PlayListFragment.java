@@ -2,6 +2,8 @@ package com.example.johan.assignment4;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class PlayListFragment extends Fragment {
 
     private PlayListAdapter playListAdapter;
     private ListView lstPlayList;
-    private ArrayList<Song> storeSongs = new ArrayList<>();
+    public static ArrayList<Song> storeSongs = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,7 +79,6 @@ public class PlayListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_play_list, container, false);
 
@@ -86,21 +88,21 @@ public class PlayListFragment extends Fragment {
         sort(storeSongs);
         AddToListView(view);
 
+        lstPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Song song = new Song();
+
+                //Get clicked song from listview.
+                song = (Song) parent.getAdapter().getItem(position);
+
+
+                changeToMediaPlayerFragment(song);
+
+            }
+        });
+
         return view;
-    }
-
-    private void AddToListView(View view) {
-        if (playListAdapter == null) {
-            playListAdapter = new PlayListAdapter(getActivity(), storeSongs);
-        }
-
-        this.lstPlayList = (ListView) view.findViewById(R.id.listView_play_list);
-
-        lstPlayList.setAdapter(playListAdapter);
-        playListAdapter.notifyDataSetChanged();
-
-        //Automatic scroll lo last item in listview
-        lstPlayList.setSelection(playListAdapter.getCount() -1);
     }
 
     private void getSongList() {
@@ -113,24 +115,48 @@ public class PlayListFragment extends Fragment {
             int titleColumns = musicCursor.getColumnIndex( MediaStore.Audio.Media.TITLE);
             int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int uriColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
 
-            //Add songs to list (storeSongs).
+            //Add songs to container (storeSongs).
             do {
                 Long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumns);
                 String thisArtist = musicCursor.getString(artistColumn);
-                storeSongs.add(new Song(thisId, thisTitle, thisArtist));
+                String thisUri = musicCursor.getString(uriColumn);
+
+                storeSongs.add(new Song(thisId, thisTitle, thisArtist, thisUri));
 
             } while (musicCursor.moveToNext());
 
         }
     }
 
+    public void changeToMediaPlayerFragment(Song song) {
+        MediaPlayerFragment mediaPlayerFragment = MediaPlayerFragment.newInstance("", "");
+        mediaPlayerFragment.setSong(song);
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.container, mediaPlayerFragment, null);
+        fT.addToBackStack("go to mediaPlayer fragmement");
+        fT.commit();
+    }
+
+    private void AddToListView(View view) {
+        if (playListAdapter == null) {
+            playListAdapter = new PlayListAdapter(getActivity(), storeSongs);
+        }
+
+        this.lstPlayList = (ListView) view.findViewById(R.id.listView_play_list);
+
+        lstPlayList.setAdapter(playListAdapter);
+        playListAdapter.notifyDataSetChanged();
+    }
+
     private void sort(ArrayList<Song> songs) {
         Collections.sort(songs, new Comparator<Song>() {
             @Override
             public int compare(Song lhs, Song rhs) {
-                return lhs.getTitle().compareTo(rhs.getTitle());
+                return lhs.getArtist().compareTo(rhs.getArtist());
             }
         });
     }

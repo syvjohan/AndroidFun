@@ -1,17 +1,16 @@
 package com.example.johan.assignment4;
 
-/**
- * Created by johan on 2/28/2015.
- */
 public class Song {
     private Long id;
     private String title = "";
     private String artist = "";
+    private String uri = "";
 
-    Song(long id, String title, String artist) {
+    Song(long id, String title, String artist, String uri) {
         this.id = id;
         this.artist = artist;
         this.title = title;
+        this.uri = uri;
     }
 
     Song() {}
@@ -28,7 +27,7 @@ public class Song {
         return title;
     }
 
-    public void SetTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -38,5 +37,13 @@ public class Song {
 
     public void SetId(Long id) {
         this.id = id;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String album) {
+        this.uri = uri;
     }
 }

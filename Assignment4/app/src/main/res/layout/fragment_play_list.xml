@@ -11,8 +11,7 @@
 
         <ListView
             android:id="@+id/listView_play_list"
-            style="@style/listView_show_data"
-            android:fastScrollEnabled="true" />
+            style="@style/listView_show_data" />
 
     </RelativeLayout>
 
