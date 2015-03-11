@@ -16,15 +16,20 @@ public class MainActivity extends ActionBarActivity implements
             MediaPlayerFragment.OnFragmentInteractionListener,
             PlayListFragment.OnFragmentInteractionListener {
 
+    MediaPlayerFragment mediaPlayerFragment;
+    PlayListFragment playListFragment;
+
+    private Song currentSong; //Fragments change this variable
+
     private final int MENU_ITEM_MEDIAPLAYER = Menu.FIRST;
     private final int MENU_ITEM_PLAYLIST = MENU_ITEM_MEDIAPLAYER + 1;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getOverflowMenu();
+        changeToPlayListFragment(); //Start view
     }
 
 
@@ -40,7 +45,6 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     private void getOverflowMenu() {
-
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -58,21 +62,11 @@ public class MainActivity extends ActionBarActivity implements
         switch(item.getItemId()) {
 
             case MENU_ITEM_MEDIAPLAYER:
-                MediaPlayerFragment incomeFragment = MediaPlayerFragment.newInstance("", "");
-                FragmentManager fMI = getFragmentManager();
-                FragmentTransaction fTI = fMI.beginTransaction();
-                fTI.replace(R.id.container, incomeFragment, null);
-                fTI.addToBackStack("got to Income fragment");
-                fTI.commit();
+                changeToMediaPlayerFragment();
                 break;
 
             case MENU_ITEM_PLAYLIST:
-                PlayListFragment expenseFragment = PlayListFragment.newInstance("", "");
-                FragmentManager fME = getFragmentManager();
-                FragmentTransaction fTE = fME.beginTransaction();
-                fTE.replace(R.id.container, expenseFragment, null);
-                fTE.addToBackStack("got to Expense fragment");
-                fTE.commit();
+                changeToPlayListFragment();
                 break;
 
             default:
@@ -80,6 +74,41 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setSong(Song song) {
+        this.currentSong = song;
+    }
+
+    public void requestNewSong(Song oldSong, int direction) {
+       currentSong = playListFragment.changeTrack(oldSong, direction);
+       changeToMediaPlayerFragment();
+    }
+
+    public void changeToMediaPlayerFragment() {
+        if (mediaPlayerFragment == null) {
+            mediaPlayerFragment = MediaPlayerFragment.newInstance("", "");
+
+            currentSong = playListFragment.setDefaultTrack();
+        }
+        mediaPlayerFragment.setNewSong(currentSong);
+        mediaPlayerFragment.changeTrack();
+        FragmentManager fM = getFragmentManager();
+        FragmentTransaction fT = fM.beginTransaction();
+        fT.replace(R.id.container, mediaPlayerFragment, null);
+        fT.addToBackStack("go to mediaPlayer fragmement");
+        fT.commit();
+    }
+
+    public void changeToPlayListFragment() {
+        if (playListFragment == null) {
+            playListFragment = PlayListFragment.newInstance("", "");
+        }
+        FragmentManager fME = getFragmentManager();
+        FragmentTransaction fTE = fME.beginTransaction();
+        fTE.replace(R.id.container, playListFragment, null);
+        fTE.addToBackStack("got to Expense fragment");
+        fTE.commit();
     }
 
     @Override

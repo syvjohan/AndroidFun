@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -34,15 +35,12 @@ public class MediaPlayerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private MediaPlayer mediaPlayer = new MediaPlayer();
-
+    private MediaPlayer mediaPlayer;
     private double endTime = 0;
     private double startTime = 0;
     private int forwardTime = 5000;
     private int backwardTime = 5000;
     public static int oneTimeOnly = 0;
-
-    private String songPath;
 
     private SeekBar seekBar;
 
@@ -50,20 +48,25 @@ public class MediaPlayerFragment extends Fragment {
     private ImageButton btnPause;
     private ImageButton btnStop;
     private ImageButton btnForward;
-    private ImageButton btnRewind;
+    private ImageButton btnBackward;
 
     public TextView songInfo;
     public TextView txtEndTime;
     public TextView txtStartTime;
 
     private Handler mediaHandler = new Handler();
+    private Handler trackHandler;
 
-    //Attributes uses for controlling when musis should start after changing seekBar state.
+    //Attributes uses for controlling when music should start after changing seekBar state.
     private boolean isPausePressed = false;
     private boolean isPlayPressed = false;
     private boolean isStopPressed = true;
 
+    private long btnTimeDown;
+    private long btnDownDuration;
+
     private OnFragmentInteractionListener mListener;
+
     private Song currentSong;
 
     /**
@@ -112,28 +115,19 @@ public class MediaPlayerFragment extends Fragment {
         btnPlay = (ImageButton)view.findViewById(R.id.btn_play);
         btnPause = (ImageButton)view.findViewById(R.id.btn_pause);
         btnStop = (ImageButton)view.findViewById(R.id.btn_stop);
-        btnRewind = (ImageButton)view.findViewById(R.id.btn_previous);
+        btnBackward = (ImageButton)view.findViewById(R.id.btn_previous);
         btnForward = (ImageButton)view.findViewById(R.id.btn_next);
 
         songInfo.setText(currentSong.getArtist() + " - " + currentSong.getTitle());
 
-        if (songPath != currentSong.getUri()) {
-            stop(view);
-            mediaPlayer.release();
-            mediaPlayer = null;
-
-            songPath = currentSong.getUri();
-            mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(songPath));
-
-        } else {
-            mediaPlayer.reset();
-        }
+        mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(currentSong.getUri()));
 
         seekBar.setClickable(false);
         btnPause.setEnabled(false);
         btnStop.setEnabled(false);
         btnForward.setEnabled(false);
-        btnRewind.setEnabled(false);
+        btnBackward.setEnabled(false);
+        btnPlay.setEnabled(true);
 
         //Click events!
         btnPause.setOnClickListener(new View.OnClickListener() {
@@ -166,28 +160,59 @@ public class MediaPlayerFragment extends Fragment {
             }
         });
 
-        btnForward.setOnClickListener(new View.OnClickListener() {
+        btnForward.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                forward(view);
-                isPausePressed = false;
-                isPlayPressed = false;
-                isStopPressed = false;
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (trackHandler != null) {
+                            return true;
+                        }
+                        btnTimeDown = System.currentTimeMillis();
+                        trackHandler = new Handler();
+                        trackHandler.postDelayed(nextTrack, 200);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        btnDownDuration = System.currentTimeMillis() - btnTimeDown;
+                        if (btnDownDuration <= 200) {
+                            nextTrack();
+
+                        }
+                        trackHandler.removeCallbacks(nextTrack);
+                        trackHandler = null;
+                        break;
+                }
+                return false;
             }
         });
 
-        btnRewind.setOnClickListener(new View.OnClickListener() {
+        btnBackward.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                rewind(view);
-                isPausePressed = false;
-                isPlayPressed = false;
-                isStopPressed = false;
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (trackHandler != null) {
+                            return true;
+                        }
+                        btnTimeDown = System.currentTimeMillis();
+                        trackHandler = new Handler();
+                        trackHandler.postDelayed(prevTrack, 200);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        btnDownDuration = System.currentTimeMillis() - btnTimeDown;
+                        if (btnDownDuration <= 200) {
+                            previousTrack();
+
+                        }
+                        trackHandler.removeCallbacks(prevTrack);
+                        trackHandler = null;
+                        break;
+                }
+                return false;
             }
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
             @Override
             public void onStartTrackingTouch(SeekBar s) {
 
@@ -211,6 +236,20 @@ public class MediaPlayerFragment extends Fragment {
             }
 
         });
+
+        //Change track when current track is finish.
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                nextTrack();
+            }
+        });
+
+
+        //if a track has been choosen in the playList play the track.
+        if (currentSong != null) {
+            preparePlayerForTrackChange(view);
+        }
 
         return view;
     }
@@ -239,16 +278,32 @@ public class MediaPlayerFragment extends Fragment {
             );
 
             seekBar.setProgress((int) startTime);
-            mediaHandler.postDelayed(UpdateSongTime, 100);
+            mediaHandler.postDelayed(updateSongTime, 100);
 
             btnPause.setEnabled(true);
             btnStop.setEnabled(true);
-            btnRewind.setEnabled(true);
+            btnBackward.setEnabled(true);
             btnForward.setEnabled(true);
         }
     }
 
-    private Runnable UpdateSongTime = new Runnable() {
+    Runnable nextTrack = new Runnable() {
+        @Override
+        public void run() {
+            forward(getView());
+            trackHandler.postDelayed(this, 200);
+        }
+    };
+
+    Runnable prevTrack = new Runnable() {
+        @Override
+        public void run() {
+            rewind(getView());
+            trackHandler.postDelayed(this, 200);
+        }
+    };
+
+    private Runnable updateSongTime = new Runnable() {
         public void run() {
             startTime = mediaPlayer.getCurrentPosition();
             txtStartTime.setText(String.format("%d min, %d sec",
@@ -257,14 +312,14 @@ public class MediaPlayerFragment extends Fragment {
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
             );
             seekBar.setProgress((int) startTime);
-            mediaHandler.postDelayed(this, 100);
+            mediaHandler.postDelayed(this, 300);
         }
     };
 
     public void stop(View view) {
         btnPause.setEnabled(false);
         btnForward.setEnabled(false);
-        btnRewind.setEnabled(false);
+        btnBackward.setEnabled(false);
         btnStop.setEnabled(false);
 
         mediaPlayer.pause();
@@ -293,8 +348,35 @@ public class MediaPlayerFragment extends Fragment {
         }
     }
 
-    public void setSong(Song song) {
+    public void nextTrack() {
+        ((MainActivity)getActivity()).requestNewSong(currentSong, 1);
+    }
+
+    public void previousTrack() {
+        ((MainActivity) getActivity()).requestNewSong(currentSong, -1);
+    }
+
+    public void setNewSong(Song song) {
         this.currentSong = song;
+    }
+
+    public void changeTrack() {
+        if (mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+
+        if (songInfo != null) {
+            songInfo.setText(currentSong.getArtist() + " - " + currentSong.getTitle());
+            mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(currentSong.getUri()));
+            play(getView());
+        }
+    }
+
+    public void preparePlayerForTrackChange(View view) {
+        startTime = 0;
+        endTime = 0;
+        seekBar.setProgress((int) startTime);
+        mediaPlayer.seekTo(0);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -319,11 +401,11 @@ public class MediaPlayerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mediaPlayer.release();
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }

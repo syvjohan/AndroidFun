@@ -22,6 +22,7 @@
         <item name="android:dividerHeight">3.5dp</item>
         <item name="android:divider">@color/lstDivider</item>
         <item name="android:fastScrollEnabled">true</item>
+        <item name="android:clickable">true</item>
     </style>
 
 </resources>

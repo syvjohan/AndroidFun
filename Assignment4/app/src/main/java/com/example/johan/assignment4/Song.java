@@ -2,8 +2,8 @@ package com.example.johan.assignment4;
 
 public class Song {
     private Long id;
-    private String title = "";
-    private String artist = "";
+    private String title = " ...";
+    private String artist = "No track choosen!";
     private String uri = "";
 
     Song(long id, String title, String artist, String uri) {
@@ -19,7 +19,7 @@ public class Song {
         return artist;
     }
 
-    public void SetArtist(String artist) {
+    public void setArtist(String artist) {
         this.artist = artist;
     }
 
@@ -35,7 +35,7 @@ public class Song {
         return id;
     }
 
-    public void SetId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
