@@ -127,7 +127,6 @@ public class MediaPlayerFragment extends Fragment {
         btnStop.setEnabled(false);
         btnForward.setEnabled(false);
         btnBackward.setEnabled(false);
-        btnPlay.setEnabled(true);
 
         //Click events!
         btnPause.setOnClickListener(new View.OnClickListener() {
@@ -268,13 +267,13 @@ public class MediaPlayerFragment extends Fragment {
             txtEndTime.setText(String.format("%d min, %d sec",
                             TimeUnit.MILLISECONDS.toMinutes((long) endTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
-                                    TimeUnit.MILLISECONDS.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
             );
 
             txtStartTime.setText(String.format("%d min, %d sec",
                             TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                             TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
             );
 
             seekBar.setProgress((int) startTime);
@@ -308,7 +307,7 @@ public class MediaPlayerFragment extends Fragment {
             startTime = mediaPlayer.getCurrentPosition();
             txtStartTime.setText(String.format("%d min, %d sec",
                             TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                            TimeUnit.MILLISECONDS.toSeconds((long) startTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
             );
             seekBar.setProgress((int) startTime);

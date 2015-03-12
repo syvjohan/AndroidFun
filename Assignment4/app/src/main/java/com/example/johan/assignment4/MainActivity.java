@@ -88,9 +88,12 @@ public class MainActivity extends ActionBarActivity implements
     public void changeToMediaPlayerFragment() {
         if (mediaPlayerFragment == null) {
             mediaPlayerFragment = MediaPlayerFragment.newInstance("", "");
+        }
 
+        if (currentSong == null) {
             currentSong = playListFragment.setDefaultTrack();
         }
+
         mediaPlayerFragment.setNewSong(currentSong);
         mediaPlayerFragment.changeTrack();
         FragmentManager fM = getFragmentManager();
