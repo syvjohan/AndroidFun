@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity implements
         changeToPlayListFragment(); //Start view
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -70,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements
                 break;
 
             default:
+                changeToPlayListFragment();
                 break;
         }
 
@@ -90,6 +90,7 @@ public class MainActivity extends ActionBarActivity implements
             mediaPlayerFragment = MediaPlayerFragment.newInstance("", "");
         }
 
+        //First time mediaPlayerFragment get called without a song choosen.
         if (currentSong == null) {
             currentSong = playListFragment.setDefaultTrack();
         }
@@ -110,12 +111,12 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager fME = getFragmentManager();
         FragmentTransaction fTE = fME.beginTransaction();
         fTE.replace(R.id.container, playListFragment, null);
-        fTE.addToBackStack("got to Expense fragment");
+        fTE.addToBackStack("go to Expense fragment");
         fTE.commit();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
+        super.onBackPressed();
     }
 }

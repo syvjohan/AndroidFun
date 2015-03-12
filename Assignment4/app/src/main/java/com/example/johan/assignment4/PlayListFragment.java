@@ -129,7 +129,7 @@ public class PlayListFragment extends Fragment {
     }
 
     public static Song setDefaultTrack() {
-        Song defaultTrack = storeSongs.get(0);
+        Song defaultTrack = storeSongs.get(10);
         return defaultTrack;
     }
 
