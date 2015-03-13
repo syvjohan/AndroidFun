@@ -18,11 +18,13 @@ public class MainActivity extends ActionBarActivity implements
 
     MediaPlayerFragment mediaPlayerFragment;
     PlayListFragment playListFragment;
+    KnockingFragment knockingFragment;
 
     private Song currentSong; //Fragments change this variable
 
     private final int MENU_ITEM_MEDIAPLAYER = Menu.FIRST;
     private final int MENU_ITEM_PLAYLIST = MENU_ITEM_MEDIAPLAYER + 1;
+    private final int MENU_ITEM_KNOCKING = MENU_ITEM_PLAYLIST + 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class MainActivity extends ActionBarActivity implements
 
         menu.add(0, MENU_ITEM_MEDIAPLAYER, 0 ,"MediaPlayer");
         menu.add(0, MENU_ITEM_PLAYLIST, 0,"Playlist");
+        menu.add(0, MENU_ITEM_KNOCKING, 0, "Knocking");
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -66,6 +69,10 @@ public class MainActivity extends ActionBarActivity implements
 
             case MENU_ITEM_PLAYLIST:
                 changeToPlayListFragment();
+                break;
+
+            case MENU_ITEM_KNOCKING:
+                changeToKnockingFragment();
                 break;
 
             default:
@@ -111,7 +118,18 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager fME = getFragmentManager();
         FragmentTransaction fTE = fME.beginTransaction();
         fTE.replace(R.id.container, playListFragment, null);
-        fTE.addToBackStack("go to Expense fragment");
+        fTE.addToBackStack("go to Playlist fragment");
+        fTE.commit();
+    }
+
+    public void changeToKnockingFragment() {
+        if (knockingFragment == null) {
+            knockingFragment = KnockingFragment.newInstance("", "");
+        }
+        FragmentManager fME = getFragmentManager();
+        FragmentTransaction fTE = fME.beginTransaction();
+        fTE.replace(R.id.container, knockingFragment, null);
+        fTE.addToBackStack("go to Knocking fragment");
         fTE.commit();
     }
 
