@@ -119,7 +119,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_media_player, container, false);
 
-        getActivity().setTitle("Media Player");
+        getActivity().setTitle(R.string.fragment_mediaplayer);
 
         txtCurrentX = (TextView)view.findViewById(R.id.x_axis_value);
         txtCurrentY = (TextView)view.findViewById(R.id.y_axis_value);

@@ -13,8 +13,7 @@
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp" >
+        style="@style/set_padd_width" >
 
         <TextView
             android:id="@+id/txt_now_playing"
@@ -38,8 +37,7 @@
         android:layout_height="200dp"
         android:orientation="vertical"
         android:layout_below="@+id/linear_top"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp" >
+        style="@style/set_padd_width" >
 
         <include
             android:id="@+id/include_knocking_layout"
@@ -54,8 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="vertical"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        style="@style/set_padd_width"
         android:layout_above="@+id/linear_bottom" >
 
         <SeekBar
@@ -98,46 +95,35 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp" >
+        style="@style/set_padd_width" >
 
         <ImageButton
             android:id="@+id/btn_next"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            style="@style/btn_image"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/next" />
 
         <ImageButton
             android:id="@+id/btn_play"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            style="@style/btn_image"
             android:layout_toRightOf="@+id/btn_next"
             android:src="@mipmap/play" />
 
         <ImageButton
             android:id="@+id/btn_pause"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            style="@style/btn_image"
             android:layout_toRightOf="@+id/btn_play"
             android:src="@mipmap/pause" />
 
         <ImageButton
             android:id="@+id/btn_stop"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            style="@style/btn_image"
             android:layout_toRightOf="@+id/btn_pause"
             android:src="@mipmap/stop"/>
 
         <ImageButton
             android:id="@+id/btn_previous"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            style="@style/btn_image"
             android:layout_toRightOf="@+id/btn_stop"
             android:layout_alignParentRight="true"
             android:src="@mipmap/previous" />

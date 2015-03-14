@@ -7,40 +7,24 @@
 
     <LinearLayout
         android:id="@+id/linear_titles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" >
+        style="@style/linear_fragment_knocking"
+        android:layout_marginTop="10dp" >
 
         <TextView
             android:id="@+id/x_axis_title"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="X-Axis" />
+            style="@style/txt_axis"
+            android:text="@string/x_axis" />
 
         <TextView
             android:id="@+id/y_axis_title"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Y-Axis"
+            style="@style/txt_axis"
+            android:text="@string/y_axis"
             android:layout_toRightOf="@+id/x_axis_title" />
 
         <TextView
             android:id="@+id/z_axis_title"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Z-Axis"
+            style="@style/txt_axis"
+            android:text="@string/z_axis"
             android:layout_toRightOf="@+id/x_axis_title" />
 
     </LinearLayout>
@@ -48,38 +32,20 @@
 
     <LinearLayout
         android:id="@+id/linear_values"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        style="@style/linear_fragment_knocking"
         android:layout_below="@+id/linear_titles" >
 
         <TextView
             android:id="@+id/x_axis_value"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/txt_axis" />
 
         <TextView
             android:id="@+id/y_axis_value"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@+id/x_axis_value" />
+            style="@style/txt_axis" />
 
         <TextView
             android:id="@+id/z_axis_value"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@+id/x_axis_value" />
+            style="@style/txt_axis"/>
 
     </LinearLayout>
 

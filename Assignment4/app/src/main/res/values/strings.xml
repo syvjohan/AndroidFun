@@ -3,5 +3,12 @@
     <string name="action_settings">Settings</string>
 
     <string name="now_playing">Now Playing: </string>
+    <string name="fragment_mediaplayer">Media Player</string>
+    <string  name="fragment_playlist">Playlist</string>
+
+    <string name="z_axis">Z-Axis</string>
+    <string name="x_axis">X-Axis</string>
+    <string name="y_axis">Y-Axis</string>
+
 
 </resources>

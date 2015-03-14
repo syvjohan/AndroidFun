@@ -13,6 +13,11 @@
         <item name="android:scrollHorizontally">false</item>
         <item name="android:layout_height">18dp</item>
         <item name="android:ellipsize">none</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingLeft">4dp</item>
     </style>
 
     <style name="listView_show_data">
@@ -23,6 +28,33 @@
         <item name="android:divider">@color/lstDivider</item>
         <item name="android:fastScrollEnabled">true</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="txt_axis">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">.33</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="linear_fragment_knocking">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="btn_image">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">.20</item>
+    </style>
+
+    <style name="set_padd_width">
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingLeft">4dp</item>
     </style>
 
 </resources>

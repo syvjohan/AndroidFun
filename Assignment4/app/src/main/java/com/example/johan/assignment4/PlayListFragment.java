@@ -73,7 +73,7 @@ public class PlayListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_play_list, container, false);
 
-        getActivity().setTitle("Play List");
+        getActivity().setTitle(R.string.fragment_playlist);
 
         getSongList();
         sort(storeSongs);
