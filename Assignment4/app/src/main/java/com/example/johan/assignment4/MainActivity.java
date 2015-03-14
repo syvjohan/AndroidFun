@@ -8,13 +8,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
 
 public class MainActivity extends ActionBarActivity implements
             MediaPlayerFragment.OnFragmentInteractionListener,
-            PlayListFragment.OnFragmentInteractionListener {
+            PlayListFragment.OnFragmentInteractionListener,
+            KnockingFragment.OnFragmentInteractionListener {
 
     MediaPlayerFragment mediaPlayerFragment;
     PlayListFragment playListFragment;
@@ -72,7 +74,12 @@ public class MainActivity extends ActionBarActivity implements
                 break;
 
             case MENU_ITEM_KNOCKING:
-                changeToKnockingFragment();
+                if (mediaPlayerFragment == null) {
+                    Toast.makeText(getApplicationContext(), "To be able to enter knock mode you need to enter mediaPlayer first",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    changeToKnockingFragment();
+                }
                 break;
 
             default:
@@ -81,6 +88,30 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setmediaPlayerState(int state){
+          switch (state) {
+              case 1:
+                  if (mediaPlayerFragment.isMediaPlaying()) {
+                      mediaPlayerFragment.pause();
+                  } else {
+                      mediaPlayerFragment.play();
+                  }
+              break;
+
+              case 2:
+                  mediaPlayerFragment.nextTrack();
+              break;
+
+              case 3:
+                  mediaPlayerFragment.previousTrack();
+              break;
+
+              case 4:
+                  mediaPlayerFragment.stop();
+              break;
+          }
     }
 
     public void setSong(Song song) {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 public class KnockingFragment extends Fragment implements SensorEventListener {
@@ -27,11 +28,19 @@ public class KnockingFragment extends Fragment implements SensorEventListener {
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
-    private long lastUpdate = 0;
     private float lastX;
     private float lastY;
     private float lastZ;
-    private static final int SHAKE_THRESHOLD = 600;
+
+    private TextView txtCurrentX;
+    private TextView txtCurrentY;
+    private TextView txtCurrentZ;
+
+    private float dt;
+    private int knockCount;
+    private long oldTimestamp;
+
+    private static final float toMilliSec = 1000000.0f;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,10 +72,26 @@ public class KnockingFragment extends Fragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_knocking, container, false);
 
+        txtCurrentX = (TextView)view.findViewById(R.id.x_axis_value);
+        txtCurrentY = (TextView)view.findViewById(R.id.y_axis_value);
+        txtCurrentZ = (TextView)view.findViewById(R.id.z_axis_value);
+
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
         return view;
+    }
+
+    private void displayCleanValues() {
+        txtCurrentX.setText("0.00");
+        txtCurrentZ.setText("0.00");
+        txtCurrentY.setText("0.00");
+    }
+
+    private void displayCurrentValues() {
+        txtCurrentX.setText(Float.toString(lastX));
+        txtCurrentY.setText(Float.toString(lastY));
+        txtCurrentZ.setText(Float.toString(lastZ));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -112,22 +137,53 @@ public class KnockingFragment extends Fragment implements SensorEventListener {
             float y = event.values[1];
             float z = event.values[2];
 
-            long currTime = System.currentTimeMillis();
+                if (lastY > 0.32) {
+                    dt = (event.timestamp - oldTimestamp) / toMilliSec;
+                    oldTimestamp = event.timestamp;
 
-            if ((currTime - lastUpdate) > 100) {
-                long diffTime = (currTime - lastUpdate);
-                lastUpdate = currTime;
+                    knockCount++;
 
-                float speed = Math.abs(x + y + z - lastX - lastY - lastZ) / (diffTime * 10000);
-                if (speed > SHAKE_THRESHOLD) {
-                    //TODO! anropa en funktion som ska aktiveras när telefonen skakas
+                    //If the time between the knocks is higher than 2 sec.
+                    if (dt >= 1500) {
+                        switch (knockCount) {
+                            case 1:
+                                //Play/Pause track
+                                System.out.println("Play");
+                                ((MainActivity)getActivity()).setmediaPlayerState(1);
+                            break;
+
+                            case 2:
+                                //Next track.
+                                System.out.println("Next");
+                                ((MainActivity)getActivity()).setmediaPlayerState(2);
+                            break;
+
+                            case 3:
+                                //Previous track.
+                                System.out.println("Previous");
+                                ((MainActivity)getActivity()).setmediaPlayerState(3);
+                             break;
+
+                            case 4:
+                                //Stop track
+                                System.out.println("Stop");
+                                ((MainActivity)getActivity()).setmediaPlayerState(4);
+                            break;
+
+                            default:
+                                knockCount = 0;
+                            break;
+                        }
+                        knockCount = 0;
+                        System.out.println("Setting knockout to 0");
+                    }
+
+                    displayCurrentValues();
                 }
 
-                lastX = x;
                 lastY = y;
+                lastX = x;
                 lastZ = z;
-
-            }
         }
     }
 
@@ -136,16 +192,6 @@ public class KnockingFragment extends Fragment implements SensorEventListener {
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);

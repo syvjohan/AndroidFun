@@ -16,14 +16,6 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MediaPlayerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MediaPlayerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MediaPlayerFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -127,7 +119,7 @@ public class MediaPlayerFragment extends Fragment {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    pause(view);
+                    pause();
                     isPausePressed = true;
                     isPlayPressed = false;
                     isStopPressed = false;
@@ -137,7 +129,7 @@ public class MediaPlayerFragment extends Fragment {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                play(view);
+                play();
                 isPausePressed = false;
                 isPlayPressed = true;
                 isStopPressed = false;
@@ -147,7 +139,7 @@ public class MediaPlayerFragment extends Fragment {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop(view);
+                stop();
                 isPausePressed = false;
                 isPlayPressed = false;
                 isStopPressed = true;
@@ -224,7 +216,7 @@ public class MediaPlayerFragment extends Fragment {
 
                     // Check if pause, play or stop buttons is pressed
                     if(!isPausePressed && !isPlayPressed && !isStopPressed) {
-                        play(view);
+                        play();
                     }
                 }
             }
@@ -246,7 +238,7 @@ public class MediaPlayerFragment extends Fragment {
         return view;
     }
 
-    public void play(View view) {
+    public void play() {
         //Check if a track has been choosen from playlist...
         if(currentSong.getId() != null) {
             mediaPlayer.start();
@@ -282,7 +274,7 @@ public class MediaPlayerFragment extends Fragment {
     Runnable nextTrack = new Runnable() {
         @Override
         public void run() {
-            forward(getView());
+            forward();
             trackHandler.postDelayed(this, 200);
         }
     };
@@ -290,7 +282,7 @@ public class MediaPlayerFragment extends Fragment {
     Runnable prevTrack = new Runnable() {
         @Override
         public void run() {
-            rewind(getView());
+            rewind();
             trackHandler.postDelayed(this, 200);
         }
     };
@@ -308,7 +300,7 @@ public class MediaPlayerFragment extends Fragment {
         }
     };
 
-    public void stop(View view) {
+    public void stop() {
         btnPause.setEnabled(false);
         btnForward.setEnabled(false);
         btnBackward.setEnabled(false);
@@ -320,13 +312,13 @@ public class MediaPlayerFragment extends Fragment {
         mediaPlayer.seekTo(0);
     }
 
-    public void pause(View view) {
+    public void pause() {
         mediaPlayer.pause();
         btnPause.setEnabled(false);
         btnPlay.setEnabled(true);
     }
 
-    public void forward(View view) {
+    public void forward() {
         int temp = (int)curretTime;
         if ((temp + forwardTime)<= endTime) {
             curretTime = curretTime + forwardTime;
@@ -334,7 +326,7 @@ public class MediaPlayerFragment extends Fragment {
         }
     }
 
-    public void rewind(View view) {
+    public void rewind() {
         int temp = (int) curretTime;
         if ((temp-backwardTime)> 0) {
             curretTime = curretTime - backwardTime;
@@ -364,8 +356,12 @@ public class MediaPlayerFragment extends Fragment {
             mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(currentSong.getUri()));
 
             seekBar.setProgress(0);
-            play(getView());
+            play();
         }
+    }
+
+    public boolean isMediaPlaying() {
+        return mediaPlayer.isPlaying();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
