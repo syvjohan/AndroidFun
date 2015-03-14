@@ -8,25 +8,24 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
 
 public class MainActivity extends ActionBarActivity implements
             MediaPlayerFragment.OnFragmentInteractionListener,
-            PlayListFragment.OnFragmentInteractionListener,
-            KnockingFragment.OnFragmentInteractionListener {
+            PlayListFragment.OnFragmentInteractionListener
+            /*,KnockingFragment.OnFragmentInteractionListener*/ {
 
     MediaPlayerFragment mediaPlayerFragment;
     PlayListFragment playListFragment;
-    KnockingFragment knockingFragment;
+    //KnockingFragment knockingFragment;
 
     private Song currentSong; //Fragments change this variable
 
     private final int MENU_ITEM_MEDIAPLAYER = Menu.FIRST;
     private final int MENU_ITEM_PLAYLIST = MENU_ITEM_MEDIAPLAYER + 1;
-    private final int MENU_ITEM_KNOCKING = MENU_ITEM_PLAYLIST + 1;
+    //private final int MENU_ITEM_KNOCKING = MENU_ITEM_PLAYLIST + 1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements
 
         menu.add(0, MENU_ITEM_MEDIAPLAYER, 0 ,"MediaPlayer");
         menu.add(0, MENU_ITEM_PLAYLIST, 0,"Playlist");
-        menu.add(0, MENU_ITEM_KNOCKING, 0, "Knocking");
+        //menu.add(0, MENU_ITEM_KNOCKING, 0, "Knocking");
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -73,14 +72,14 @@ public class MainActivity extends ActionBarActivity implements
                 changeToPlayListFragment();
                 break;
 
-            case MENU_ITEM_KNOCKING:
+            /*case MENU_ITEM_KNOCKING:
                 if (mediaPlayerFragment == null) {
                     Toast.makeText(getApplicationContext(), "To be able to enter knock mode you need to enter mediaPlayer first",
                             Toast.LENGTH_LONG).show();
                 } else {
                     changeToKnockingFragment();
                 }
-                break;
+                break;*/
 
             default:
                 changeToPlayListFragment();
@@ -90,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void setmediaPlayerState(int state){
+    /*public void setmediaPlayerState(int state){
           switch (state) {
               case 1:
                   if (mediaPlayerFragment.isMediaPlaying()) {
@@ -112,7 +111,7 @@ public class MainActivity extends ActionBarActivity implements
                   mediaPlayerFragment.stop();
               break;
           }
-    }
+    }*/
 
     public void setSong(Song song) {
         this.currentSong = song;
@@ -153,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements
         fTE.commit();
     }
 
-    public void changeToKnockingFragment() {
+    /*public void changeToKnockingFragment() {
         if (knockingFragment == null) {
             knockingFragment = KnockingFragment.newInstance("", "");
         }
@@ -162,7 +161,7 @@ public class MainActivity extends ActionBarActivity implements
         fTE.replace(R.id.container, knockingFragment, null);
         fTE.addToBackStack("go to Knocking fragment");
         fTE.commit();
-    }
+    }*/
 
     @Override
     public void onFragmentInteraction(Uri uri) {

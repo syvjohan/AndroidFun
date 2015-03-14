@@ -1,4 +1,4 @@
-package com.example.johan.assignment4;
+/*package com.example.johan.assignment4;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -197,4 +197,4 @@ public class KnockingFragment extends Fragment implements SensorEventListener {
         public void onFragmentInteraction(Uri uri);
     }
 
-}
+}*/

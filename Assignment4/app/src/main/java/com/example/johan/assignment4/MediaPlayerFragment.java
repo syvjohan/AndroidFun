@@ -2,6 +2,11 @@ package com.example.johan.assignment4;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,10 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-public class MediaPlayerFragment extends Fragment {
+public class MediaPlayerFragment extends Fragment implements SensorEventListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,6 +61,23 @@ public class MediaPlayerFragment extends Fragment {
 
     private long btnTimeDown;
     private long btnDownDuration;
+
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+
+    private float lastX;
+    private float lastY;
+    private float lastZ;
+
+    private TextView txtCurrentX;
+    private TextView txtCurrentY;
+    private TextView txtCurrentZ;
+
+    private float dt;
+    private int knockCount;
+    private long oldTimestamp;
+
+    private static final float toMilliSec = 1000000.0f;
 
     private OnFragmentInteractionListener mListener;
 
@@ -97,6 +120,14 @@ public class MediaPlayerFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_media_player, container, false);
 
         getActivity().setTitle("Media Player");
+
+        txtCurrentX = (TextView)view.findViewById(R.id.x_axis_value);
+        txtCurrentY = (TextView)view.findViewById(R.id.y_axis_value);
+        txtCurrentZ = (TextView)view.findViewById(R.id.z_axis_value);
+
+        senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
         songInfo = (TextView)view.findViewById(R.id.txt_currentsong);
         txtEndTime = (TextView)view.findViewById(R.id.txt_time_left);
@@ -387,6 +418,92 @@ public class MediaPlayerFragment extends Fragment {
         super.onDetach();
         mListener = null;
         mediaPlayer.release();
+    }
+
+    private void displayCurrentValues() {
+        txtCurrentX.setText(Float.toString(lastX));
+        txtCurrentY.setText(Float.toString(lastY));
+        txtCurrentZ.setText(Float.toString(lastZ));
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor;
+
+        if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            //Filter vibrations.
+            if (lastY > 0.32) {
+                dt = (event.timestamp - oldTimestamp) / toMilliSec;
+                oldTimestamp = event.timestamp;
+
+                knockCount++;
+
+                //If the time between the knocks is higher than 2 sec.
+                if (dt >= 500) {
+                    switch (knockCount) {
+                        case 1:
+                            //Play/Pause track
+                            System.out.println("Play");
+                            if (isMediaPlaying()) {
+                                pause();
+                            } else {
+                                play();
+                            }
+                            break;
+
+                        case 2:
+                            //Next track.
+                            System.out.println("Next");
+                            nextTrack();
+                            break;
+
+                        case 3:
+                            //Previous track.
+                            System.out.println("Previous");
+                            previousTrack();
+                            break;
+
+                        case 4:
+                            //Stop track
+                            System.out.println("Stop");
+                            stop();
+                            break;
+
+                        default:
+                            knockCount = 0;
+                            break;
+                    }
+                    Toast.makeText(getActivity(), "Number of knock(s) is: " + knockCount,
+                            Toast.LENGTH_SHORT).show();
+                    knockCount = 0;
+                    System.out.println("Setting knockout to 0");
+                }
+                displayCurrentValues();
+            }
+
+            lastY = y;
+            lastX = x;
+            lastZ = z;
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        senSensorManager.unregisterListener(this);
+    }
+
+    public void onResume() {
+        super.onResume();
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     public interface OnFragmentInteractionListener {

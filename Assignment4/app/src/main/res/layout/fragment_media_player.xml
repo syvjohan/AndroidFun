@@ -35,11 +35,17 @@
     <LinearLayout
         android:id="@+id/linear_midd_above"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:orientation="vertical"
         android:layout_below="@+id/linear_top"
         android:paddingLeft="2dp"
         android:paddingRight="2dp" >
+
+        <include
+            android:id="@+id/include_knocking_layout"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            layout="@layout/fragment_knocking" />
 
     </LinearLayout>
 
@@ -79,7 +85,6 @@
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".50"
-
                 android:paddingLeft="60dp" />
 
         </LinearLayout>

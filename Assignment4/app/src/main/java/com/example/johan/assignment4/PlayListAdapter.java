@@ -72,9 +72,9 @@ public class PlayListAdapter extends ArrayAdapter<Song> {
         holder.songTitle.setText(song.getTitle());
 
         if (position % 2 == 1) {
-            convertView.setBackgroundColor(res.getColor(R.color.odd_color));
+            convertView.setBackgroundResource(R.mipmap.rowodd);
         } else {
-            convertView.setBackgroundColor(res.getColor(R.color.even_color));
+            convertView.setBackgroundResource(R.mipmap.roweven);
         }
 
         // Return the completed view to render on screen
