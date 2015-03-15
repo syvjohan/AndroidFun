@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".25"
+        android:orientation="horizontal"
+        android:id="@+id/listView_regNewGroup" >
+
+        <EditText
+            android:id="@+id/txt_group_name"
+            android:layout_width="0dp"
+            android:layout_weight=".75"
+            android:layout_height="match_parent"
+            android:background="#CBCBB2"
+            android:hint="grupp name" />
+
+        <Button
+            android:id="@+id/btn_reg_new_group"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:layout_height="match_parent"
+            android:text="Create new group"
+            android:textSize ="15sp"
+            android:background="#D7C5E0"
+            android:layout_toRightOf="@+id/txt_group_name" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".75"
+        android:layout_below="@+id/listView_regNewGroup" >
+
+        <ListView
+            android:id="@+id/listView_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</RelativeLayout>

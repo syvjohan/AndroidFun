@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.johan.laboration1_ab5785.Fragment.LoginFragment"
+    android:orientation="vertical" >
+
+    <EditText
+        android:layout_marginTop="10dp"
+        style="@style/editTextView"
+        android:text="johan@gmail.com"
+        android:inputType="textPersonName"
+        android:id="@+id/login_txtUsername" />
+
+    <EditText
+        android:layout_marginTop="5dp"
+        style="@style/editTextView"
+        android:text="firebase1"
+        android:inputType="textPassword"
+        android:id="@+id/login_txtPassword" />
+
+    <Button
+        style="@style/btn"
+        android:text="@string/btn_login"
+        android:id="@+id/btn_login"/>
+
+    <Button
+        style="@style/btn"
+        android:id="@+id/btn_goto_register"
+        android:text="@string/btn_Register_new_user" />
+
+    <Button
+        android:layout_gravity="center_horizontal|bottom"
+        style="@style/btn"
+        android:text="@string/btn_about"
+        android:id="@+id/btn_about"/>
+
+    <TextView
+        android:id="@+id/err_login"
+        style="@style/error_msg"
+        android:visibility="invisible" />
+</LinearLayout>
