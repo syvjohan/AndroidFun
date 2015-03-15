@@ -36,7 +36,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
     //Attributes media player.
     private MediaPlayer mediaPlayer;
     private double endTime;
-    private double curretTime;
+    private double currentTime;
     private int forwardTime = 5000;
     private int backwardTime = 5000;
     public static int oneTimeOnly = 0;
@@ -105,7 +105,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        mediaPlayer = new MediaPlayer();
+        mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(currentSong.getUri()));
     }
 
     @Override
@@ -128,6 +128,8 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         txtStartTime = (TextView)view.findViewById(R.id.txt_time_start);
         seekBar = (SeekBar)view.findViewById(R.id.seek_bar_elapsed_time);
         checkBoxKnockingMode = (CheckBox)view.findViewById(R.id.knocking_mode);
+
+        songInfo.setText(currentSong.getArtist() + " - " + currentSong.getTitle());
 
         btnPlay = (ImageButton)view.findViewById(R.id.btn_play);
         btnPause = (ImageButton)view.findViewById(R.id.btn_pause);
@@ -155,7 +157,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                play();
+                play(getView());
                 isPausePressed = false;
                 isPlayPressed = true;
                 isStopPressed = false;
@@ -242,7 +244,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
 
                     // Check if pause, play or stop buttons is pressed
                     if(!isPausePressed && !isPlayPressed && !isStopPressed) {
-                        play();
+                        play(getView());
                     }
                 }
             }
@@ -256,11 +258,12 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
                         sensorIsActivated = true;
                 } else {
                     sensorIsActivated = false;
+                    txtCurrentZ.setText("0.00");
+                    txtCurrentY.setText("0.00");
+                    txtCurrentX.setText("0.00");
                 }
             }
         });
-
-        play();
 
         //Change track when current track is finish.
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -271,15 +274,18 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             }
         });
 
+
+        play(getView());
+
         return view;
     }
 
-    public void play() {
+    public void play(View view) {
         //Check if a track has been choosen from playlist...
         if(currentSong.getId() != null) {
             mediaPlayer.start();
             endTime = mediaPlayer.getDuration();
-            curretTime = mediaPlayer.getCurrentPosition();
+            currentTime = mediaPlayer.getCurrentPosition();
             if (oneTimeOnly == 0) {
                 seekBar.setMax((int) endTime);
                 oneTimeOnly = 1;
@@ -292,11 +298,13 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             );
 
             txtStartTime.setText(String.format("%d min, %d sec",
-                            TimeUnit.MILLISECONDS.toMinutes((long) curretTime),
-                            TimeUnit.MILLISECONDS.toSeconds((long) curretTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curretTime)))
+                            TimeUnit.MILLISECONDS.toMinutes((long) currentTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) currentTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) currentTime)))
             );
 
+            seekBar.setMax((int) endTime);
+            seekBar.setProgress((int) currentTime);
             mediaHandler.postDelayed(updateSongTime, 100);
 
             btnPause.setEnabled(true);
@@ -311,7 +319,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         @Override
         public void run() {
             forward();
-            trackHandler.postDelayed(this, 200);
+            trackHandler.postDelayed(this, 100);
         }
     };
 
@@ -319,19 +327,20 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         @Override
         public void run() {
             rewind();
-            trackHandler.postDelayed(this, 200);
+            trackHandler.postDelayed(this, 100);
         }
     };
 
     private Runnable updateSongTime = new Runnable() {
         public void run() {
-            curretTime = mediaPlayer.getCurrentPosition();
+            currentTime = mediaPlayer.getCurrentPosition();
             txtStartTime.setText(String.format("%d min, %d sec",
-                            TimeUnit.MILLISECONDS.toMinutes((long) curretTime),
-                            TimeUnit.MILLISECONDS.toSeconds((long) curretTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curretTime)))
+                            TimeUnit.MILLISECONDS.toMinutes((long) currentTime),
+                            TimeUnit.MILLISECONDS.toSeconds((long) currentTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) currentTime)))
             );
-            seekBar.setProgress((int) curretTime);
+            seekBar.setMax((int) endTime);
+            seekBar.setProgress((int) currentTime);
             mediaHandler.postDelayed(this, 100);
         }
     };
@@ -355,18 +364,18 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
     }
 
     public void forward() {
-        int temp = (int)curretTime;
+        int temp = (int)currentTime;
         if ((temp + forwardTime)<= endTime) {
-            curretTime = curretTime + forwardTime;
-            mediaPlayer.seekTo((int) curretTime);
+            currentTime = currentTime + forwardTime;
+            mediaPlayer.seekTo((int) currentTime);
         }
     }
 
     public void rewind() {
-        int temp = (int) curretTime;
+        int temp = (int) currentTime;
         if ((temp-backwardTime)> 0) {
-            curretTime = curretTime - backwardTime;
-            mediaPlayer.seekTo((int)curretTime);
+            currentTime = currentTime - backwardTime;
+            mediaPlayer.seekTo((int)currentTime);
         }
     }
 
@@ -396,8 +405,9 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             songInfo.setText(currentSong.getArtist() + " - " + currentSong.getTitle());
             mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(currentSong.getUri()));
 
+            seekBar.setMax((int) endTime);
             seekBar.setProgress(0);
-            play();
+            play(getView());
         }
     }
 
@@ -461,7 +471,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
                                     if (mediaPlayer.isPlaying()) {
                                         pause();
                                     } else {
-                                        play();
+                                        play(getView());
                                     }
                                     System.out.println("PLAY");
                                     break;
