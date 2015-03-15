@@ -1,5 +1,6 @@
 package com.example.johan.assignment4;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
@@ -80,9 +81,28 @@ public class MainActivity extends ActionBarActivity implements
         this.currentSong = song;
     }
 
+    private int getCurrentFragment() {
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.container);
+        if (currentFragment instanceof MediaPlayerFragment) {
+            return 1;
+        } else if (currentFragment instanceof  PlayListFragment) {
+            return 2;
+        } else {
+            return 0;
+        }
+    }
+
     public void requestNewSong(Song oldSong, int direction) {
        currentSong = playListFragment.changeTrack(oldSong, direction);
-       changeToMediaPlayerFragment();
+        if (oldSong != currentSong) {
+            mediaPlayerFragment.setNewSong(currentSong);
+            mediaPlayerFragment.changeTrack();
+            FragmentManager fM = getFragmentManager();
+            FragmentTransaction fT = fM.beginTransaction();
+            fT.replace(R.id.container, mediaPlayerFragment, null);
+            fT.addToBackStack("go to mediaPlayer fragmement");
+            fT.commit();
+        }
     }
 
     public void changeToMediaPlayerFragment() {
@@ -90,29 +110,41 @@ public class MainActivity extends ActionBarActivity implements
             mediaPlayerFragment = MediaPlayerFragment.newInstance("", "");
         }
 
-        //First time mediaPlayerFragment get called without a song choosen.
-        if (currentSong == null) {
-            currentSong = playListFragment.setDefaultTrack();
-        }
+        if (getCurrentFragment() == 1) {
+            return;
+        } else {
+            //First time mediaPlayerFragment get called without a song choosen.
+            if (currentSong == null) {
+                currentSong = playListFragment.setDefaultTrack();
+            }
 
-        mediaPlayerFragment.setNewSong(currentSong);
-        mediaPlayerFragment.changeTrack();
-        FragmentManager fM = getFragmentManager();
-        FragmentTransaction fT = fM.beginTransaction();
-        fT.replace(R.id.container, mediaPlayerFragment, null);
-        fT.addToBackStack("go to mediaPlayer fragmement");
-        fT.commit();
+            boolean isSet = mediaPlayerFragment.setNewSong(currentSong);
+            if (isSet) {
+                mediaPlayerFragment.changeTrack();
+            }
+
+            FragmentManager fM = getFragmentManager();
+            FragmentTransaction fT = fM.beginTransaction();
+            fT.replace(R.id.container, mediaPlayerFragment, null);
+            fT.addToBackStack("go to mediaPlayer fragmement");
+            fT.commit();
+        }
     }
 
     public void changeToPlayListFragment() {
         if (playListFragment == null) {
             playListFragment = PlayListFragment.newInstance("", "");
         }
-        FragmentManager fME = getFragmentManager();
-        FragmentTransaction fTE = fME.beginTransaction();
-        fTE.replace(R.id.container, playListFragment, null);
-        fTE.addToBackStack("go to Playlist fragment");
-        fTE.commit();
+
+        if (getCurrentFragment() == 2) {
+            return;
+        } else {
+            FragmentManager fME = getFragmentManager();
+            FragmentTransaction fTE = fME.beginTransaction();
+            fTE.replace(R.id.container, playListFragment, null);
+            fTE.addToBackStack("go to Playlist fragment");
+            fTE.commit();
+        }
     }
 
     @Override

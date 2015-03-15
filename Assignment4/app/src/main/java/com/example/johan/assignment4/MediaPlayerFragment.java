@@ -104,6 +104,8 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mediaPlayer = new MediaPlayer();
     }
 
     @Override
@@ -258,8 +260,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             }
         });
 
-        //if a track has been choosen in the playList play the track.
-         changeTrack();
+        play();
 
         //Change track when current track is finish.
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -377,8 +378,13 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         ((MainActivity) getActivity()).requestNewSong(currentSong, -1);
     }
 
-    public void setNewSong(Song song) {
-        this.currentSong = song;
+    public boolean setNewSong(Song song) {
+        if (currentSong == song) {
+            return false;
+        } else {
+            this.currentSong = song;
+            return true;
+        }
     }
 
     public void changeTrack() {
@@ -472,7 +478,6 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
                                     stop();
                                     break;
                             }
-
                             knocks = 0;
                             lastKnock = 0;
                         }
