@@ -274,7 +274,6 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             }
         });
 
-
         play(getView());
 
         return view;
