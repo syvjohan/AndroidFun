@@ -33,7 +33,8 @@
     <LinearLayout
         android:id="@+id/linear_values"
         style="@style/linear_fragment_knocking"
-        android:layout_below="@+id/linear_titles" >
+        android:layout_below="@+id/linear_titles"
+        android:layout_marginBottom="30dp" >
 
         <TextView
             android:id="@+id/x_axis_value"
@@ -48,5 +49,20 @@
             style="@style/txt_axis"/>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_activate_knocking_mode"
+        style="@style/linear_fragment_knocking"
+        android:layout_below="@+id/linear_values" >
+
+        <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="On/Off Knocking mode"
+        android:id="@+id/knocking_mode" />
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
