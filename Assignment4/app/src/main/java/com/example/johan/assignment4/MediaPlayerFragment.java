@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class MediaPlayerFragment extends Fragment implements SensorEventListener {
@@ -53,6 +54,7 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
 
     private Handler mediaHandler = new Handler();
     private Handler trackHandler;
+    private Handler sensorHandler = new Handler();
 
     //Attributes uses for controlling when music should start after changing seekBar state.
     private boolean isPausePressed = false;
@@ -65,17 +67,15 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
-    private float lastX;
-    private float lastY;
-    private float lastZ;
-
     private TextView txtCurrentX;
     private TextView txtCurrentY;
     private TextView txtCurrentZ;
 
-    private float dt;
-    private int knockCount;
-    private long oldTimestamp;
+    private long lastKnock = 0;
+    private int knocks = 0;
+    private static final long COMMAND_DELAY = 4000;
+    private static final double KNOCK_FILTER = 0.20;
+    private Timer knockTimer;
 
     private static final float toMilliSec = 1000000.0f;
 
@@ -276,29 +276,29 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
             endTime = mediaPlayer.getDuration();
             curretTime = mediaPlayer.getCurrentPosition();
             if (oneTimeOnly == 0) {
-                seekBar.setMax((int) endTime);
+//                seekBar.setMax((int) endTime);
                 oneTimeOnly = 1;
             }
 
-            txtEndTime.setText(String.format("%d min, %d sec",
-                            TimeUnit.MILLISECONDS.toMinutes((long) endTime),
-                            TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
-            );
+//            txtEndTime.setText(String.format("%d min, %d sec",
+//                            TimeUnit.MILLISECONDS.toMinutes((long) endTime),
+//                            TimeUnit.MILLISECONDS.toSeconds((long) endTime) -
+//                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) endTime)))
+//            );
 
-            txtStartTime.setText(String.format("%d min, %d sec",
-                            TimeUnit.MILLISECONDS.toMinutes((long) curretTime),
-                            TimeUnit.MILLISECONDS.toSeconds((long) curretTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curretTime)))
-            );
+//            txtStartTime.setText(String.format("%d min, %d sec",
+//                            TimeUnit.MILLISECONDS.toMinutes((long) curretTime),
+//                            TimeUnit.MILLISECONDS.toSeconds((long) curretTime) -
+//                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curretTime)))
+//            );
 
-            mediaHandler.postDelayed(updateSongTime, 100);
+//            mediaHandler.postDelayed(updateSongTime, 100);
 
-            btnPause.setEnabled(true);
-            btnStop.setEnabled(true);
-            btnBackward.setEnabled(true);
-            btnForward.setEnabled(true);
-            btnPlay.setEnabled(false);
+//            btnPause.setEnabled(true);
+//            btnStop.setEnabled(true);
+//            btnBackward.setEnabled(true);
+//            btnForward.setEnabled(true);
+//            btnPlay.setEnabled(false);
         }
     }
 
@@ -391,10 +391,6 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         }
     }
 
-    public boolean isMediaPlaying() {
-        return mediaPlayer.isPlaying();
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -420,74 +416,64 @@ public class MediaPlayerFragment extends Fragment implements SensorEventListener
         mediaPlayer.release();
     }
 
-    private void displayCurrentValues() {
-        txtCurrentX.setText(Float.toString(lastX));
-        txtCurrentY.setText(Float.toString(lastY));
-        txtCurrentZ.setText(Float.toString(lastZ));
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Sensor sensor = event.sensor;
+        final Sensor sensor = event.sensor;
 
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
 
-            //Filter vibrations.
-            if (lastY > 0.32) {
-                dt = (event.timestamp - oldTimestamp) / toMilliSec;
-                oldTimestamp = event.timestamp;
+            double c = event.values[0] * event.values[0] + event.values[1] * event.values[1] + event.values[2] * event.values[2];
+            c = Math.sqrt(c); // length of acceleration vector.
 
-                knockCount++;
+            boolean test1 = Math.abs(c - 9.5) > KNOCK_FILTER;
 
-                //If the time between the knocks is higher than 2 sec.
-                if (dt >= 500) {
-                    switch (knockCount) {
-                        case 1:
-                            //Play/Pause track
-                            System.out.println("Play");
-                            if (isMediaPlaying()) {
-                                pause();
-                            } else {
-                                play();
-                            }
-                            break;
+            if (test1 && (event.timestamp - lastKnock) / toMilliSec > 250) {
+                lastKnock = event.timestamp;
+                knocks++;
 
-                        case 2:
-                            //Next track.
-                            System.out.println("Next");
-                            nextTrack();
-                            break;
+                System.out.println(String.format("KNOCK: %d -- accel event (%.2f, %.2f, %.2f) | %.2f" + "/n", knocks, event.values[0], event.values[1], event.values[2], c));
 
-                        case 3:
-                            //Previous track.
-                            System.out.println("Previous");
-                            previousTrack();
-                            break;
+                //Display values
+                txtCurrentX.setText(Float.toString(event.values[0]));
+                txtCurrentY.setText(Float.toString(event.values[1]));
+                txtCurrentZ.setText(Float.toString(event.values[2]));
 
-                        case 4:
-                            //Stop track
-                            System.out.println("Stop");
-                            stop();
-                            break;
+                //Display number of knocks.
+                Toast.makeText(getActivity(), "Number of knocks is: " + knocks, Toast.LENGTH_SHORT).show();
 
-                        default:
-                            knockCount = 0;
-                            break;
+                sensorHandler = new Handler();
+                sensorHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (knocks) {
+                            case 1:
+                                if (mediaPlayer.isPlaying()) {
+                                    pause();
+                                } else {
+                                    play();
+                                }
+                                System.out.println("PLAY");
+                                break;
+                            case 2:
+                                nextTrack();
+                                System.out.println("NEXT");
+                                break;
+                            case 3:
+                                System.out.println("PREVIOUS");
+                                previousTrack();
+                                break;
+                            case 4:
+                                System.out.println("STOP");
+                                stop();
+                                break;
+                        }
+
+                        knocks = 0;
+                        knockTimer = null;
+                        lastKnock = 0;
                     }
-                    Toast.makeText(getActivity(), "Number of knock(s) is: " + knockCount,
-                            Toast.LENGTH_SHORT).show();
-                    knockCount = 0;
-                    System.out.println("Setting knockout to 0");
-                }
-                displayCurrentValues();
+                }, COMMAND_DELAY);
             }
-
-            lastY = y;
-            lastX = x;
-            lastZ = z;
         }
     }
 
